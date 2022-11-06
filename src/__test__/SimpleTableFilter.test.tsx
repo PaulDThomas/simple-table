@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { iSimpleTableField, iSimpleTableRow } from './interface';
-import { SimpleTableContext } from './SimpleTableContext';
-import { SimpleTableFilter } from './SimpleTableFilter';
+import { iSimpleTableField, iSimpleTableRow } from 'components/interface';
+import { SimpleTableContext } from 'components/SimpleTableContext';
+import { SimpleTableFilter } from 'components/SimpleTableFilter';
 
 const mockFilter = jest.fn();
 

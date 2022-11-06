@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { iSimpleTableField, iSimpleTableRow } from './interface';
-import { SimpleTableContext } from './SimpleTableContext';
-import { SimpleTableSearch } from './SimpleTableSearch';
+import { iSimpleTableField, iSimpleTableRow } from 'components/interface';
+import { SimpleTableContext } from 'components/SimpleTableContext';
+import { SimpleTableSearch } from 'components/SimpleTableSearch';
 
 const mockFields: iSimpleTableField[] = [
   { name: 'userId', hidden: true, label: 'UserId' },
