@@ -1,4 +1,4 @@
-import React, { Key, useState } from 'react';
+import { Key, useState } from 'react';
 import {
   iSimpleTableCellRenderProps,
   iSimpleTableField,
