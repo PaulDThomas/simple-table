@@ -12,7 +12,10 @@ export const SimpleTableRow = ({ rowId }: iSimpleTableRowProps): JSX.Element => 
   return (
     <tr id={`${simpleTableContext.id}-row-${rowId}`}>
       {simpleTableContext.selectable && (
-        <td className='simpletable-firstcol'>
+        <td
+          className='simpletable-firstcol'
+          style={{ backgroundColor: simpleTableContext.firstColumnBackgroundColor }}
+        >
           <input
             id={`${simpleTableContext.id}-check-row-${rowId}`}
             role='checkbox'

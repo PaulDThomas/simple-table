@@ -7,7 +7,7 @@ export const SimpleTableBody = (): JSX.Element => {
 
   return (
     <tbody>
-      {simpleTableContext.viewData.map((row) => {
+      {simpleTableContext.viewData.map((row, ri) => {
         const chk =
           typeof row[simpleTableContext.keyField] === 'string' ||
           typeof row[simpleTableContext.keyField] === 'number';
@@ -17,7 +17,7 @@ export const SimpleTableBody = (): JSX.Element => {
             rowId={row[simpleTableContext.keyField] as string | number}
           />
         ) : (
-          <tr>
+          <tr key={ri}>
             <td
               colSpan={simpleTableContext.fields.filter((f) => !f.hidden ?? true).length}
               className='simpletable-cell'

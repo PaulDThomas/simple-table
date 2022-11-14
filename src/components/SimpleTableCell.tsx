@@ -32,21 +32,18 @@ export const SimpleTableCell = ({
       }`}
       key={cellField}
       className={`${columnNumber === 0 && 'simpletable-firstcol'} simpletable-cell`}
+      style={{
+        backgroundColor:
+          columnNumber === 0 ? simpleTableContext.firstColumnBackgroundColor : undefined,
+      }}
     >
-      {
-        !field || !rowData
-          ? `${!rowData ? 'Row data' : ''}${!rowData && !field ? ', ' : ''}${
-              !field ? 'Field' : ''
-            } not found`
-          : field.renderFn
-          ? field.renderFn({ rowData, columnNumber, cellField: field.name })
-          : String(rowData[field.name])
-        // typeof rowData[field.name] === 'string'
-        // ? (rowData[field.name] as string)
-        // : typeof rowData[field.name] === 'number'
-        // ? (rowData[field.name] as number)
-        // : 'Render function required'
-      }
+      {!field || !rowData
+        ? `${!rowData ? 'Row data' : ''}${!rowData && !field ? ', ' : ''}${
+            !field ? 'Field' : ''
+          } not found`
+        : field.renderFn
+        ? field.renderFn({ rowData, columnNumber, cellField: field.name })
+        : String(rowData[field.name])}
     </td>
   );
 };
