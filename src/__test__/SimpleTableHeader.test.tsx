@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from 'components/interface';
-import { SimpleTableContext } from 'components/SimpleTableContext';
-import { SimpleTableHeader } from 'components/SimpleTableHeader';
+import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from '../components/interface';
+import { SimpleTableContext } from '../components/SimpleTableContext';
+import { SimpleTableHeader } from '../components/SimpleTableHeader';
 
 const mockSort = jest.fn();
 

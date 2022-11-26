@@ -1,11 +1,11 @@
-import { Key, useState } from 'react';
+import React, { Key, useState } from 'react';
 import {
   iSimpleTableCellRenderProps,
   iSimpleTableField,
   iSimpleTableRow,
-} from './components/interface';
-import { SimpleTable } from './components/SimpleTable';
-import { mockData } from './__test__/mock_data';
+  SimpleTable,
+} from '../../src/components';
+import { mockData } from '../../src/__mocks__/mock_data';
 
 // Main application
 const App = (): JSX.Element => {

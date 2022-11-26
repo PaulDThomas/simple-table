@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { iSimpleTableField, iSimpleTableRow } from 'components/interface';
-import { SimpleTableBody } from 'components/SimpleTableBody';
-import { SimpleTableContext } from 'components/SimpleTableContext';
+import { iSimpleTableField, iSimpleTableRow } from '../components/interface';
+import { SimpleTableBody } from '../components/SimpleTableBody';
+import { SimpleTableContext } from '../components/SimpleTableContext';
 
 const mockFields: iSimpleTableField[] = [
   { name: 'tlfId', hidden: true },

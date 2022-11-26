@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SimpleTable } from 'components/SimpleTable';
-import { iSimpleTableField, iSimpleTableRow } from 'components/interface';
+import { iSimpleTableField, iSimpleTableRow } from '../components/interface';
+import { SimpleTable } from '../components/SimpleTable';
 
 enum eAccessLevel {
   lead,

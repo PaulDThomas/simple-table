@@ -20,6 +20,7 @@ export const SimpleTableRow = ({ rowId }: iSimpleTableRowProps): JSX.Element => 
             id={`${simpleTableContext.id}-check-row-${rowId}`}
             role='checkbox'
             type='checkbox'
+            className={simpleTableContext.filterCheckClassName}
             checked={
               (simpleTableContext.currentSelection?.findIndex((s) => s === rowId) ?? -1) > -1
             }

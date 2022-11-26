@@ -5,6 +5,8 @@
 .vscode
 
 # testing
+.parcel-cache
+/demo/dist
 /coverage
 
 # production
