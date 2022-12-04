@@ -17,6 +17,7 @@ export interface iSimpleTableField {
   name: string;
   label?: string;
   hidden?: boolean;
+  width?: string;
   sortFn?: (a: iSimpleTableRow, b: iSimpleTableRow, sortBy: iSimpleTableSort) => number;
   searchFn?: (a: iSimpleTableRow, searchText: string) => boolean;
   filterOutFn?: (a: iSimpleTableRow) => boolean;

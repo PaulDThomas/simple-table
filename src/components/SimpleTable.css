@@ -22,6 +22,21 @@
   white-space: nowrap;
 }
 
+.simpletable th span,
+.simpletable td span {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.simpletable th span:not(.sorted) {
+  padding-right: 20px;
+}
+.simpletable th span.sorted {
+  margin-right: 4px;
+}
+
 .simpletable-clickable {
   cursor: pointer;
 }
@@ -84,4 +99,20 @@ h5.simpletable-title {
 .simpletable-filter-label {
   display: table-cell;
   margin-left: 0.5rem;
+}
+
+.simpletable .resize-handle {
+  display: inline-block;
+  position: absolute;
+  cursor: col-resize;
+  width: 0.5rem;
+  right: 0;
+  top: 0;
+  z-index: 10;
+  height: 100%;
+  border-right: 2px solid transparent;
+}
+
+.simpletable .resize-handle:hover {
+  border-color: rgba(0, 0, 0, 0.75);
 }

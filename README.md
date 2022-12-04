@@ -203,3 +203,36 @@ const renderFn = ({ columnNnumber, cellField, rowData }:iSimpleTableCellRenderPr
   return rowData.car_make ? <div>{rowData.car_make as string}</div> : <div>No car</div>;
 });
 ```
+
+# VS code launch settings
+
+Use these configurations to attach to chrome, then launch the server
+
+```
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "name": "Attach to Browser debug",
+      "webRoot": "${workspaceFolder}",
+      "sourceMapPathOverrides": {
+        "/__parcel_source_root/*": "${webRoot}/*"
+      }
+    },
+    {
+      "name": "Launch NPM web server",
+      "command": "npm start",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceRoot}",
+      "env": {
+        "PORT": "3010"
+      },
+      "serverReadyAction": {
+        "pattern": "Server running at (http://localhost:[0-9]+)",
+        "uriFormat": "%s",
+        "action": "openExternally"
+      }
+    }
+```
