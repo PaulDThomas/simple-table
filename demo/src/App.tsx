@@ -58,40 +58,23 @@ const App = (): JSX.Element => {
   ]);
 
   return (
-    <div
-      className='holder'
-      style={{}}
-    >
-      <div
-        className=''
-        style={{
-          width: '800px',
-          border: '1px black solid',
-          backgroundColor: 'white',
-          opacity: 1,
-          paddingLeft: '1rem',
-          paddingRight: '1rem',
-          marginTop: '1rem',
-          marginBottom: '1rem',
-          borderRadius: '0.5rem',
-          maxHeight: '90vh',
-          overflow: 'auto',
-          position: 'relative',
-        }}
-      >
-        <SimpleTable
-          id='ais'
-          fields={fields}
-          keyField={'id'}
-          data={data}
-          headerLabel='Demo table'
-          showSearch
-          showFilter
-          filterLabel='Cars only'
-          selectable
-          currentSelection={selected}
-          setCurrentSelection={setSelected}
-        />
+    <div className='app-holder'>
+      <div className='app-border'>
+        <div className='app-inner'>
+          <SimpleTable
+            id='ais'
+            fields={fields}
+            keyField={'id'}
+            data={data}
+            headerLabel='Demo table'
+            showSearch
+            showFilter
+            filterLabel='Cars only'
+            selectable
+            currentSelection={selected}
+            setCurrentSelection={setSelected}
+          />
+        </div>
       </div>
     </div>
   );
