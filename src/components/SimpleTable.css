@@ -1,18 +1,22 @@
+.simpletable-holder {
+  position: relative;
+}
+
 .simpletable {
   position: relative;
 }
 
 .simpletable-header {
   position: sticky;
-  z-index: 1;
-  top: 0;
+  z-index: 2;
+  top: 30;
   opacity: 1;
   white-space: nowrap;
 }
 .simpletable-box-header {
   position: sticky;
   z-index: 2;
-  top: 0;
+  top: 30;
   left: 0;
   opacity: 1;
   white-space: nowrap;
@@ -35,9 +39,21 @@
   flex-wrap: wrap;
   align-items: center;
   align-content: stretch;
+  top: 0;
+  position: sticky;
+  opacity: 1;
+  z-index: 2;
 }
 
-.simpletable-title {
+.simpletable-title-holder-roof,
+.simpletable-title-holder-floor {
+  min-height: 1rem;
+}
+
+h5.simpletable-title {
+  font-size: 24px;
+  height: 30px;
+  margin: 0;
   flex-grow: 1;
 }
 

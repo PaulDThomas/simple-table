@@ -30,6 +30,7 @@ interface iSimpleTable {
   searchLabelClassName?: string;
   searchInputClassName?: string;
 
+  mainBackgroundColor?: string;
   headerBackgroundColor?: string;
   firstColumnBackgroundColor?: string;
 }
@@ -54,6 +55,7 @@ export const SimpleTable = ({
   filterCheckClassName = 'form-check-input',
   searchLabelClassName = 'form-label',
   searchInputClassName = 'form-control form-control-sm',
+  mainBackgroundColor = 'white',
   headerBackgroundColor = 'white',
   firstColumnBackgroundColor = 'white',
 }: iSimpleTable): JSX.Element => {
@@ -158,7 +160,10 @@ export const SimpleTable = ({
   );
 
   return (
-    <div className='simpletable-holder'>
+    <div
+      className='simpletable-holder'
+      style={{ backgroundColor: mainBackgroundColor }}
+    >
       <SimpleTableContext.Provider
         value={
           {
@@ -194,7 +199,11 @@ export const SimpleTable = ({
           } as iSimpleTableContext
         }
       >
-        <div className='simpletable-title-holder'>
+        <div className='simpletable-title-holder-roof' />
+        <div
+          className='simpletable-title-holder'
+          style={{ backgroundColor: mainBackgroundColor }}
+        >
           {headerLabel && (
             <h5 className='simpletable-title'>
               {headerLabel}
@@ -208,6 +217,7 @@ export const SimpleTable = ({
           {showSearch && fields.filter((f) => f.searchFn).length > 0 && <SimpleTableSearch />}
           {showFilter && fields.filter((f) => f.filterOutFn).length > 0 && <SimpleTableFilter />}
         </div>
+        <div className='simpletable-title-holder-floor' />
         <table
           id={id}
           className={`simpletable ${tableClassName}`}
