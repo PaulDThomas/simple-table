@@ -37,13 +37,15 @@ export const SimpleTableCell = ({
           columnNumber === 0 ? simpleTableContext.firstColumnBackgroundColor : undefined,
       }}
     >
-      {!field || !rowData
-        ? `${!rowData ? 'Row data' : ''}${!rowData && !field ? ', ' : ''}${
-            !field ? 'Field' : ''
-          } not found`
-        : field.renderFn
-        ? field.renderFn({ rowData, columnNumber, cellField: field.name })
-        : String(rowData[field.name])}
+      <span>
+        {!field || !rowData
+          ? `${!rowData ? 'Row data' : ''}${!rowData && !field ? ', ' : ''}${
+              !field ? 'Field' : ''
+            } not found`
+          : field.renderFn
+          ? field.renderFn({ rowData, columnNumber, cellField: field.name })
+          : String(rowData[field.name])}
+      </span>
     </td>
   );
 };

@@ -1,6 +1,6 @@
 {
   "name": "@asup/simple-table",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "REACT table, because I wanted one that took an array of objects as an input.",
   "author": "Paul Thomas <@PaulDThomas>",
   "private": false,
@@ -29,7 +29,8 @@
   "scripts": {
     "build": "rollup -c --configPlugin typescript",
     "start": "parcel demo/index.html --dist-dir demo/dist",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "test:coverage-report": "npm test -- --coverage --watchAll=false"
   },
   "eslintConfig": {
     "extends": [

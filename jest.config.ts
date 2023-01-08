@@ -26,7 +26,12 @@ const config: Config = {
   // Added by Paul
   collectCoverage: true,
   coverageProvider: 'v8',
-  collectCoverageFrom: ['**/*.{js,jsx}', '**/*.{ts,tsx}'],
+  collectCoverageFrom: [
+    'src/components/**/*.{js,jsx}',
+    'src/components/**/*.{ts,tsx}',
+    '!**/index.ts',
+    '!**/interface.ts',
+  ],
   testEnvironment: 'jsdom',
   moduleNameMapper: {
     '\\.(css|less)$': '<rootDir>/src/__mocks__/styleMock.ts',
