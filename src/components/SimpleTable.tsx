@@ -81,11 +81,11 @@ export const SimpleTable = ({
 
   const searchFn = useCallback(
     (row: iSimpleTableRow) => {
-      if (showSearch && (searchText?.trim().length ?? 0) > 0) {
+      if (showSearch && searchText.trim().length > 0) {
         const searchFns = fields
           .filter((f) => f.searchFn)
           .map((f) => f.searchFn as (a: iSimpleTableRow, searchText: string) => boolean);
-        return searchFns.some((fn) => fn(row, searchText ?? ''));
+        return searchFns.some((fn) => fn(row, searchText));
       } else return true;
     },
     [fields, searchText, showSearch],
@@ -95,7 +95,7 @@ export const SimpleTable = ({
     (rowa: iSimpleTableRow, rowb: iSimpleTableRow) => {
       const sortFn = fields.find((f) => f.name === sortBy?.name)?.sortFn;
       if (sortFn && sortBy)
-        return sortBy.asc ? sortFn(rowa, rowb, sortBy) : -sortFn(rowa, rowb, sortBy) ?? 0;
+        return sortBy.asc ? sortFn(rowa, rowb, sortBy) : -sortFn(rowa, rowb, sortBy);
       else return 0;
     },
     [fields, sortBy],
@@ -109,7 +109,6 @@ export const SimpleTable = ({
   // Update sort order
   const updateSortBy = useCallback(
     (field: iSimpleTableField) => {
-      if (!tableData) return;
       if (field.name === sortBy?.name && sortBy?.asc === false) {
         setSortBy(null);
       } else {
@@ -119,12 +118,11 @@ export const SimpleTable = ({
         });
       }
     },
-    [sortBy, tableData],
+    [sortBy],
   );
 
   // Toggle all viewed rows
   const toggleAllCurrentSelection = useCallback(() => {
-    if (setCurrentSelection === undefined) return;
     // Select available if some are not selected
     const viewedKeys: Key[] = viewData
       .filter(
@@ -132,7 +130,7 @@ export const SimpleTable = ({
       )
       .map((rowData) => rowData[keyField] as Key);
     // Add if any of the current selection are not selected
-    if (viewedKeys.some((v) => !currentSelection?.includes(v))) {
+    if (setCurrentSelection && viewedKeys.some((v) => !currentSelection?.includes(v))) {
       setCurrentSelection([
         ...(currentSelection ?? []),
         ...viewedKeys.filter((v) => !currentSelection?.includes(v)),
@@ -140,13 +138,13 @@ export const SimpleTable = ({
     }
     // Or remove if any of the current selection are all selection
     else {
-      setCurrentSelection(currentSelection?.filter((s) => !viewedKeys.includes(s)) ?? []);
+      setCurrentSelection &&
+        setCurrentSelection(currentSelection?.filter((s) => !viewedKeys.includes(s)) ?? []);
     }
   }, [currentSelection, keyField, setCurrentSelection, viewData]);
   // Toggle individual row
   const toggleSelection = useCallback(
     (rowId: Key) => {
-      if (setCurrentSelection === undefined) return;
       // Check key exists
       if (tableData.findIndex((row) => row[keyField] === rowId) === -1) return;
       // Create new selection
@@ -154,7 +152,7 @@ export const SimpleTable = ({
       const ix = newSelection.findIndex((s) => s === rowId);
       if (ix > -1) newSelection.splice(ix, 1);
       else newSelection.push(rowId);
-      setCurrentSelection(newSelection);
+      setCurrentSelection && setCurrentSelection(newSelection);
     },
     [currentSelection, keyField, setCurrentSelection, tableData],
   );

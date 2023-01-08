@@ -10,7 +10,7 @@
 
 # @asup/simple-table
 
-REACT table, because I wanted one that took an array of objects as an input.
+REACT table, because I wanted one that took an array of objects as an input. Sort, filter and search functions can be added. Includes column resize.
 
 ## Installation
 
