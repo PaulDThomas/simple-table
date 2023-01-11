@@ -1,4 +1,4 @@
-import React, { Key, useState } from 'react';
+import { Key, useState } from 'react';
 import {
   iSimpleTableCellRenderProps,
   iSimpleTableField,
@@ -20,6 +20,7 @@ const App = (): JSX.Element => {
       searchFn: (rowData, searchText) =>
         (rowData.first_name as string).toLowerCase().includes(searchText.toLowerCase().trim()),
       sortFn: (a, b) => (a.first_name as string).localeCompare(b.first_name as string),
+      width: '100px',
     },
     {
       name: 'last_name',
@@ -27,6 +28,7 @@ const App = (): JSX.Element => {
       searchFn: (rowData, searchText) =>
         (rowData.last_name as string).toLowerCase().includes(searchText.toLowerCase().trim()),
       sortFn: (a, b) => (a.last_name as string).localeCompare(b.last_name as string),
+      width: '120px',
     },
     {
       name: 'car_make',
@@ -41,6 +43,7 @@ const App = (): JSX.Element => {
         return rowData.car_make ? <div>{rowData.car_make as string}</div> : <div>No car</div>;
       },
       filterOutFn: (rowData) => (rowData.car_make as string | null) === null,
+      width: '140px',
     },
     {
       name: 'car_model',
@@ -54,6 +57,7 @@ const App = (): JSX.Element => {
       renderFn: ({ rowData }: iSimpleTableCellRenderProps) => {
         return rowData.car_model ? <div>{rowData.car_model as string}</div> : <div>&nbsp;</div>;
       },
+      width: '160px',
     },
   ]);
 

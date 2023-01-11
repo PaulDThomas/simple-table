@@ -1,33 +1,74 @@
 .simpletable-holder {
   position: relative;
+  overflow-x: auto;
+  height: 600px;
+}
+
+.small-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.small-scrollbar::-webkit-scrollbar-track {
+  border-radius: 100px;
+}
+
+.small-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 100px;
+}
+
+.small-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.9);
 }
 
 .simpletable {
   position: relative;
+  border-collapse: collapse;
+  width: 1px;
+  table-layout: fixed;
 }
 
-.simpletable-header {
-  position: sticky;
-  z-index: 2;
-  top: 30;
-  opacity: 1;
-  white-space: nowrap;
-}
+.simpletable-header,
 .simpletable-box-header {
   position: sticky;
   z-index: 2;
-  top: 30;
-  left: 0;
+  top: 0;
   opacity: 1;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.simpletable-box-header {
+  width: 20px;
 }
 
-.simpletable th span,
-.simpletable td span {
+.simpletable th,
+.simpletable td {
+  border-left: 1px dotted black;
+  border-right: 1px dotted black;
+}
+
+.simpletable th:hover,
+.simpletable td:hover {
+  border-left: 1px solid rgba(0, 0, 0, 0.75);
+  border-right: 1px solid rgba(0, 0, 0, 0.75);
+}
+
+.simpletable td {
+  position: relative;
+}
+
+.simpletable td span,
+.simpletable td div {
   white-space: nowrap;
-  text-overflow: ellipsis;
   overflow: hidden;
-  display: inline-block;
+  text-overflow: ellipsis;
+}
+
+.simpletable tr.selected td > div {
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .simpletable th span:not(.sorted) {
@@ -58,11 +99,8 @@
   position: sticky;
   opacity: 1;
   z-index: 2;
-}
-
-.simpletable-title-holder-roof,
-.simpletable-title-holder-floor {
-  min-height: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 h5.simpletable-title {

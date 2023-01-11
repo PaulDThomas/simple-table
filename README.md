@@ -50,6 +50,8 @@ import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort, SimpleTable } fro
     searchInputClassName?: string;
     headerBackgroundColor?: string;
     firstColumnBackgroundColor?: string;
+    heightPx?: number;
+    widthPx?: number;
   />
 ```
 
@@ -78,6 +80,8 @@ import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort, SimpleTable } fro
 | searchInputClassName       | Class names to apply to the search input. The default works well with bootstrap 5.2                    |               `form-control form-control-sm`                |
 | headerBackgroundColor      | Background colour applied to the header row, used when other rows scroll under it                      |                           `white`                           |
 | firstColumnBackgroundColor | Background colour applied to the first column (+ seletor), used when other columns scroll under it     |                           `white`                           |
+| heightPx                   | Height of element (titles + table) in pixels                                                           |                             800                             |
+| widthPx                    | Width of element (titles + table) in pixels                                                            |                             800                             |
 
 ### Input data
 
@@ -113,6 +117,7 @@ interface iSimpleTableField {
     name: string;
     label?: string;
     hidden?: boolean;
+    width?: string;
     sortFn?: (a: iSimpleTableRow, b: iSimpleTableRow, sortBy: iSimpleTableSort) => number;
     searchFn?: (a: iSimpleTableRow, searchText: string) => boolean;
     filterOutFn?: (a: iSimpleTableRow) => boolean;

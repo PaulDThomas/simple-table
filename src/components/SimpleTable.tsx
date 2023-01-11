@@ -8,7 +8,7 @@ import { SimpleTableHeader } from './SimpleTableHeader';
 import { SimpleTableSearch } from './SimpleTableSearch';
 import { SimpleTableSelectHeader } from './SimpleTableSelectHeader';
 
-interface iSimpleTable {
+interface SimpleTableProps {
   id?: string;
   headerLabel?: string;
   fields: iSimpleTableField[];
@@ -33,6 +33,9 @@ interface iSimpleTable {
   mainBackgroundColor?: string;
   headerBackgroundColor?: string;
   firstColumnBackgroundColor?: string;
+
+  heightPx?: number;
+  widthPx?: number;
 }
 
 export const SimpleTable = ({
@@ -58,7 +61,9 @@ export const SimpleTable = ({
   mainBackgroundColor = 'white',
   headerBackgroundColor = 'white',
   firstColumnBackgroundColor = 'white',
-}: iSimpleTable): JSX.Element => {
+  heightPx = 800,
+  widthPx = 800,
+}: SimpleTableProps): JSX.Element => {
   const [tableData, setTableData] = useState<iSimpleTableRow[]>(data);
   useEffect(() => {
     setTableData(data);
@@ -158,64 +163,66 @@ export const SimpleTable = ({
   );
 
   return (
-    <div
-      className='simpletable-holder'
-      style={{ backgroundColor: mainBackgroundColor }}
+    <SimpleTableContext.Provider
+      value={
+        {
+          id,
+          fields,
+          keyField,
+          viewData,
+          tableData,
+          setTableData,
+          selectable,
+          showSearch,
+          showFilter,
+          filterLabel,
+          filterData,
+          setFilterData,
+          searchLabel,
+          searchText,
+          setSearchText,
+          sortBy,
+          updateSortBy,
+          currentSelection,
+          toggleAllCurrentSelection,
+          toggleSelection,
+
+          inputGroupClassName,
+          filterLabelClassName,
+          filterCheckClassName,
+          searchLabelClassName,
+          searchInputClassName,
+
+          headerBackgroundColor,
+          firstColumnBackgroundColor,
+        } as iSimpleTableContext
+      }
     >
-      <SimpleTableContext.Provider
-        value={
-          {
-            id,
-            fields,
-            keyField,
-            viewData,
-            tableData,
-            setTableData,
-            selectable,
-            showSearch,
-            showFilter,
-            filterLabel,
-            filterData,
-            setFilterData,
-            searchLabel,
-            searchText,
-            setSearchText,
-            sortBy,
-            updateSortBy,
-            currentSelection,
-            toggleAllCurrentSelection,
-            toggleSelection,
-
-            inputGroupClassName,
-            filterLabelClassName,
-            filterCheckClassName,
-            searchLabelClassName,
-            searchInputClassName,
-
-            headerBackgroundColor,
-            firstColumnBackgroundColor,
-          } as iSimpleTableContext
-        }
+      <div
+        className='simpletable-title-holder'
+        style={{ backgroundColor: mainBackgroundColor }}
       >
-        <div className='simpletable-title-holder-roof' />
-        <div
-          className='simpletable-title-holder'
-          style={{ backgroundColor: mainBackgroundColor }}
-        >
-          {headerLabel && (
-            <h5 className='simpletable-title'>
-              {headerLabel}
-              {selectable && (currentSelection?.length ?? 0) > 0 && (
-                <small style={{ fontSize: 'small' }}>
-                  {} {currentSelection?.length} selected
-                </small>
-              )}
-            </h5>
-          )}
-          {showSearch && fields.filter((f) => f.searchFn).length > 0 && <SimpleTableSearch />}
-          {showFilter && fields.filter((f) => f.filterOutFn).length > 0 && <SimpleTableFilter />}
-        </div>
-        <div className='simpletable-title-holder-floor' />
+        {headerLabel && (
+          <h5 className='simpletable-title'>
+            {headerLabel}
+            {selectable && (currentSelection?.length ?? 0) > 0 && (
+              <small style={{ fontSize: 'small' }}>
+                {} {currentSelection?.length} selected
+              </small>
+            )}
+          </h5>
+        )}
+        {showSearch && fields.filter((f) => f.searchFn).length > 0 && <SimpleTableSearch />}
+        {showFilter && fields.filter((f) => f.filterOutFn).length > 0 && <SimpleTableFilter />}
+      </div>
+      <div
+        className='simpletable-holder small-scrollbar'
+        style={{
+          backgroundColor: mainBackgroundColor,
+          height: `${heightPx - 46}px`,
+          width: `${widthPx}px`,
+        }}
+      >
         <table
           id={id}
           className={`simpletable ${tableClassName}`}
@@ -228,7 +235,7 @@ export const SimpleTable = ({
           </thead>
           <SimpleTableBody />
         </table>
-      </SimpleTableContext.Provider>
-    </div>
+      </div>
+    </SimpleTableContext.Provider>
   );
 };

@@ -37,7 +37,7 @@ export const SimpleTableCell = ({
           columnNumber === 0 ? simpleTableContext.firstColumnBackgroundColor : undefined,
       }}
     >
-      <span>
+      <div>
         {!field || !rowData
           ? `${!rowData ? 'Row data' : ''}${!rowData && !field ? ', ' : ''}${
               !field ? 'Field' : ''
@@ -45,7 +45,7 @@ export const SimpleTableCell = ({
           : field.renderFn
           ? field.renderFn({ rowData, columnNumber, cellField: field.name })
           : String(rowData[field.name])}
-      </span>
+      </div>
     </td>
   );
 };

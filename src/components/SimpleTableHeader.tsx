@@ -35,16 +35,15 @@ export const SimpleTableHeader = (): JSX.Element => {
       {simpleTableContext.fields
         .filter((f) => !f.hidden)
         .map((field, hi) => {
-          const classNames: string[] = [hi === 0 ? 'simpletable-box-header' : 'simpletable-header'];
           return (
             <th
               id={`${simpleTableContext.id}-header-${field.name}`}
               key={hi}
-              className={classNames.join(' ')}
+              className={'simpletable-header'}
               style={{
                 backgroundColor: simpleTableContext.headerBackgroundColor,
                 opacity: 1,
-                width: simpleTableContext.fields[hi].width,
+                width: simpleTableContext.fields[hi].width ?? '100px',
               }}
             >
               <span
