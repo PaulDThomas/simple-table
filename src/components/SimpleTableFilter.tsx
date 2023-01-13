@@ -17,7 +17,9 @@ export const SimpleTableFilter = (): JSX.Element => {
         type='checkbox'
         role='checkbox'
         className={simpleTableContext.filterCheckClassName}
-        checked={simpleTableContext.filterData}
+        checked={
+          simpleTableContext.filterData !== undefined ? simpleTableContext.filterData : false
+        }
         onChange={() => true}
       />
       <span

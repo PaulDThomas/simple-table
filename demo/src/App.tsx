@@ -69,7 +69,7 @@ const App = (): JSX.Element => {
             id='ais'
             fields={fields}
             keyField={'id'}
-            data={data}
+            data={data.slice(0, 200)}
             headerLabel='Demo table'
             showSearch
             showFilter

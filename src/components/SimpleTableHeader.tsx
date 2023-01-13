@@ -15,20 +15,24 @@ export const SimpleTableHeader = (): JSX.Element => {
     }
   }, []);
 
-  const mouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    targetCell.current = (e.currentTarget as HTMLDivElement).parentElement as HTMLTableCellElement;
-    if (targetCell.current) {
-      window.addEventListener('mousemove', mouseMove);
-      window.addEventListener('mouseup', mouseUp);
-    }
-  }, []);
-
   const mouseUp = useCallback(() => {
     targetCell.current = null;
     window.removeEventListener('mousemove', mouseMove);
     window.removeEventListener('mouseup', mouseUp);
-  }, []);
+  }, [mouseMove]);
+
+  const mouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      targetCell.current = (e.currentTarget as HTMLDivElement)
+        .parentElement as HTMLTableCellElement;
+      if (targetCell.current) {
+        window.addEventListener('mousemove', mouseMove);
+        window.addEventListener('mouseup', mouseUp);
+      }
+    },
+    [mouseMove, mouseUp],
+  );
 
   return (
     <>
