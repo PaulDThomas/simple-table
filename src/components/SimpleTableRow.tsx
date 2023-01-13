@@ -19,10 +19,7 @@ export const SimpleTableRow = ({ rowId }: iSimpleTableRowProps): JSX.Element => 
       }`}
     >
       {simpleTableContext.selectable && (
-        <td
-          className='simpletable-firstcol'
-          style={{ backgroundColor: simpleTableContext.firstColumnBackgroundColor }}
-        >
+        <td className='simpletable-firstcol'>
           <input
             id={`${simpleTableContext.id}-check-row-${rowId}`}
             role='checkbox'

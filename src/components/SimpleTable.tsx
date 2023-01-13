@@ -32,7 +32,6 @@ interface SimpleTableProps {
 
   mainBackgroundColor?: string;
   headerBackgroundColor?: string;
-  firstColumnBackgroundColor?: string;
 
   heightPx?: number;
   widthPx?: number;
@@ -60,7 +59,6 @@ export const SimpleTable = ({
   searchInputClassName = 'form-control form-control-sm',
   mainBackgroundColor = 'white',
   headerBackgroundColor = 'white',
-  firstColumnBackgroundColor = 'white',
   heightPx = 800,
   widthPx = 800,
 }: SimpleTableProps): JSX.Element => {
@@ -194,7 +192,6 @@ export const SimpleTable = ({
           searchInputClassName,
 
           headerBackgroundColor,
-          firstColumnBackgroundColor,
         } as iSimpleTableContext
       }
     >

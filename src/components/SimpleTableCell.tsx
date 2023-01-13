@@ -31,11 +31,7 @@ export const SimpleTableCell = ({
         field?.name ?? columnNumber
       }`}
       key={cellField}
-      className={`${columnNumber === 0 && 'simpletable-firstcol'} simpletable-cell`}
-      style={{
-        backgroundColor:
-          columnNumber === 0 ? simpleTableContext.firstColumnBackgroundColor : undefined,
-      }}
+      className={'simpletable-cell'}
     >
       <div>
         {!field || !rowData
