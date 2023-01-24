@@ -49,35 +49,33 @@ import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort, SimpleTable } fro
     searchLabelClassName?: string;
     searchInputClassName?: string;
     headerBackgroundColor?: string;
-    firstColumnBackgroundColor?: string;
   />
 ```
 
 ## Properties
 
-| Prop                       | Description                                                                                            |                           Default                           |
-| :------------------------- | :----------------------------------------------------------------------------------------------------- | :---------------------------------------------------------: |
-| id                         | Unique row id                                                                                          |                       `simple-table`                        |
-| headerLabel                | Title used in the at the top of the table                                                              |                       'Simple table'                        |
-| fields                     | List of columns in the table                                                                           |                                                             |
-| keyField                   | Field containing the unique key for each row                                                           |                                                             |
-| data                       | Data to display, must contain a unique key field                                                       |                                                             |
-| selectable                 | Indicates if rows can be selected, using a checkbox                                                    |                                                             |
-| currentSelection           | Currently selected row keys                                                                            |                                                             |
-| setCurrentSelection        | Function to update the selected row keys, must be used in conjunction with the selectable indicator    |                                                             |
-| showSearch                 | Indicates whether to show the search input. All fields with a defined search function will be searched |                                                             |
-| searchLabel                | Label for the search input                                                                             |                          'Search'                           |
-| showFilter                 | Indicates whether to show the filter checkbox                                                          |                                                             |
-| initialFilterSelected      | Indicates whether the filter checkbox is checked on the initial render                                 |                                                             |
-| filterLabel                | Label for the filter checkbox                                                                          |                          'Filter'                           |
-| tableClassName             | Class names to apply to the table element. The default works well with bootstrap 5.2                   | `simpletable table table-responsive table-striped table-sm` |
-| ~~inputGroupClassName~~    | Not currently implemented                                                                              |                        `form-group`                         |
-| ~~filterLabelClassName~~   | Not currently implemented                                                                              |                     `form-check-label`                      |
-| filterCheckClassName       | Class names to apply to the checkboxes in the table. The default works well with bootstrap 5.2         |                     `form-check-input`                      |
-| searchLabelClassName       | Class names to apply to the search label. The default works well with bootstrap 5.2                    |                        `form-label`                         |
-| searchInputClassName       | Class names to apply to the search input. The default works well with bootstrap 5.2                    |               `form-control form-control-sm`                |
-| headerBackgroundColor      | Background colour applied to the header row, used when other rows scroll under it                      |                           `white`                           |
-| firstColumnBackgroundColor | Background colour applied to the first column (+ seletor), used when other columns scroll under it     |                           `white`                           |
+| Prop                     | Description                                                                                            |                           Default                           |
+| :----------------------- | :----------------------------------------------------------------------------------------------------- | :---------------------------------------------------------: |
+| id                       | Unique row id                                                                                          |                       `simple-table`                        |
+| headerLabel              | Title used in the at the top of the table                                                              |                       'Simple table'                        |
+| fields                   | List of columns in the table                                                                           |                                                             |
+| keyField                 | Field containing the unique key for each row                                                           |                                                             |
+| data                     | Data to display, must contain a unique key field                                                       |                                                             |
+| selectable               | Indicates if rows can be selected, using a checkbox                                                    |                                                             |
+| currentSelection         | Currently selected row keys                                                                            |                                                             |
+| setCurrentSelection      | Function to update the selected row keys, must be used in conjunction with the selectable indicator    |                                                             |
+| showSearch               | Indicates whether to show the search input. All fields with a defined search function will be searched |                                                             |
+| searchLabel              | Label for the search input                                                                             |                          'Search'                           |
+| showFilter               | Indicates whether to show the filter checkbox                                                          |                                                             |
+| initialFilterSelected    | Indicates whether the filter checkbox is checked on the initial render                                 |                                                             |
+| filterLabel              | Label for the filter checkbox                                                                          |                          'Filter'                           |
+| tableClassName           | Class names to apply to the table element. The default works well with bootstrap 5.2                   | `simpletable table table-responsive table-striped table-sm` |
+| ~~inputGroupClassName~~  | Not currently implemented                                                                              |                        `form-group`                         |
+| ~~filterLabelClassName~~ | Not currently implemented                                                                              |                     `form-check-label`                      |
+| filterCheckClassName     | Class names to apply to the checkboxes in the table. The default works well with bootstrap 5.2         |                     `form-check-input`                      |
+| searchLabelClassName     | Class names to apply to the search label. The default works well with bootstrap 5.2                    |                        `form-label`                         |
+| searchInputClassName     | Class names to apply to the search input. The default works well with bootstrap 5.2                    |               `form-control form-control-sm`                |
+| headerBackgroundColor    | Background colour applied to the header row, used when other rows scroll under it                      |                           `white`                           |
 
 ### Input data
 
@@ -113,6 +111,7 @@ interface iSimpleTableField {
     name: string;
     label?: string;
     hidden?: boolean;
+    width?: string;
     sortFn?: (a: iSimpleTableRow, b: iSimpleTableRow, sortBy: iSimpleTableSort) => number;
     searchFn?: (a: iSimpleTableRow, searchText: string) => boolean;
     filterOutFn?: (a: iSimpleTableRow) => boolean;
@@ -227,7 +226,7 @@ Use these configurations to attach to chrome, then launch the server
       "type": "node-terminal",
       "cwd": "${workspaceRoot}",
       "env": {
-        "PORT": "3010"
+        "PORT": "1234"
       },
       "serverReadyAction": {
         "pattern": "Server running at (http://localhost:[0-9]+)",

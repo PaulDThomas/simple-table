@@ -22,5 +22,5 @@
     "noImplicitAny": true
   },
   "include": ["src", "demo"],
-  "exclude": ["node_modules", "dist", "demo/dist"]
+  "exclude": ["**/dist/"]
 }

@@ -30,7 +30,6 @@ export interface iSimpleTableContext {
   searchInputClassName?: string;
 
   headerBackgroundColor?: string;
-  firstColumnBackgroundColor?: string;
 }
 
 export const SimpleTableContext = React.createContext<iSimpleTableContext>({
@@ -40,5 +39,4 @@ export const SimpleTableContext = React.createContext<iSimpleTableContext>({
   viewData: [],
   tableData: [],
   headerBackgroundColor: 'white',
-  firstColumnBackgroundColor: 'white',
 });

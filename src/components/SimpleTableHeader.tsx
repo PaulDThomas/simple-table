@@ -15,36 +15,39 @@ export const SimpleTableHeader = (): JSX.Element => {
     }
   }, []);
 
-  const mouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    targetCell.current = (e.currentTarget as HTMLDivElement).parentElement as HTMLTableCellElement;
-    if (targetCell.current) {
-      window.addEventListener('mousemove', mouseMove);
-      window.addEventListener('mouseup', mouseUp);
-    }
-  }, []);
-
   const mouseUp = useCallback(() => {
     targetCell.current = null;
     window.removeEventListener('mousemove', mouseMove);
     window.removeEventListener('mouseup', mouseUp);
-  }, []);
+  }, [mouseMove]);
+
+  const mouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      targetCell.current = (e.currentTarget as HTMLDivElement)
+        .parentElement as HTMLTableCellElement;
+      if (targetCell.current) {
+        window.addEventListener('mousemove', mouseMove);
+        window.addEventListener('mouseup', mouseUp);
+      }
+    },
+    [mouseMove, mouseUp],
+  );
 
   return (
     <>
       {simpleTableContext.fields
         .filter((f) => !f.hidden)
         .map((field, hi) => {
-          const classNames: string[] = [hi === 0 ? 'simpletable-box-header' : 'simpletable-header'];
           return (
             <th
               id={`${simpleTableContext.id}-header-${field.name}`}
               key={hi}
-              className={classNames.join(' ')}
+              className={'simpletable-header'}
               style={{
                 backgroundColor: simpleTableContext.headerBackgroundColor,
                 opacity: 1,
-                width: simpleTableContext.fields[hi].width,
+                width: simpleTableContext.fields[hi].width ?? '100px',
               }}
             >
               <span

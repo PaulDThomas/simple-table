@@ -1,4 +1,4 @@
-import React, { Key, useState } from 'react';
+import { Key, useState } from 'react';
 import {
   iSimpleTableCellRenderProps,
   iSimpleTableField,
@@ -11,6 +11,8 @@ import { mockData } from '../../src/__mocks__/mock_data';
 const App = (): JSX.Element => {
   const [data] = useState<iSimpleTableRow[]>(mockData);
   const [selected, setSelected] = useState<Key[]>([]);
+  const [height, setHeight] = useState<string>('800px');
+  const [width, setWidth] = useState<string>('600px');
 
   const [fields] = useState<iSimpleTableField[]>([
     { name: 'id', hidden: true },
@@ -20,6 +22,7 @@ const App = (): JSX.Element => {
       searchFn: (rowData, searchText) =>
         (rowData.first_name as string).toLowerCase().includes(searchText.toLowerCase().trim()),
       sortFn: (a, b) => (a.first_name as string).localeCompare(b.first_name as string),
+      width: '100px',
     },
     {
       name: 'last_name',
@@ -27,6 +30,7 @@ const App = (): JSX.Element => {
       searchFn: (rowData, searchText) =>
         (rowData.last_name as string).toLowerCase().includes(searchText.toLowerCase().trim()),
       sortFn: (a, b) => (a.last_name as string).localeCompare(b.last_name as string),
+      width: '120px',
     },
     {
       name: 'car_make',
@@ -41,6 +45,7 @@ const App = (): JSX.Element => {
         return rowData.car_make ? <div>{rowData.car_make as string}</div> : <div>No car</div>;
       },
       filterOutFn: (rowData) => (rowData.car_make as string | null) === null,
+      width: '140px',
     },
     {
       name: 'car_model',
@@ -54,6 +59,7 @@ const App = (): JSX.Element => {
       renderFn: ({ rowData }: iSimpleTableCellRenderProps) => {
         return rowData.car_model ? <div>{rowData.car_model as string}</div> : <div>&nbsp;</div>;
       },
+      width: '160px',
     },
   ]);
 
@@ -61,19 +67,47 @@ const App = (): JSX.Element => {
     <div className='app-holder'>
       <div className='app-border'>
         <div className='app-inner'>
-          <SimpleTable
-            id='ais'
-            fields={fields}
-            keyField={'id'}
-            data={data}
-            headerLabel='Demo table'
-            showSearch
-            showFilter
-            filterLabel='Cars only'
-            selectable
-            currentSelection={selected}
-            setCurrentSelection={setSelected}
-          />
+          <div>
+            <table>
+              <tr>
+                <td>Height</td>
+                <td>
+                  <input
+                    value={height}
+                    onChange={(e) => setHeight(e.currentTarget.value)}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Width</td>
+                <td>
+                  <input
+                    value={width}
+                    onChange={(e) => setWidth(e.currentTarget.value)}
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div
+            className='table-holder'
+            style={{ backgroundColor: 'cyan', height, width, maxWidth: '800px', padding: '1rem' }}
+          >
+            <SimpleTable
+              id='ais'
+              fields={fields}
+              keyField={'id'}
+              data={data.slice(0, 200)}
+              headerLabel='Demo table'
+              showSearch
+              showFilter
+              filterLabel='Cars only'
+              selectable
+              currentSelection={selected}
+              setCurrentSelection={setSelected}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -10,12 +10,16 @@ export const SimpleTableRow = ({ rowId }: iSimpleTableRowProps): JSX.Element => 
   const simpleTableContext = useContext(SimpleTableContext);
 
   return (
-    <tr id={`${simpleTableContext.id}-row-${rowId}`}>
+    <tr
+      id={`${simpleTableContext.id}-row-${rowId}`}
+      className={`${
+        (simpleTableContext.currentSelection?.findIndex((s) => s === rowId) ?? -1) > -1
+          ? 'selected'
+          : ''
+      }`}
+    >
       {simpleTableContext.selectable && (
-        <td
-          className='simpletable-firstcol'
-          style={{ backgroundColor: simpleTableContext.firstColumnBackgroundColor }}
-        >
+        <td className='simpletable-firstcol'>
           <input
             id={`${simpleTableContext.id}-check-row-${rowId}`}
             role='checkbox'

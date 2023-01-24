@@ -99,7 +99,6 @@ describe('Simple table header renders', () => {
 
 describe('Resize table cell', () => {
   test('Resize', async () => {
-    const user = userEvent.setup();
     const { container } = render(
       <SimpleTableContext.Provider
         value={{

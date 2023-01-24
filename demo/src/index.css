@@ -22,7 +22,6 @@ code {
 
 .app-border {
   border: 1px black solid;
-  /* background-color: white; */
   padding: 0.25rem;
   border-radius: 0.5rem;
   background-color: rgba(0, 0, 0, 0.4);
