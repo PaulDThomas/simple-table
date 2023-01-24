@@ -32,9 +32,6 @@ interface SimpleTableProps {
 
   mainBackgroundColor?: string;
   headerBackgroundColor?: string;
-
-  heightPx?: number;
-  widthPx?: number;
 }
 
 export const SimpleTable = ({
@@ -51,7 +48,7 @@ export const SimpleTable = ({
   initialFilterSelected = false,
   filterLabel = 'Filter',
   searchLabel = 'Search',
-  tableClassName = 'simpletable table table-responsive table-striped table-sm',
+  tableClassName = '',
   inputGroupClassName = 'form-group',
   filterLabelClassName = 'form-check-label',
   filterCheckClassName = 'form-check-input',
@@ -59,8 +56,6 @@ export const SimpleTable = ({
   searchInputClassName = 'form-control form-control-sm',
   mainBackgroundColor = 'white',
   headerBackgroundColor = 'white',
-  heightPx = 800,
-  widthPx = 800,
 }: SimpleTableProps): JSX.Element => {
   const [tableData, setTableData] = useState<iSimpleTableRow[]>(data);
   useEffect(() => {
@@ -213,25 +208,25 @@ export const SimpleTable = ({
         {showFilter && fields.filter((f) => f.filterOutFn).length > 0 && <SimpleTableFilter />}
       </div>
       <div
-        className='simpletable-holder small-scrollbar'
+        className='simpletable-bottom small-scrollbar'
         style={{
           backgroundColor: mainBackgroundColor,
-          height: `${heightPx - 46}px`,
-          width: `${widthPx}px`,
         }}
       >
-        <table
-          id={id}
-          className={`simpletable ${tableClassName}`}
-        >
-          <thead>
-            <tr>
-              {selectable && <SimpleTableSelectHeader />}
-              <SimpleTableHeader />
-            </tr>
-          </thead>
-          <SimpleTableBody />
-        </table>
+        <div className='simpletable-holder'>
+          <table
+            id={id}
+            className={`simpletable ${tableClassName}`}
+          >
+            <thead>
+              <tr>
+                {selectable && <SimpleTableSelectHeader />}
+                <SimpleTableHeader />
+              </tr>
+            </thead>
+            <SimpleTableBody />
+          </table>
+        </div>
       </div>
     </SimpleTableContext.Provider>
   );

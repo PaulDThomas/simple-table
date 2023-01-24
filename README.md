@@ -49,8 +49,6 @@ import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort, SimpleTable } fro
     searchLabelClassName?: string;
     searchInputClassName?: string;
     headerBackgroundColor?: string;
-    heightPx?: number;
-    widthPx?: number;
   />
 ```
 
@@ -78,8 +76,6 @@ import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort, SimpleTable } fro
 | searchLabelClassName     | Class names to apply to the search label. The default works well with bootstrap 5.2                    |                        `form-label`                         |
 | searchInputClassName     | Class names to apply to the search input. The default works well with bootstrap 5.2                    |               `form-control form-control-sm`                |
 | headerBackgroundColor    | Background colour applied to the header row, used when other rows scroll under it                      |                           `white`                           |
-| heightPx                 | Height of element (titles + table) in pixels                                                           |                             800                             |
-| widthPx                  | Width of element (titles + table) in pixels                                                            |                             800                             |
 
 ### Input data
 
@@ -230,7 +226,7 @@ Use these configurations to attach to chrome, then launch the server
       "type": "node-terminal",
       "cwd": "${workspaceRoot}",
       "env": {
-        "PORT": "3010"
+        "PORT": "1234"
       },
       "serverReadyAction": {
         "pattern": "Server running at (http://localhost:[0-9]+)",

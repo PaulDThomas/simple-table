@@ -11,6 +11,8 @@ import { mockData } from '../../src/__mocks__/mock_data';
 const App = (): JSX.Element => {
   const [data] = useState<iSimpleTableRow[]>(mockData);
   const [selected, setSelected] = useState<Key[]>([]);
+  const [height, setHeight] = useState<string>('800px');
+  const [width, setWidth] = useState<string>('600px');
 
   const [fields] = useState<iSimpleTableField[]>([
     { name: 'id', hidden: true },
@@ -65,19 +67,47 @@ const App = (): JSX.Element => {
     <div className='app-holder'>
       <div className='app-border'>
         <div className='app-inner'>
-          <SimpleTable
-            id='ais'
-            fields={fields}
-            keyField={'id'}
-            data={data.slice(0, 200)}
-            headerLabel='Demo table'
-            showSearch
-            showFilter
-            filterLabel='Cars only'
-            selectable
-            currentSelection={selected}
-            setCurrentSelection={setSelected}
-          />
+          <div>
+            <table>
+              <tr>
+                <td>Height</td>
+                <td>
+                  <input
+                    value={height}
+                    onChange={(e) => setHeight(e.currentTarget.value)}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Width</td>
+                <td>
+                  <input
+                    value={width}
+                    onChange={(e) => setWidth(e.currentTarget.value)}
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div
+            className='table-holder'
+            style={{ backgroundColor: 'cyan', height, width, maxWidth: '800px', padding: '1rem' }}
+          >
+            <SimpleTable
+              id='ais'
+              fields={fields}
+              keyField={'id'}
+              data={data.slice(0, 200)}
+              headerLabel='Demo table'
+              showSearch
+              showFilter
+              filterLabel='Cars only'
+              selectable
+              currentSelection={selected}
+              setCurrentSelection={setSelected}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -1,7 +1,13 @@
+.simpletable-bottom {
+  height: calc(100% - 30px - 1rem);
+  width: 100%;
+  overflow: auto;
+}
+
 .simpletable-holder {
   position: relative;
-  overflow-x: auto;
-  height: 600px;
+  width: 100%;
+  height: 100%;
 }
 
 .small-scrollbar::-webkit-scrollbar {
@@ -92,7 +98,7 @@
 .simpletable-title-holder {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  gap: 0.5rem;
   align-items: center;
   align-content: stretch;
   top: 0;
@@ -101,6 +107,8 @@
   z-index: 2;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 h5.simpletable-title {
