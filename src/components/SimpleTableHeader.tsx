@@ -47,7 +47,7 @@ export const SimpleTableHeader = (): JSX.Element => {
               style={{
                 backgroundColor: simpleTableContext.headerBackgroundColor,
                 opacity: 1,
-                width: simpleTableContext.fields[hi].width ?? '100px',
+                width: field.width ?? '100px',
               }}
             >
               <span
