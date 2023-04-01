@@ -93,7 +93,7 @@ describe('Simple table header renders', () => {
     expect(mockSorting).toHaveBeenCalledWith(mockFields[1]);
 
     await user.click(screen.getByText('Description'));
-    expect(mockSorting).toHaveBeenCalledWith(mockFields[2]);
+    expect(mockSorting).not.toHaveBeenCalledWith(mockFields[2]);
   });
 });
 

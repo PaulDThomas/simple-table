@@ -39,8 +39,8 @@ const App = (): JSX.Element => {
         ((rowData.car_make as string | null) ?? '')
           .toLowerCase()
           .includes(searchText.toLowerCase().trim()),
-      sortFn: (a, b) =>
-        ((a.car_make as string | null) ?? '').localeCompare((b.car_make as string | null) ?? ''),
+      // sortFn: (a, b) =>
+      //   ((a.car_make as string | null) ?? '').localeCompare((b.car_make as string | null) ?? ''),
       renderFn: ({ rowData }) => {
         return rowData.car_make ? <div>{rowData.car_make as string}</div> : <div>No car</div>;
       },
@@ -99,10 +99,10 @@ const App = (): JSX.Element => {
               fields={fields}
               keyField={'id'}
               data={data.slice(0, 200)}
-              headerLabel='Demo table'
-              showSearch
-              showFilter
-              filterLabel='Cars only'
+              headerLabel=''
+              showSearch={false}
+              // showFilter
+              // filterLabel='Cars only'
               selectable
               currentSelection={selected}
               setCurrentSelection={setSelected}

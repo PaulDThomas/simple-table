@@ -51,9 +51,11 @@ export const SimpleTableHeader = (): JSX.Element => {
               }}
             >
               <span
-                className='simpletable-clickable'
+                className={field.sortFn ? 'simpletable-clickable' : 'simple-table-nosorting'}
                 onClick={() => {
-                  simpleTableContext.updateSortBy && simpleTableContext.updateSortBy(field);
+                  field.sortFn &&
+                    simpleTableContext.updateSortBy &&
+                    simpleTableContext.updateSortBy(field);
                 }}
               >
                 <span
