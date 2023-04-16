@@ -6,7 +6,7 @@ export interface iSimpleTableContext {
   fields: iSimpleTableField[];
   keyField: string;
   viewData: iSimpleTableRow[];
-  tableData: iSimpleTableRow[];
+  totalRows: number;
   setTableData?: (ret: iSimpleTableRow[]) => void;
   selectable?: boolean;
   showSearch?: boolean;
@@ -22,6 +22,10 @@ export interface iSimpleTableContext {
   currentSelection?: Key[];
   toggleAllCurrentSelection?: () => void;
   toggleSelection?: (ret: Key) => void;
+  pageRows: number;
+  setPageRows?: (ret: number) => void;
+  firstRow: number;
+  setFirstRow?: (ret: number) => void;
 
   inputGroupClassName?: string;
   filterLabelClassName?: string;
@@ -37,6 +41,8 @@ export const SimpleTableContext = React.createContext<iSimpleTableContext>({
   fields: [],
   keyField: '',
   viewData: [],
-  tableData: [],
+  totalRows: 0,
   headerBackgroundColor: 'white',
+  firstRow: 0,
+  pageRows: 50,
 });

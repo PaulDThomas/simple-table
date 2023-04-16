@@ -9,7 +9,12 @@ import { mockData } from '../../src/__mocks__/mock_data';
 
 // Main application
 const App = (): JSX.Element => {
-  const [data] = useState<iSimpleTableRow[]>(mockData);
+  // const [data] = useState<iSimpleTableRow[]>(
+  //   [...mockData, ...mockData, ...mockData, ...mockData, ...mockData].map((r, i) => {
+  //     return { ...r, id: i };
+  //   }),
+  // );
+  const [data] = useState<iSimpleTableRow[]>(mockData.slice(0, 100));
   const [selected, setSelected] = useState<Key[]>([]);
   const [height, setHeight] = useState<string>('800px');
   const [width, setWidth] = useState<string>('600px');
@@ -39,8 +44,8 @@ const App = (): JSX.Element => {
         ((rowData.car_make as string | null) ?? '')
           .toLowerCase()
           .includes(searchText.toLowerCase().trim()),
-      sortFn: (a, b) =>
-        ((a.car_make as string | null) ?? '').localeCompare((b.car_make as string | null) ?? ''),
+      // sortFn: (a, b) =>
+      //   ((a.car_make as string | null) ?? '').localeCompare((b.car_make as string | null) ?? ''),
       renderFn: ({ rowData }) => {
         return rowData.car_make ? <div>{rowData.car_make as string}</div> : <div>No car</div>;
       },
@@ -98,9 +103,9 @@ const App = (): JSX.Element => {
               id='ais'
               fields={fields}
               keyField={'id'}
-              data={data.slice(0, 200)}
-              headerLabel='Demo table'
-              showSearch
+              data={data}
+              headerLabel=''
+              showSearch={true}
               showFilter
               filterLabel='Cars only'
               selectable

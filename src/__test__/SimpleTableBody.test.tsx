@@ -33,7 +33,9 @@ describe('Simple table body rendering', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockData,
-          tableData: mockData,
+          totalRows: mockData.length,
+          firstRow: 0,
+          pageRows: 50,
         }}
       >
         <table>
@@ -52,7 +54,9 @@ describe('Simple table body rendering', () => {
           fields: mockFields,
           keyField: 'tlfId',
           viewData: mockData,
-          tableData: mockData,
+          totalRows: mockData.length,
+          firstRow: 0,
+          pageRows: 50,
         }}
       >
         <table>

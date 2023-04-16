@@ -60,7 +60,9 @@ describe('Bad cell rendering', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockAccesses,
-          tableData: mockAccesses,
+          totalRows: mockAccesses.length,
+          firstRow: 0,
+          pageRows: 50,
         }}
       >
         <table>
@@ -87,7 +89,9 @@ describe('Bad cell rendering', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockAccesses,
-          tableData: mockAccesses,
+          totalRows: mockAccesses.length,
+          firstRow: 0,
+          pageRows: 50,
         }}
       >
         <table>
@@ -114,7 +118,9 @@ describe('Bad cell rendering', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockAccesses,
-          tableData: mockAccesses,
+          totalRows: mockAccesses.length,
+          firstRow: 0,
+          pageRows: 50,
         }}
       >
         <table>
@@ -143,7 +149,9 @@ describe('Cell render, show things', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockAccesses,
-          tableData: mockAccesses,
+          totalRows: mockAccesses.length,
+          firstRow: 0,
+          pageRows: 50,
         }}
       >
         <table>
@@ -170,7 +178,9 @@ describe('Cell render, show things', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockAccesses,
-          tableData: mockAccesses,
+          totalRows: mockAccesses.length,
+          firstRow: 0,
+          pageRows: 50,
         }}
       >
         <table>
@@ -197,7 +207,9 @@ describe('Cell render, show things', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockAccesses,
-          tableData: mockAccesses,
+          totalRows: mockAccesses.length,
+          firstRow: 0,
+          pageRows: 50,
         }}
       >
         <table>
@@ -224,7 +236,9 @@ describe('Cell render, show things', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockAccesses,
-          tableData: mockAccesses,
+          totalRows: mockAccesses.length,
+          firstRow: 0,
+          pageRows: 50,
         }}
       >
         <table>
@@ -251,7 +265,9 @@ describe('Cell render, show things', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockAccesses,
-          tableData: mockAccesses,
+          totalRows: mockAccesses.length,
+          firstRow: 0,
+          pageRows: 50,
         }}
       >
         <table>

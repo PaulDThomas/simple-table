@@ -47,13 +47,15 @@ export const SimpleTableHeader = (): JSX.Element => {
               style={{
                 backgroundColor: simpleTableContext.headerBackgroundColor,
                 opacity: 1,
-                width: simpleTableContext.fields[hi].width ?? '100px',
+                width: field.width ?? '100px',
               }}
             >
               <span
-                className='simpletable-clickable'
+                className={field.sortFn ? 'simpletable-clickable' : 'simple-table-nosorting'}
                 onClick={() => {
-                  simpleTableContext.updateSortBy && simpleTableContext.updateSortBy(field);
+                  field.sortFn &&
+                    simpleTableContext.updateSortBy &&
+                    simpleTableContext.updateSortBy(field);
                 }}
               >
                 <span

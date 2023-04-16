@@ -27,7 +27,9 @@ describe('Simple table search rendering', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockData,
-          tableData: mockData,
+          totalRows: mockData.length,
+          firstRow: 0,
+          pageRows: 50,
           searchText: 'Hello',
         }}
       >
@@ -48,7 +50,9 @@ describe('Simple table search rendering', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockData,
-          tableData: mockData,
+          totalRows: mockData.length,
+          firstRow: 0,
+          pageRows: 50,
           searchLabel: 'BIG SEARCH',
           setSearchText: mockSetSearch,
         }}

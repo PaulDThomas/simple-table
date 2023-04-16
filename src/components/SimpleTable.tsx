@@ -7,6 +7,7 @@ import { SimpleTableFilter } from './SimpleTableFilter';
 import { SimpleTableHeader } from './SimpleTableHeader';
 import { SimpleTableSearch } from './SimpleTableSearch';
 import { SimpleTableSelectHeader } from './SimpleTableSelectHeader';
+import { SimpleTablePager } from './SimpleTablePager';
 
 interface SimpleTableProps {
   id?: string;
@@ -19,6 +20,7 @@ interface SimpleTableProps {
   setCurrentSelection?: (ret: Key[]) => void;
   showSearch?: boolean;
   showFilter?: boolean;
+  showPager?: boolean;
   initialFilterSelected?: boolean;
   filterLabel?: string;
   searchLabel?: string;
@@ -64,6 +66,8 @@ export const SimpleTable = ({
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
   const [sortBy, setSortBy] = useState<iSimpleTableSort | null>(null);
   const [searchText, setSearchText] = useState<string>('');
+  const [firstRow, setFirstRow] = useState(0);
+  const [pageRows, setPageRows] = useState(50);
 
   const filterFn = useCallback(
     (row: iSimpleTableRow) => {
@@ -163,7 +167,7 @@ export const SimpleTable = ({
           fields,
           keyField,
           viewData,
-          tableData,
+          totalRows: tableData.length,
           setTableData,
           selectable,
           showSearch,
@@ -179,6 +183,10 @@ export const SimpleTable = ({
           currentSelection,
           toggleAllCurrentSelection,
           toggleSelection,
+          firstRow,
+          setFirstRow,
+          pageRows,
+          setPageRows,
 
           inputGroupClassName,
           filterLabelClassName,
@@ -227,6 +235,12 @@ export const SimpleTable = ({
             <SimpleTableBody />
           </table>
         </div>
+      </div>
+      <div
+        className='simpletable-footer-holder'
+        style={{ backgroundColor: mainBackgroundColor }}
+      >
+        <SimpleTablePager />
       </div>
     </SimpleTableContext.Provider>
   );

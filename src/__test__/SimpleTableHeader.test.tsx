@@ -46,7 +46,9 @@ describe('Simple table header renders', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockData,
-          tableData: mockData,
+          totalRows: mockData.length,
+          firstRow: 0,
+          pageRows: 50,
           sortBy: mockSortDown,
         }}
       >
@@ -72,8 +74,10 @@ describe('Simple table header renders', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockData,
-          tableData: mockData,
+          totalRows: mockData.length,
           sortBy: mockSortUp,
+          firstRow: 0,
+          pageRows: 50,
           updateSortBy: mockSorting,
         }}
       >
@@ -93,7 +97,7 @@ describe('Simple table header renders', () => {
     expect(mockSorting).toHaveBeenCalledWith(mockFields[1]);
 
     await user.click(screen.getByText('Description'));
-    expect(mockSorting).toHaveBeenCalledWith(mockFields[2]);
+    expect(mockSorting).not.toHaveBeenCalledWith(mockFields[2]);
   });
 });
 
@@ -106,8 +110,10 @@ describe('Resize table cell', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockData,
-          tableData: mockData,
+          totalRows: mockData.length,
           sortBy: mockSortUp,
+          firstRow: 0,
+          pageRows: 50,
           updateSortBy: mockSorting,
         }}
       >

@@ -24,7 +24,9 @@ describe('Access rights row rendering', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: [mockData],
-          tableData: [mockData],
+          totalRows: [mockData].length,
+          firstRow: 0,
+          pageRows: 50,
           selectable: true,
         }}
       >
@@ -46,7 +48,9 @@ describe('Access rights row rendering', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: [mockData],
-          tableData: [mockData],
+          totalRows: [mockData].length,
+          firstRow: 0,
+          pageRows: 50,
           selectable: true,
           currentSelection: [3],
           toggleSelection: mockToggle,

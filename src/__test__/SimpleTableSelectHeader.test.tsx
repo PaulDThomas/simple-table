@@ -26,7 +26,9 @@ describe('Simple table header checkbox rendering', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockData,
-          tableData: mockData,
+          totalRows: mockData.length,
+          firstRow: 0,
+          pageRows: 50,
           selectable: true,
         }}
       >
@@ -51,8 +53,10 @@ describe('Simple table header checkbox rendering', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockData,
-          tableData: mockData,
+          totalRows: mockData.length,
           selectable: true,
+          firstRow: 0,
+          pageRows: 50,
           currentSelection: [1, 2, 3, 'four'],
         }}
       >
@@ -77,7 +81,9 @@ describe('Simple table header checkbox rendering', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockData.slice(0, 1),
-          tableData: mockData,
+          totalRows: 1,
+          firstRow: 0,
+          pageRows: 50,
           selectable: true,
           currentSelection: [1, 2],
           toggleAllCurrentSelection: mockToggle,
