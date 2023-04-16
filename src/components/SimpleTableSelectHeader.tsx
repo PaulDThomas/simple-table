@@ -7,7 +7,7 @@ export const SimpleTableSelectHeader = (): JSX.Element => {
 
   useEffect(() => {
     if (allCheck.current) {
-      if (simpleTableContext.currentSelection?.length === simpleTableContext.tableData.length) {
+      if (simpleTableContext.currentSelection?.length === simpleTableContext.totalRows) {
         allCheck.current.checked = true;
         allCheck.current.indeterminate = false;
       } else if ((simpleTableContext.currentSelection?.length ?? 0) === 0) {
@@ -18,7 +18,7 @@ export const SimpleTableSelectHeader = (): JSX.Element => {
         allCheck.current.indeterminate = true;
       }
     }
-  }, [simpleTableContext.currentSelection?.length, simpleTableContext.tableData.length]);
+  }, [simpleTableContext.currentSelection?.length, simpleTableContext.totalRows]);
 
   return (
     <th

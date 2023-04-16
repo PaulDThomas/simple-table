@@ -9,7 +9,12 @@ import { mockData } from '../../src/__mocks__/mock_data';
 
 // Main application
 const App = (): JSX.Element => {
-  const [data] = useState<iSimpleTableRow[]>(mockData);
+  // const [data] = useState<iSimpleTableRow[]>(
+  //   [...mockData, ...mockData, ...mockData, ...mockData, ...mockData].map((r, i) => {
+  //     return { ...r, id: i };
+  //   }),
+  // );
+  const [data] = useState<iSimpleTableRow[]>(mockData.slice(0, 100));
   const [selected, setSelected] = useState<Key[]>([]);
   const [height, setHeight] = useState<string>('800px');
   const [width, setWidth] = useState<string>('600px');
@@ -98,11 +103,11 @@ const App = (): JSX.Element => {
               id='ais'
               fields={fields}
               keyField={'id'}
-              data={data.slice(0, 200)}
+              data={data}
               headerLabel=''
-              showSearch={false}
-              // showFilter
-              // filterLabel='Cars only'
+              showSearch={true}
+              showFilter
+              filterLabel='Cars only'
               selectable
               currentSelection={selected}
               setCurrentSelection={setSelected}

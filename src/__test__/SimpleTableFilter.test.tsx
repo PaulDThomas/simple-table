@@ -33,7 +33,10 @@ describe('Access rights filter rendering', () => {
           fields: mockFields,
           keyField: 'userId',
           viewData: mockData,
-          tableData: mockData,
+          totalRows: mockData.length,
+          firstRow: 0,
+          pageRows: 50,
+
           filterLabel: 'BIG FILTER',
           setFilterData: mockFilter,
         }}
