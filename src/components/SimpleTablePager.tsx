@@ -28,7 +28,10 @@ export const SimpleTablePager = (): JSX.Element => {
           <option>500</option>
           <option>All</option>
         </select>
-        &nbsp;of&nbsp;{simpleTableContext.totalRows}&nbsp;rows&nbsp;from&nbsp;
+        &nbsp;of&nbsp;{simpleTableContext.viewData.length}&nbsp;rows
+        {simpleTableContext.viewData.length !== simpleTableContext.totalRows &&
+          ` (${simpleTableContext.totalRows} unfiltered)`}
+        &nbsp;from&nbsp;
         <svg
           xmlns='http://www.w3.org/2000/svg'
           width='16'
