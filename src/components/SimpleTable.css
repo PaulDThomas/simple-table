@@ -1,4 +1,5 @@
-.simpletable-bottom {
+.simpletable-main {
+  /* Height is updated dynamically */
   height: calc(100% - 30px - 2.25rem);
   width: 100%;
   overflow: auto;
@@ -135,11 +136,10 @@ h5.simpletable-title {
 }
 
 .simpletable-footer {
-  height: 1.75rem;
+  height: 1.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-right: 4px;
-  padding-bottom: 4px;
 }
 
 .simpletable-search-holder {

@@ -39,6 +39,7 @@ import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort, SimpleTable } fro
     setCurrentSelection?: (ret: Key[]) => void;
     showSearch?: boolean;
     showFilter?: boolean;
+    showPager?: boolean;
     initialFilterSelected?: boolean;
     filterLabel?: string;
     searchLabel?: string;
@@ -61,20 +62,22 @@ import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort, SimpleTable } fro
 | fields                   | List of columns in the table                                                                           |                                |
 | keyField                 | Field containing the unique key for each row                                                           |                                |
 | data                     | Data to display, must contain a unique key field                                                       |                                |
-| selectable               | Indicates if rows can be selected, using a checkbox                                                    |                                |
+| selectable               | Indicates if rows can be selected, using a checkbox                                                    |            `false`             |
 | currentSelection         | Currently selected row keys                                                                            |                                |
 | setCurrentSelection      | Function to update the selected row keys, must be used in conjunction with the selectable indicator    |                                |
-| showSearch               | Indicates whether to show the search input. All fields with a defined search function will be searched |                                |
-| searchLabel              | Label for the search input                                                                             |            'Search'            |
-| showFilter               | Indicates whether to show the filter checkbox                                                          |                                |
-| initialFilterSelected    | Indicates whether the filter checkbox is checked on the initial render                                 |                                |
+| showSearch               | Indicates whether to show the search input. All fields with a defined search function will be searched |             `true`             |
+| showFilter               | Indicates whether to show the filter checkbox                                                          |            `false`             |
+| showPager                | Indicates whether to show the pager in the footer.                                                     |             `true`             |
+| initialFilterSelected    | Indicates whether the filter checkbox is checked on the initial render                                 |            `false`             |
 | filterLabel              | Label for the filter checkbox                                                                          |            'Filter'            |
-| tableClassName           | Class names to apply to the table element.                                                             |               ``               |
+| searchLabel              | Label for the search input                                                                             |            'Search'            |
+| tableClassName           | Class names to apply to the table element.                                                             |               ''               |
 | ~~inputGroupClassName~~  | Not currently implemented                                                                              |          `form-group`          |
 | ~~filterLabelClassName~~ | Not currently implemented                                                                              |       `form-check-label`       |
 | filterCheckClassName     | Class names to apply to the checkboxes in the table. The default works well with bootstrap 5.2         |       `form-check-input`       |
 | searchLabelClassName     | Class names to apply to the search label. The default works well with bootstrap 5.2                    |          `form-label`          |
 | searchInputClassName     | Class names to apply to the search input. The default works well with bootstrap 5.2                    | `form-control form-control-sm` |
+| mainBackgroundColor      | Background colour applied                                                                              |            `white`             |
 | headerBackgroundColor    | Background colour applied to the header row, used when other rows scroll under it                      |            `white`             |
 
 ### Input data

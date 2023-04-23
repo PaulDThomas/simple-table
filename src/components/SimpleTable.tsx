@@ -47,6 +47,7 @@ export const SimpleTable = ({
   setCurrentSelection,
   showSearch = true,
   showFilter = false,
+  showPager = true,
   initialFilterSelected = false,
   filterLabel = 'Filter',
   searchLabel = 'Search',
@@ -216,9 +217,10 @@ export const SimpleTable = ({
         {showFilter && fields.filter((f) => f.filterOutFn).length > 0 && <SimpleTableFilter />}
       </div>
       <div
-        className='simpletable-bottom small-scrollbar'
+        className='simpletable-main small-scrollbar'
         style={{
           backgroundColor: mainBackgroundColor,
+          height: `calc(100% - 30px - 2.25rem${showPager ? ' - 1.5rem' : ''}`,
         }}
       >
         <div className='simpletable-holder'>
@@ -240,7 +242,7 @@ export const SimpleTable = ({
         className='simpletable-footer-holder'
         style={{ backgroundColor: mainBackgroundColor }}
       >
-        <SimpleTablePager />
+        {showPager && <SimpleTablePager />}
       </div>
     </SimpleTableContext.Provider>
   );

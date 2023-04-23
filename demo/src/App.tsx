@@ -18,6 +18,10 @@ const App = (): JSX.Element => {
   const [selected, setSelected] = useState<Key[]>([]);
   const [height, setHeight] = useState<string>('800px');
   const [width, setWidth] = useState<string>('600px');
+  const [title, setTitle] = useState<string>('');
+  const [showFilter, setShowFilter] = useState<boolean>(true);
+  const [showPager, setShowPager] = useState<boolean>(true);
+  const [showSearch, setShowSearch] = useState<boolean>(true);
 
   const [fields] = useState<iSimpleTableField[]>([
     { name: 'id', hidden: true },
@@ -74,24 +78,54 @@ const App = (): JSX.Element => {
         <div className='app-inner'>
           <div>
             <table>
-              <tr>
-                <td>Height</td>
-                <td>
-                  <input
-                    value={height}
-                    onChange={(e) => setHeight(e.currentTarget.value)}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Width</td>
-                <td>
-                  <input
-                    value={width}
-                    onChange={(e) => setWidth(e.currentTarget.value)}
-                  />
-                </td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td>Height</td>
+                  <td>
+                    <input
+                      value={height}
+                      onChange={(e) => setHeight(e.currentTarget.value)}
+                    />
+                  </td>
+                  <td>Width</td>
+                  <td>
+                    <input
+                      value={width}
+                      onChange={(e) => setWidth(e.currentTarget.value)}
+                    />
+                  </td>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td>Title</td>
+                  <td>
+                    <input
+                      value={title}
+                      onChange={(e) => setTitle(e.currentTarget.value)}
+                    />
+                  </td>
+                  <td>
+                    Search:{' '}
+                    <input
+                      type='checkbox'
+                      checked={showSearch}
+                      onClick={() => setShowSearch(!showSearch)}
+                    />
+                    &nbsp;&nbsp;&nbsp; Filter:{' '}
+                    <input
+                      type='checkbox'
+                      checked={showFilter}
+                      onClick={() => setShowFilter(!showFilter)}
+                    />
+                    &nbsp;&nbsp;&nbsp; Pager:{' '}
+                    <input
+                      type='checkbox'
+                      checked={showPager}
+                      onClick={() => setShowPager(!showPager)}
+                    />
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
 
@@ -104,9 +138,10 @@ const App = (): JSX.Element => {
               fields={fields}
               keyField={'id'}
               data={data}
-              headerLabel=''
-              showSearch={true}
-              showFilter
+              headerLabel={title}
+              showSearch={showSearch}
+              showFilter={showFilter}
+              showPager={showPager}
               filterLabel='Cars only'
               selectable
               currentSelection={selected}
