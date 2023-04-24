@@ -220,7 +220,7 @@ export const SimpleTable = ({
         className='simpletable-main small-scrollbar'
         style={{
           backgroundColor: mainBackgroundColor,
-          height: `calc(100% - 30px - 2.25rem${showPager ? ' - 1.5rem' : ''}`,
+          height: `calc(100% - 30px - 2.25rem${showPager ? ' - 1.75rem' : ''}`,
         }}
       >
         <div className='simpletable-holder'>
