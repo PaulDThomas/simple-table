@@ -123,8 +123,8 @@ h5.simpletable-title {
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
-  align-items: end;
-  justify-content: end;
+  align-items: flex-end;
+  justify-content: flex-end;
   bottom: 0;
   position: sticky;
   opacity: 1;
@@ -154,7 +154,7 @@ h5.simpletable-title {
   margin-left: 1rem;
   display: flex;
   cursor: default;
-  justify-self: end;
+  justify-self: flex-end;
 }
 
 .simpletable-filter-holder:last-child {
