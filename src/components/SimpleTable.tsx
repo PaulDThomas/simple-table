@@ -106,8 +106,12 @@ export const SimpleTable = ({
 
   // Get view data
   const viewData = useMemo(() => {
-    return tableData.filter(filterFn).filter(searchFn).sort(sortFn);
-  }, [filterFn, searchFn, sortFn, tableData]);
+    const _viewData = tableData.filter(filterFn).filter(searchFn).sort(sortFn);
+    if (_viewData.length < firstRow) {
+      setFirstRow(0);
+    }
+    return _viewData;
+  }, [filterFn, firstRow, searchFn, sortFn, tableData]);
 
   // Update sort order
   const updateSortBy = useCallback(
