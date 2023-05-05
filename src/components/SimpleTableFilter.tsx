@@ -21,6 +21,7 @@ export const SimpleTableFilter = (): JSX.Element => {
           simpleTableContext.filterData !== undefined ? simpleTableContext.filterData : false
         }
         onChange={() => true}
+        aria-labelledby={`${simpleTableContext.id}-filter-label`}
       />
       <span
         id={`${simpleTableContext.id}-filter-label`}

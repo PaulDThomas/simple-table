@@ -14,7 +14,7 @@ const App = (): JSX.Element => {
   //     return { ...r, id: i };
   //   }),
   // );
-  const [data] = useState<iSimpleTableRow[]>(mockData.slice(0, 100));
+  const [data, setData] = useState<iSimpleTableRow[]>(mockData);
   const [selected, setSelected] = useState<Key[]>([]);
   const [height, setHeight] = useState<string>('800px');
   const [width, setWidth] = useState<string>('600px');
@@ -123,6 +123,15 @@ const App = (): JSX.Element => {
                       checked={showPager}
                       onClick={() => setShowPager(!showPager)}
                     />
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => {
+                        setData(data.filter((r) => !selected.includes(r.id as Key)));
+                      }}
+                    >
+                      Remove selected
+                    </button>
                   </td>
                 </tr>
               </tbody>

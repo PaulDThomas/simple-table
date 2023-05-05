@@ -82,4 +82,30 @@ describe('Simple table pager', () => {
     await user.selectOptions(rows, '50');
     expect(mockPageRows).toHaveBeenCalledWith(50);
   });
+
+  test('Select first row', async () => {
+    const user = userEvent.setup();
+    const mockFirstRow = jest.fn();
+    render(
+      <SimpleTableContext.Provider
+        value={{
+          id: 'testtable',
+          fields: [],
+          keyField: 'userId',
+          viewData: mockData,
+          totalRows: 500,
+          firstRow: 100,
+          pageRows: 50,
+          setFirstRow: mockFirstRow,
+        }}
+      >
+        <SimpleTablePager />
+      </SimpleTableContext.Provider>,
+    );
+    const frow = screen.getByLabelText('First row') as HTMLSelectElement;
+    fireEvent.change(frow, { target: { value: '250' } });
+    expect(mockFirstRow).toHaveBeenCalledWith(250);
+    await user.selectOptions(frow, '51');
+    expect(mockFirstRow).toHaveBeenCalledWith(50);
+  });
 });

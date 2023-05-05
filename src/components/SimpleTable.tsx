@@ -106,8 +106,12 @@ export const SimpleTable = ({
 
   // Get view data
   const viewData = useMemo(() => {
-    return tableData.filter(filterFn).filter(searchFn).sort(sortFn);
-  }, [filterFn, searchFn, sortFn, tableData]);
+    const _viewData = tableData.filter(filterFn).filter(searchFn).sort(sortFn);
+    if (_viewData.length < firstRow) {
+      setFirstRow(0);
+    }
+    return _viewData;
+  }, [filterFn, firstRow, searchFn, sortFn, tableData]);
 
   // Update sort order
   const updateSortBy = useCallback(
@@ -203,16 +207,14 @@ export const SimpleTable = ({
         className='simpletable-title-holder'
         style={{ backgroundColor: mainBackgroundColor }}
       >
-        {headerLabel && (
-          <h5 className='simpletable-title'>
-            {headerLabel}
-            {selectable && (currentSelection?.length ?? 0) > 0 && (
-              <small style={{ fontSize: 'small' }}>
-                {} {currentSelection?.length} selected
-              </small>
-            )}
-          </h5>
-        )}
+        <h5 className='simpletable-title'>
+          {headerLabel}
+          {selectable && (currentSelection?.length ?? 0) > 0 && (
+            <small style={{ fontSize: 'small' }}>
+              {} {currentSelection?.length} selected
+            </small>
+          )}
+        </h5>
         {showSearch && fields.filter((f) => f.searchFn).length > 0 && <SimpleTableSearch />}
         {showFilter && fields.filter((f) => f.filterOutFn).length > 0 && <SimpleTableFilter />}
       </div>
@@ -220,7 +222,7 @@ export const SimpleTable = ({
         className='simpletable-main small-scrollbar'
         style={{
           backgroundColor: mainBackgroundColor,
-          height: `calc(100% - 30px - 2.25rem${showPager ? ' - 1.5rem' : ''}`,
+          height: `calc(100% - 55px ${showPager ? ' - 1.75rem' : ''}`,
         }}
       >
         <div className='simpletable-holder'>
