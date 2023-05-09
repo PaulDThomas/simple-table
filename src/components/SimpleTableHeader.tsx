@@ -16,10 +16,18 @@ export const SimpleTableHeader = (): JSX.Element => {
   }, []);
 
   const mouseUp = useCallback(() => {
-    targetCell.current = null;
-    window.removeEventListener('mousemove', mouseMove);
-    window.removeEventListener('mouseup', mouseUp);
-  }, [mouseMove]);
+    if (targetCell.current) {
+      const ix = parseInt(targetCell.current.dataset.key ?? '-1');
+      const width = targetCell.current.style.width;
+      simpleTableContext &&
+        simpleTableContext.setColumnWidth &&
+        width &&
+        simpleTableContext.setColumnWidth(ix, targetCell.current.style.width);
+      targetCell.current = null;
+      window.removeEventListener('mousemove', mouseMove);
+      window.removeEventListener('mouseup', mouseUp);
+    }
+  }, [mouseMove, simpleTableContext]);
 
   const mouseDown = useCallback(
     (e: React.MouseEvent) => {
@@ -43,11 +51,12 @@ export const SimpleTableHeader = (): JSX.Element => {
             <th
               id={`${simpleTableContext.id}-header-${field.name}`}
               key={hi}
+              data-key={hi}
               className={'simpletable-header'}
               style={{
                 backgroundColor: simpleTableContext.headerBackgroundColor,
                 opacity: 1,
-                width: field.width ?? '100px',
+                width: simpleTableContext.columnWidths[hi] ?? '100px',
               }}
             >
               <span

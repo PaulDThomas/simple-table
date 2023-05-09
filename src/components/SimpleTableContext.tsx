@@ -26,6 +26,8 @@ export interface iSimpleTableContext {
   setPageRows?: (ret: number) => void;
   firstRow: number;
   setFirstRow?: (ret: number) => void;
+  columnWidths: (string | undefined)[];
+  setColumnWidth?: (col: number, width: string) => void;
 
   inputGroupClassName?: string;
   filterLabelClassName?: string;
@@ -45,4 +47,5 @@ export const SimpleTableContext = React.createContext<iSimpleTableContext>({
   headerBackgroundColor: 'white',
   firstRow: 0,
   pageRows: 50,
+  columnWidths: [],
 });

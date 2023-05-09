@@ -36,6 +36,11 @@ interface SimpleTableProps {
   headerBackgroundColor?: string;
 }
 
+interface SimpleTableLocalSettings {
+  pageRows?: number | 'Infinity';
+  headerWidths?: (string | undefined)[];
+}
+
 export const SimpleTable = ({
   id = 'simple-table',
   headerLabel = 'Simple table',
@@ -67,8 +72,11 @@ export const SimpleTable = ({
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
   const [sortBy, setSortBy] = useState<iSimpleTableSort | null>(null);
   const [searchText, setSearchText] = useState<string>('');
+  const [columnWidths, setColumnWidths] = useState<(string | undefined)[]>(
+    fields.map((f) => f.width),
+  );
   const [firstRow, setFirstRow] = useState(0);
-  const [pageRows, setPageRows] = useState(50);
+  const [pageRows, setPageRows] = useState(25);
 
   const filterFn = useCallback(
     (row: iSimpleTableRow) => {
@@ -164,6 +172,37 @@ export const SimpleTable = ({
     [currentSelection, keyField, setCurrentSelection, tableData],
   );
 
+  // Save local settings
+  const updateLocalSettings = useCallback(
+    (setting: string, value: number | (string | undefined)[]) => {
+      const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
+      const localSettings = JSON.parse(localSettingsText ?? '{}') as SimpleTableLocalSettings;
+      if (setting === 'pageRows' && value && !Array.isArray(value)) {
+        localSettings.pageRows = value === Infinity ? 'Infinity' : value;
+      } else if (setting === 'headerWidths' && value && Array.isArray(value)) {
+        localSettings.headerWidths = value;
+      }
+      window.localStorage.setItem(
+        `asup.simple-table.${id}.settings`,
+        JSON.stringify(localSettings),
+      );
+    },
+    [id],
+  );
+
+  // Load any previous settings, should only run on load
+  useEffect(() => {
+    const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
+    if (localSettingsText) {
+      const localSettings = JSON.parse(localSettingsText) as SimpleTableLocalSettings;
+      localSettings.pageRows &&
+        setPageRows(localSettings.pageRows === 'Infinity' ? Infinity : localSettings.pageRows);
+      if (localSettings.headerWidths) {
+        setColumnWidths(localSettings.headerWidths);
+      }
+    }
+  }, [fields, id]);
+
   return (
     <SimpleTableContext.Provider
       value={
@@ -191,7 +230,19 @@ export const SimpleTable = ({
           firstRow,
           setFirstRow,
           pageRows,
-          setPageRows,
+          setPageRows: (ret) => {
+            setPageRows(ret);
+            updateLocalSettings('pageRows', ret);
+          },
+          columnWidths,
+          setColumnWidth: (col: number, width?: string) => {
+            const newColumnWidths = [...columnWidths];
+            if (col >= 0 && col < newColumnWidths.length) {
+              newColumnWidths[col] = width;
+            }
+            setColumnWidths(newColumnWidths);
+            updateLocalSettings('headerWidths', newColumnWidths);
+          },
 
           inputGroupClassName,
           filterLabelClassName,
