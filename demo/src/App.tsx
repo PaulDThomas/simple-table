@@ -109,19 +109,19 @@ const App = (): JSX.Element => {
                     <input
                       type='checkbox'
                       checked={showSearch}
-                      onClick={() => setShowSearch(!showSearch)}
+                      onChange={() => setShowSearch(!showSearch)}
                     />
                     &nbsp;&nbsp;&nbsp; Filter:{' '}
                     <input
                       type='checkbox'
                       checked={showFilter}
-                      onClick={() => setShowFilter(!showFilter)}
+                      onChange={() => setShowFilter(!showFilter)}
                     />
                     &nbsp;&nbsp;&nbsp; Pager:{' '}
                     <input
                       type='checkbox'
                       checked={showPager}
-                      onClick={() => setShowPager(!showPager)}
+                      onChange={() => setShowPager(!showPager)}
                     />
                   </td>
                   <td>
