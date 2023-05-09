@@ -1,6 +1,11 @@
 import React, { Key } from 'react';
 import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from './interface';
 
+export interface iSimpleTableColumnFilter {
+  columnName: string;
+  values: string[];
+}
+
 export interface iSimpleTableContext {
   id: string;
   fields: iSimpleTableField[];
@@ -22,12 +27,17 @@ export interface iSimpleTableContext {
   currentSelection?: Key[];
   toggleAllCurrentSelection?: () => void;
   toggleSelection?: (ret: Key) => void;
+
+  columnWidths: (string | undefined)[];
+  setColumnWidth?: (col: number, width: string) => void;
   pageRows: number;
   setPageRows?: (ret: number) => void;
   firstRow: number;
   setFirstRow?: (ret: number) => void;
-  columnWidths: (string | undefined)[];
-  setColumnWidth?: (col: number, width: string) => void;
+
+  currentColumnItems: iSimpleTableColumnFilter[];
+  currentColumnFilters: iSimpleTableColumnFilter[];
+  setCurrentColumnFilters?: (ret: iSimpleTableColumnFilter[]) => void;
 
   inputGroupClassName?: string;
   filterLabelClassName?: string;
@@ -48,4 +58,6 @@ export const SimpleTableContext = React.createContext<iSimpleTableContext>({
   firstRow: 0,
   pageRows: 50,
   columnWidths: [],
+  currentColumnItems: [],
+  currentColumnFilters: [],
 });

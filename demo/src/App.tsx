@@ -40,6 +40,7 @@ const App = (): JSX.Element => {
         (rowData.last_name as string).toLowerCase().includes(searchText.toLowerCase().trim()),
       sortFn: (a, b) => (a.last_name as string).localeCompare(b.last_name as string),
       width: '120px',
+      canColumnFilter: true,
     },
     {
       name: 'car_make',
@@ -55,6 +56,7 @@ const App = (): JSX.Element => {
       },
       filterOutFn: (rowData) => (rowData.car_make as string | null) === null,
       width: '140px',
+      canColumnFilter: true,
     },
     {
       name: 'car_model',
@@ -69,6 +71,7 @@ const App = (): JSX.Element => {
         return rowData.car_model ? <div>{rowData.car_model as string}</div> : <div>&nbsp;</div>;
       },
       width: '160px',
+      canColumnFilter: true,
     },
   ]);
 

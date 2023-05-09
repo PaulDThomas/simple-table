@@ -2,7 +2,11 @@ import { Key, useCallback, useEffect, useMemo, useState } from 'react';
 import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from './interface';
 import './SimpleTable.css';
 import { SimpleTableBody } from './SimpleTableBody';
-import { iSimpleTableContext, SimpleTableContext } from './SimpleTableContext';
+import {
+  iSimpleTableColumnFilter,
+  iSimpleTableContext,
+  SimpleTableContext,
+} from './SimpleTableContext';
 import { SimpleTableFilter } from './SimpleTableFilter';
 import { SimpleTableHeader } from './SimpleTableHeader';
 import { SimpleTableSearch } from './SimpleTableSearch';
@@ -77,6 +81,7 @@ export const SimpleTable = ({
   );
   const [firstRow, setFirstRow] = useState(0);
   const [pageRows, setPageRows] = useState(25);
+  const [currentColumnFilters, setCurrentColumnFilters] = useState<iSimpleTableColumnFilter[]>([]);
 
   const filterFn = useCallback(
     (row: iSimpleTableRow) => {
@@ -114,12 +119,28 @@ export const SimpleTable = ({
 
   // Get view data
   const viewData = useMemo(() => {
-    const _viewData = tableData.filter(filterFn).filter(searchFn).sort(sortFn);
+    const _viewData = tableData
+      .filter(filterFn)
+      .filter(searchFn)
+      .filter((row) => {
+        return currentColumnFilters
+          .map((cf) => {
+            if (row[cf.columnName] !== undefined) {
+              return cf.values.includes(
+                typeof row[cf.columnName] === 'number'
+                  ? (row[cf.columnName] as number).toString()
+                  : ((row[cf.columnName] ?? '<blank>') as string),
+              );
+            } else return true;
+          })
+          .reduce((prev, cur) => prev && cur, true);
+      })
+      .sort(sortFn);
     if (_viewData.length < firstRow) {
       setFirstRow(0);
     }
     return _viewData;
-  }, [filterFn, firstRow, searchFn, sortFn, tableData]);
+  }, [currentColumnFilters, filterFn, firstRow, searchFn, sortFn, tableData]);
 
   // Update sort order
   const updateSortBy = useCallback(
@@ -135,6 +156,26 @@ export const SimpleTable = ({
     },
     [sortBy],
   );
+
+  // Get current column items
+  const currentColumnItems = useMemo(() => {
+    const ret = fields
+      .filter((f) => f.canColumnFilter)
+      .map((f) => ({
+        columnName: f.name,
+        values: Array.from(
+          new Set(
+            tableData.map((t) =>
+              typeof t[f.name] === 'number'
+                ? (t[f.name] as number).toString()
+                : ((t[f.name] ?? '<blank>') as string),
+            ),
+          ),
+        ),
+      }));
+    setCurrentColumnFilters(ret);
+    return ret;
+  }, [fields, tableData]);
 
   // Toggle all viewed rows
   const toggleAllCurrentSelection = useCallback(() => {
@@ -227,13 +268,7 @@ export const SimpleTable = ({
           currentSelection,
           toggleAllCurrentSelection,
           toggleSelection,
-          firstRow,
-          setFirstRow,
-          pageRows,
-          setPageRows: (ret) => {
-            setPageRows(ret);
-            updateLocalSettings('pageRows', ret);
-          },
+
           columnWidths,
           setColumnWidth: (col: number, width?: string) => {
             const newColumnWidths = [...columnWidths];
@@ -243,6 +278,17 @@ export const SimpleTable = ({
             setColumnWidths(newColumnWidths);
             updateLocalSettings('headerWidths', newColumnWidths);
           },
+          pageRows,
+          setPageRows: (ret) => {
+            setPageRows(ret);
+            updateLocalSettings('pageRows', ret);
+          },
+          firstRow,
+          setFirstRow,
+
+          currentColumnItems,
+          currentColumnFilters,
+          setCurrentColumnFilters,
 
           inputGroupClassName,
           filterLabelClassName,

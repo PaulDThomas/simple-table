@@ -44,11 +44,16 @@
   top: 0;
   opacity: 1;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .simpletable-box-header {
   width: 20px;
+}
+
+.simpletable-header > div,
+.simpletable-box-header > div {
+  overflow-x: hidden;
+  overflow-y: visible;
+  text-overflow: ellipsis;
 }
 
 .simpletable th,
@@ -57,8 +62,8 @@
   border-right: 1px dotted transparent;
 }
 
-.simpletable th:hover,
-.simpletable td:hover {
+.simpletable > thead th:hover,
+.simpletable > tbody td:hover {
   border-left: 1px solid rgba(0, 0, 0, 0.75);
   border-right: 1px solid rgba(0, 0, 0, 0.75);
 }
@@ -78,8 +83,8 @@
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.simpletable th span:not(.sorted) {
-  padding-right: 20px;
+.simpletable th span:not(.sorted):last-child {
+  padding-right: 16px;
 }
 .simpletable th span.sorted {
   margin-right: 4px;
@@ -192,4 +197,54 @@ h5.simpletable-title {
 
 .simpletable-footer-holder select {
   border-radius: 4px;
+}
+
+.simpletable-columnfilter-holder {
+  position: absolute;
+  height: 200px;
+  width: 200px;
+  z-index: 10;
+  border: 1px solid black;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  top: 24px;
+  resize: both;
+  overflow: auto;
+  box-shadow: 4px 4px 4px rgb(64, 64, 64, 0.75);
+  min-width: 60px;
+}
+
+.columnfilter-table {
+  height: 100%;
+  width: 100%;
+  border-collapse: collapse;
+}
+.columnfilter-table tbody {
+  display: block;
+  height: calc(100% - 48px);
+  overflow: auto;
+}
+.columnfilter-table thead,
+.columnfilter-table tbody tr {
+  display: table;
+  width: calc(100% - 3px);
+  table-layout: fixed;
+}
+.columnfilter-table thead {
+  width: calc(100% - 8px);
+}
+.columnfilter-table tbody {
+  border-top: 1px dotted black;
+}
+.columnfilter-table tfoot {
+  border-top: 1px dotted black;
+}
+.columnfilter-table tr td:first-child,
+.columnfilter-table tr th:first-child {
+  width: 2rem;
+}
+.columnfilter-table td {
+  text-align: left;
+  font-weight: 400;
 }
