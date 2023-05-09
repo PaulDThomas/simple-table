@@ -69,19 +69,23 @@ export const SimpleTablePager = (): JSX.Element => {
               simpleTableContext.setFirstRow(parseInt(e.currentTarget.value));
           }}
         >
-          {Array.from(
-            {
-              length: Math.ceil(simpleTableContext.viewData.length / simpleTableContext.pageRows),
-            },
-            (_, i) => i * simpleTableContext.pageRows,
-          ).map((rn) => (
-            <option
-              key={rn}
-              value={rn}
-            >
-              {rn + 1}
-            </option>
-          ))}
+          {simpleTableContext.pageRows === Infinity ? (
+            <option>1</option>
+          ) : (
+            Array.from(
+              {
+                length: Math.ceil(simpleTableContext.viewData.length / simpleTableContext.pageRows),
+              },
+              (_, i) => i * simpleTableContext.pageRows,
+            ).map((rn) => (
+              <option
+                key={rn}
+                value={rn}
+              >
+                {rn + 1}
+              </option>
+            ))
+          )}
         </select>
         <svg
           xmlns='http://www.w3.org/2000/svg'
