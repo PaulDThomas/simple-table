@@ -88,6 +88,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
             >
               <input
                 id={`${simpleTableContext.id}-columnfilter-${columnName}-check-all`}
+                aria-label='Column filter toggle'
                 ref={allCheck}
                 type='checkbox'
                 role='checkbox'
@@ -109,6 +110,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
                       id={`${simpleTableContext.id}-check-all`}
                       type='checkbox'
                       role='checkbox'
+                      aria-label={v}
                       className={simpleTableContext.filterCheckClassName}
                       checked={currentFilter.includes(v)}
                       onChange={() => {

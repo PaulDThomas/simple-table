@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from '../components/interface';
 import { SimpleTableContext } from '../components/SimpleTableContext';
@@ -8,7 +8,14 @@ const mockSort = jest.fn();
 
 const mockFields: iSimpleTableField[] = [
   { name: 'tlfId', hidden: true },
-  { name: 'displayName', hidden: false, label: 'Name', sortFn: mockSort, width: '200px' },
+  {
+    name: 'displayName',
+    hidden: false,
+    label: 'Name',
+    sortFn: mockSort,
+    width: '200px',
+    canColumnFilter: true,
+  },
   { name: 'description', hidden: false, label: 'Description' },
 ];
 
@@ -50,6 +57,13 @@ describe('Simple table header renders', () => {
           firstRow: 0,
           pageRows: 50,
           sortBy: mockSortDown,
+          columnWidths: [],
+          currentColumnItems: [
+            { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+          ],
+          currentColumnFilters: [
+            { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+          ],
         }}
       >
         <table>
@@ -79,6 +93,13 @@ describe('Simple table header renders', () => {
           firstRow: 0,
           pageRows: 50,
           updateSortBy: mockSorting,
+          columnWidths: [],
+          currentColumnItems: [
+            { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+          ],
+          currentColumnFilters: [
+            { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+          ],
         }}
       >
         <table>
@@ -103,34 +124,150 @@ describe('Simple table header renders', () => {
 
 describe('Resize table cell', () => {
   test('Resize', async () => {
-    const { container } = render(
-      <SimpleTableContext.Provider
-        value={{
-          id: 'testtable',
-          fields: mockFields,
-          keyField: 'userId',
-          viewData: mockData,
-          totalRows: mockData.length,
-          sortBy: mockSortUp,
-          firstRow: 0,
-          pageRows: 50,
-          updateSortBy: mockSorting,
-        }}
-      >
-        <table>
-          <thead>
-            <tr>
-              <SimpleTableHeader />
-            </tr>
-          </thead>
-        </table>
-      </SimpleTableContext.Provider>,
-    );
+    await act(async () => {
+      render(
+        <SimpleTableContext.Provider
+          value={{
+            id: 'testtable',
+            fields: mockFields,
+            keyField: 'userId',
+            viewData: mockData,
+            totalRows: mockData.length,
+            sortBy: mockSortUp,
+            firstRow: 0,
+            pageRows: 50,
+            updateSortBy: mockSorting,
+            columnWidths: [],
+            currentColumnItems: [
+              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+            ],
+            currentColumnFilters: [
+              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+            ],
+          }}
+        >
+          <div data-testid='container'>
+            <table>
+              <thead>
+                <tr>
+                  <SimpleTableHeader />
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </SimpleTableContext.Provider>,
+      );
+    });
+    const container = await screen.findByTestId('container');
+    const cells = container.querySelectorAll('th');
     const rhs = container.querySelectorAll('th div.resize-handle');
+    const th = cells[0];
     const rh = rhs[0];
+    expect(th).toBeInTheDocument();
     expect(rh).toBeInTheDocument();
+    console.log('1', th.style.width);
     fireEvent.mouseDown(rh);
-    fireEvent.mouseMove(rh, { clientX: '300px', clientY: '100px' });
+    fireEvent.mouseMove(rh, { clientX: 300, clientY: 100 });
     fireEvent.mouseUp(rh);
+    // expect(th.style.width).toEqual('400px');
+    fireEvent.mouseDown(rh);
+    fireEvent.mouseMove(rh, { clientX: -100, clientY: -100 });
+    fireEvent.mouseUp(rh);
+    // expect(th.style.width).toEqual('16px');
+  });
+});
+
+describe('Filter on column values', () => {
+  test('Display all filter', async () => {
+    const user = userEvent.setup();
+    const mockSet = jest.fn();
+    await act(async () => {
+      render(
+        <SimpleTableContext.Provider
+          value={{
+            id: 'testtable',
+            fields: mockFields,
+            keyField: 'userId',
+            viewData: mockData,
+            totalRows: mockData.length,
+            sortBy: mockSortUp,
+            firstRow: 0,
+            pageRows: 50,
+            updateSortBy: mockSorting,
+            columnWidths: [],
+            currentColumnItems: [
+              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+            ],
+            currentColumnFilters: [
+              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+            ],
+            setCurrentColumnFilters: mockSet,
+          }}
+        >
+          <div data-testid='container'>
+            <table>
+              <thead>
+                <tr>
+                  <SimpleTableHeader />
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </SimpleTableContext.Provider>,
+      );
+    });
+    const filter = screen.getByLabelText('Column filter');
+    const selectTester = screen.getByLabelText('Tester');
+    expect(filter).toBeInTheDocument();
+    expect(selectTester).toBeInTheDocument();
+    expect(selectTester).not.toBeVisible();
+    await user.click(filter);
+    expect(selectTester).toBeVisible();
+    expect(screen.queryByText('3 items selected')).toBeInTheDocument();
+  });
+  test('Display partial filter', async () => {
+    const user = userEvent.setup();
+    const mockSet = jest.fn();
+    await act(async () => {
+      render(
+        <SimpleTableContext.Provider
+          value={{
+            id: 'testtable',
+            fields: mockFields,
+            keyField: 'userId',
+            viewData: mockData,
+            totalRows: mockData.length,
+            sortBy: mockSortUp,
+            firstRow: 0,
+            pageRows: 50,
+            updateSortBy: mockSorting,
+            columnWidths: [],
+            currentColumnItems: [
+              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+            ],
+            currentColumnFilters: [{ columnName: 'displayName', values: ['Tester'] }],
+            setCurrentColumnFilters: mockSet,
+          }}
+        >
+          <div data-testid='container'>
+            <table>
+              <thead>
+                <tr>
+                  <SimpleTableHeader />
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </SimpleTableContext.Provider>,
+      );
+    });
+    const filter = screen.getByLabelText('Column filter (Active)');
+    const selectTester = screen.getByLabelText('Tester');
+    expect(filter).toBeInTheDocument();
+    expect(selectTester).toBeInTheDocument();
+    expect(selectTester).not.toBeVisible();
+    await user.click(filter);
+    expect(selectTester).toBeVisible();
+    expect(screen.queryByText('1 item selected')).toBeInTheDocument();
   });
 });

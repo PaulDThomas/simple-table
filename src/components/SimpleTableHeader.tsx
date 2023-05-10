@@ -102,6 +102,7 @@ export const SimpleTableHeader = (): JSX.Element => {
                           height='16'
                           fill='currentColor'
                           viewBox='0 0 16 16'
+                          aria-label='Column filter'
                           onClick={(e) => {
                             e.stopPropagation();
                             e.preventDefault();
@@ -117,6 +118,7 @@ export const SimpleTableHeader = (): JSX.Element => {
                           height='16'
                           fill='currentColor'
                           viewBox='0 0 16 16'
+                          aria-label='Column filter (Active)'
                           onClick={(e) => {
                             e.stopPropagation();
                             e.preventDefault();
