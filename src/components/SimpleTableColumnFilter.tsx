@@ -72,6 +72,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
             <td>
               <input
                 id={`${simpleTableContext.id}-columnfilter-${columnName}-filter`}
+                aria-label='Column filter search'
                 value={localFilter}
                 onChange={(e) => setLocalFilter(e.currentTarget.value)}
                 style={{ width: 'calc(100% - 8px)' }}

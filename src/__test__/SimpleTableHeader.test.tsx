@@ -165,7 +165,6 @@ describe('Resize table cell', () => {
     const rh = rhs[0];
     expect(th).toBeInTheDocument();
     expect(rh).toBeInTheDocument();
-    console.log('1', th.style.width);
     fireEvent.mouseDown(rh);
     fireEvent.mouseMove(rh, { clientX: 300, clientY: 100 });
     fireEvent.mouseUp(rh);
