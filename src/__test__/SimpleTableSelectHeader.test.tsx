@@ -30,6 +30,9 @@ describe('Simple table header checkbox rendering', () => {
           firstRow: 0,
           pageRows: 50,
           selectable: true,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilters: [],
         }}
       >
         <table>
@@ -58,6 +61,9 @@ describe('Simple table header checkbox rendering', () => {
           firstRow: 0,
           pageRows: 50,
           currentSelection: [1, 2, 3, 'four'],
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilters: [],
         }}
       >
         <table>
@@ -87,6 +93,9 @@ describe('Simple table header checkbox rendering', () => {
           selectable: true,
           currentSelection: [1, 2],
           toggleAllCurrentSelection: mockToggle,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilters: [],
         }}
       >
         <table>
