@@ -81,6 +81,7 @@ export const SimpleTable = ({
   );
   const [firstRow, setFirstRow] = useState(0);
   const [pageRows, setPageRows] = useState(25);
+  const [currentColumnFilter, setCurrentColumnFilter] = useState<number | null>(null);
   const [currentColumnFilters, setCurrentColumnFilters] = useState<iSimpleTableColumnFilter[]>([]);
 
   const filterFn = useCallback(
@@ -287,6 +288,8 @@ export const SimpleTable = ({
           setFirstRow,
 
           currentColumnItems,
+          currentColumnFilter,
+          setCurrentColumnFilter,
           currentColumnFilters,
           setCurrentColumnFilters,
 

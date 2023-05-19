@@ -36,6 +36,8 @@ export interface iSimpleTableContext {
   setFirstRow?: (ret: number) => void;
 
   currentColumnItems: iSimpleTableColumnFilter[];
+  currentColumnFilter: number | null;
+  setCurrentColumnFilter: (ret: number | null) => void;
   currentColumnFilters: iSimpleTableColumnFilter[];
   setCurrentColumnFilters?: (ret: iSimpleTableColumnFilter[]) => void;
 
