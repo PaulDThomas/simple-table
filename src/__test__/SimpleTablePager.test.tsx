@@ -18,6 +18,7 @@ describe('Simple table pager', () => {
           pageRows: Infinity,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
@@ -47,6 +48,7 @@ describe('Simple table pager', () => {
           pageRows: 50,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
@@ -79,6 +81,7 @@ describe('Simple table pager', () => {
           setPageRows: mockPageRows,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
@@ -108,6 +111,7 @@ describe('Simple table pager', () => {
           setFirstRow: mockFirstRow,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >

@@ -6,6 +6,7 @@ import {
   SimpleTable,
 } from '../../src/components';
 import { mockData } from '../../src/__mocks__/mock_data';
+import { simpleTableSortFn } from '../../src/main';
 
 // Main application
 const App = (): JSX.Element => {
@@ -30,7 +31,7 @@ const App = (): JSX.Element => {
       label: 'First name',
       searchFn: (rowData, searchText) =>
         (rowData.first_name as string).toLowerCase().includes(searchText.toLowerCase().trim()),
-      sortFn: (a, b) => (a.first_name as string).localeCompare(b.first_name as string),
+      sortFn: simpleTableSortFn,
       width: '100px',
     },
     {
@@ -65,8 +66,7 @@ const App = (): JSX.Element => {
         ((rowData.car_model as string | null) ?? '')
           .toLowerCase()
           .includes(searchText.toLowerCase().trim()),
-      sortFn: (a, b) =>
-        ((a.car_model as string | null) ?? '').localeCompare((b.car_model as string | null) ?? ''),
+      sortFn: simpleTableSortFn,
       renderFn: ({ rowData }: iSimpleTableCellRenderProps) => {
         return rowData.car_model ? <div>{rowData.car_model as string}</div> : <div>&nbsp;</div>;
       },

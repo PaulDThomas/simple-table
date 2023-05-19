@@ -20,6 +20,7 @@ describe('Simple table column filter rendering', () => {
   test('Basic render', async () => {
     const user = userEvent.setup();
     const mockSet = jest.fn();
+    const mockSetCurrentFilter = jest.fn();
     await act(async () => {
       render(
         <SimpleTableContext.Provider
@@ -36,6 +37,8 @@ describe('Simple table column filter rendering', () => {
             currentColumnItems: [
               { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
             ],
+            currentColumnFilter: 0,
+            setCurrentColumnFilter: mockSetCurrentFilter,
             currentColumnFilters: [
               { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
             ],
@@ -53,6 +56,9 @@ describe('Simple table column filter rendering', () => {
     await user.click(screen.queryByLabelText('Column filter toggle') as HTMLInputElement);
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledWith([{ columnName: 'displayName', values: [] }]);
+    await user.click(screen.queryByLabelText('Close filter') as Element);
+    expect(mockSetCurrentFilter).toHaveBeenCalledTimes(1);
+    expect(mockSetCurrentFilter).toHaveBeenCalledWith(null);
   });
 
   test('Add to filter', async () => {
@@ -73,6 +79,7 @@ describe('Simple table column filter rendering', () => {
             currentColumnItems: [
               { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
             ],
+            currentColumnFilter: null,
             currentColumnFilters: [
               { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
             ],
@@ -112,6 +119,7 @@ describe('Update filter', () => {
             currentColumnItems: [
               { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
             ],
+            currentColumnFilter: null,
             currentColumnFilters: cf,
             setCurrentColumnFilters: mockSet,
           }}
@@ -151,6 +159,7 @@ describe('Update toggle', () => {
             currentColumnItems: [
               { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
             ],
+            currentColumnFilter: null,
             currentColumnFilters: [],
             setCurrentColumnFilters: mockSet,
           }}

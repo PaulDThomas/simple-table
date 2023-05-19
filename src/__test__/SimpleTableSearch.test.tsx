@@ -33,6 +33,7 @@ describe('Simple table search rendering', () => {
           searchText: 'Hello',
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
@@ -60,6 +61,7 @@ describe('Simple table search rendering', () => {
           setSearchText: mockSetSearch,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >

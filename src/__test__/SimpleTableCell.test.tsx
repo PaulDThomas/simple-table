@@ -65,6 +65,7 @@ describe('Bad cell rendering', () => {
           pageRows: 50,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
@@ -97,6 +98,7 @@ describe('Bad cell rendering', () => {
           pageRows: 50,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
@@ -129,6 +131,7 @@ describe('Bad cell rendering', () => {
           pageRows: 50,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
@@ -163,6 +166,7 @@ describe('Cell render, show things', () => {
           pageRows: 50,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
@@ -195,6 +199,7 @@ describe('Cell render, show things', () => {
           pageRows: 50,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
@@ -227,6 +232,7 @@ describe('Cell render, show things', () => {
           pageRows: 50,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
@@ -259,6 +265,7 @@ describe('Cell render, show things', () => {
           pageRows: 50,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
@@ -291,6 +298,7 @@ describe('Cell render, show things', () => {
           pageRows: 50,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >

@@ -40,6 +40,7 @@ describe('Access rights filter rendering', () => {
           setFilterData: mockFilter,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >

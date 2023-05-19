@@ -37,7 +37,7 @@ export interface iSimpleTableContext {
 
   currentColumnItems: iSimpleTableColumnFilter[];
   currentColumnFilter: number | null;
-  setCurrentColumnFilter: (ret: number | null) => void;
+  setCurrentColumnFilter?: (ret: number | null) => void;
   currentColumnFilters: iSimpleTableColumnFilter[];
   setCurrentColumnFilters?: (ret: iSimpleTableColumnFilter[]) => void;
 
@@ -61,5 +61,6 @@ export const SimpleTableContext = React.createContext<iSimpleTableContext>({
   pageRows: 50,
   columnWidths: [],
   currentColumnItems: [],
+  currentColumnFilter: null,
   currentColumnFilters: [],
 });

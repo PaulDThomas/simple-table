@@ -61,6 +61,7 @@ describe('Simple table header renders', () => {
           currentColumnItems: [
             { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
           ],
+          currentColumnFilter: null,
           currentColumnFilters: [
             { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
           ],
@@ -97,6 +98,7 @@ describe('Simple table header renders', () => {
           currentColumnItems: [
             { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
           ],
+          currentColumnFilter: null,
           currentColumnFilters: [
             { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
           ],
@@ -141,6 +143,7 @@ describe('Resize table cell', () => {
             currentColumnItems: [
               { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
             ],
+            currentColumnFilter: null,
             currentColumnFilters: [
               { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
             ],
@@ -180,6 +183,7 @@ describe('Filter on column values', () => {
   test('Display all filter', async () => {
     const user = userEvent.setup();
     const mockSet = jest.fn();
+    const mockSetCurrentFilter = jest.fn();
     await act(async () => {
       render(
         <SimpleTableContext.Provider
@@ -197,6 +201,8 @@ describe('Filter on column values', () => {
             currentColumnItems: [
               { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
             ],
+            currentColumnFilter: null,
+            setCurrentColumnFilter: mockSetCurrentFilter,
             currentColumnFilters: [
               { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
             ],
@@ -221,12 +227,13 @@ describe('Filter on column values', () => {
     expect(selectTester).toBeInTheDocument();
     expect(selectTester).not.toBeVisible();
     await user.click(filter);
-    expect(selectTester).toBeVisible();
-    expect(screen.queryByText('3 items selected')).toBeInTheDocument();
+    expect(mockSetCurrentFilter).toHaveBeenCalledTimes(1);
+    expect(mockSetCurrentFilter).toHaveBeenCalledWith(0);
   });
   test('Display partial filter', async () => {
     const user = userEvent.setup();
     const mockSet = jest.fn();
+    const mockSetCurrentFilter = jest.fn();
     await act(async () => {
       render(
         <SimpleTableContext.Provider
@@ -244,6 +251,8 @@ describe('Filter on column values', () => {
             currentColumnItems: [
               { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
             ],
+            currentColumnFilter: 0,
+            setCurrentColumnFilter: mockSetCurrentFilter,
             currentColumnFilters: [{ columnName: 'displayName', values: ['Tester'] }],
             setCurrentColumnFilters: mockSet,
           }}
@@ -264,9 +273,10 @@ describe('Filter on column values', () => {
     const selectTester = screen.getByLabelText('Tester');
     expect(filter).toBeInTheDocument();
     expect(selectTester).toBeInTheDocument();
-    expect(selectTester).not.toBeVisible();
-    await user.click(filter);
     expect(selectTester).toBeVisible();
+    await user.click(filter);
+    expect(mockSetCurrentFilter).toBeCalledTimes(1);
+    expect(mockSetCurrentFilter).toBeCalledWith(null);
     expect(screen.queryByText('1 item selected')).toBeInTheDocument();
   });
 });

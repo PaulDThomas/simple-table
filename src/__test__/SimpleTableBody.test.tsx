@@ -38,6 +38,7 @@ describe('Simple table body rendering', () => {
           pageRows: 50,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
@@ -62,6 +63,7 @@ describe('Simple table body rendering', () => {
           pageRows: 50,
           columnWidths: [],
           currentColumnItems: [],
+          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
