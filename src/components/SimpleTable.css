@@ -206,13 +206,17 @@ h5.simpletable-title {
   z-index: 10;
   border: 1px solid black;
   border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
   border-bottom-left-radius: 8px;
   top: 24px;
   resize: both;
   overflow: auto;
   box-shadow: 4px 4px 4px rgb(64, 64, 64, 0.75);
   min-width: 60px;
+}
+
+.simpletable-columnfilter-holder input {
+  border-radius: 4px;
+  border: 1px solid black;
 }
 
 .columnfilter-table {
@@ -233,6 +237,7 @@ h5.simpletable-title {
 }
 .columnfilter-table thead {
   width: calc(100% - 8px);
+  height: 50px;
 }
 .columnfilter-table tbody {
   border-top: 1px dotted black;
