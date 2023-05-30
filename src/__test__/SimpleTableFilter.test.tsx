@@ -36,9 +36,12 @@ describe('Access rights filter rendering', () => {
           totalRows: mockData.length,
           firstRow: 0,
           pageRows: 50,
-
           filterLabel: 'BIG FILTER',
           setFilterData: mockFilter,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <SimpleTableFilter />,

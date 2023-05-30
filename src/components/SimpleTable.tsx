@@ -2,7 +2,11 @@ import { Key, useCallback, useEffect, useMemo, useState } from 'react';
 import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from './interface';
 import './SimpleTable.css';
 import { SimpleTableBody } from './SimpleTableBody';
-import { iSimpleTableContext, SimpleTableContext } from './SimpleTableContext';
+import {
+  iSimpleTableColumnFilter,
+  iSimpleTableContext,
+  SimpleTableContext,
+} from './SimpleTableContext';
 import { SimpleTableFilter } from './SimpleTableFilter';
 import { SimpleTableHeader } from './SimpleTableHeader';
 import { SimpleTableSearch } from './SimpleTableSearch';
@@ -36,6 +40,11 @@ interface SimpleTableProps {
   headerBackgroundColor?: string;
 }
 
+interface SimpleTableLocalSettings {
+  pageRows?: number | 'Infinity';
+  headerWidths?: (string | undefined)[];
+}
+
 export const SimpleTable = ({
   id = 'simple-table',
   headerLabel = 'Simple table',
@@ -67,8 +76,13 @@ export const SimpleTable = ({
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
   const [sortBy, setSortBy] = useState<iSimpleTableSort | null>(null);
   const [searchText, setSearchText] = useState<string>('');
+  const [columnWidths, setColumnWidths] = useState<(string | undefined)[]>(
+    fields.map((f) => f.width),
+  );
   const [firstRow, setFirstRow] = useState(0);
-  const [pageRows, setPageRows] = useState(50);
+  const [pageRows, setPageRows] = useState(25);
+  const [currentColumnFilter, setCurrentColumnFilter] = useState<number | null>(null);
+  const [currentColumnFilters, setCurrentColumnFilters] = useState<iSimpleTableColumnFilter[]>([]);
 
   const filterFn = useCallback(
     (row: iSimpleTableRow) => {
@@ -106,12 +120,28 @@ export const SimpleTable = ({
 
   // Get view data
   const viewData = useMemo(() => {
-    const _viewData = tableData.filter(filterFn).filter(searchFn).sort(sortFn);
+    const _viewData = tableData
+      .filter(filterFn)
+      .filter(searchFn)
+      .filter((row) => {
+        return currentColumnFilters
+          .map((cf) => {
+            if (row[cf.columnName] !== undefined) {
+              return cf.values.includes(
+                typeof row[cf.columnName] === 'number'
+                  ? (row[cf.columnName] as number).toString()
+                  : ((row[cf.columnName] ?? '<blank>') as string),
+              );
+            } else return true;
+          })
+          .reduce((prev, cur) => prev && cur, true);
+      })
+      .sort(sortFn);
     if (_viewData.length < firstRow) {
       setFirstRow(0);
     }
     return _viewData;
-  }, [filterFn, firstRow, searchFn, sortFn, tableData]);
+  }, [currentColumnFilters, filterFn, firstRow, searchFn, sortFn, tableData]);
 
   // Update sort order
   const updateSortBy = useCallback(
@@ -127,6 +157,26 @@ export const SimpleTable = ({
     },
     [sortBy],
   );
+
+  // Get current column items
+  const currentColumnItems = useMemo(() => {
+    const ret = fields
+      .filter((f) => f.canColumnFilter)
+      .map((f) => ({
+        columnName: f.name,
+        values: Array.from(
+          new Set(
+            tableData.map((t) =>
+              typeof t[f.name] === 'number'
+                ? (t[f.name] as number).toString()
+                : ((t[f.name] ?? '<blank>') as string),
+            ),
+          ),
+        ),
+      }));
+    setCurrentColumnFilters(ret);
+    return ret;
+  }, [fields, tableData]);
 
   // Toggle all viewed rows
   const toggleAllCurrentSelection = useCallback(() => {
@@ -164,6 +214,37 @@ export const SimpleTable = ({
     [currentSelection, keyField, setCurrentSelection, tableData],
   );
 
+  // Save local settings
+  const updateLocalSettings = useCallback(
+    (setting: string, value: number | (string | undefined)[]) => {
+      const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
+      const localSettings = JSON.parse(localSettingsText ?? '{}') as SimpleTableLocalSettings;
+      if (setting === 'pageRows' && value && !Array.isArray(value)) {
+        localSettings.pageRows = value === Infinity ? 'Infinity' : value;
+      } else if (setting === 'headerWidths' && value && Array.isArray(value)) {
+        localSettings.headerWidths = value;
+      }
+      window.localStorage.setItem(
+        `asup.simple-table.${id}.settings`,
+        JSON.stringify(localSettings),
+      );
+    },
+    [id],
+  );
+
+  // Load any previous settings, should only run on load
+  useEffect(() => {
+    const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
+    if (localSettingsText) {
+      const localSettings = JSON.parse(localSettingsText) as SimpleTableLocalSettings;
+      localSettings.pageRows &&
+        setPageRows(localSettings.pageRows === 'Infinity' ? Infinity : localSettings.pageRows);
+      if (localSettings.headerWidths) {
+        setColumnWidths(localSettings.headerWidths);
+      }
+    }
+  }, [fields, id]);
+
   return (
     <SimpleTableContext.Provider
       value={
@@ -188,10 +269,29 @@ export const SimpleTable = ({
           currentSelection,
           toggleAllCurrentSelection,
           toggleSelection,
+
+          columnWidths,
+          setColumnWidth: (col: number, width?: string) => {
+            const newColumnWidths = [...columnWidths];
+            if (col >= 0 && col < newColumnWidths.length) {
+              newColumnWidths[col] = width;
+            }
+            setColumnWidths(newColumnWidths);
+            updateLocalSettings('headerWidths', newColumnWidths);
+          },
+          pageRows,
+          setPageRows: (ret) => {
+            setPageRows(ret);
+            updateLocalSettings('pageRows', ret);
+          },
           firstRow,
           setFirstRow,
-          pageRows,
-          setPageRows,
+
+          currentColumnItems,
+          currentColumnFilter,
+          setCurrentColumnFilter,
+          currentColumnFilters,
+          setCurrentColumnFilters,
 
           inputGroupClassName,
           filterLabelClassName,

@@ -69,19 +69,23 @@ export const SimpleTablePager = (): JSX.Element => {
               simpleTableContext.setFirstRow(parseInt(e.currentTarget.value));
           }}
         >
-          {Array.from(
-            {
-              length: Math.ceil(simpleTableContext.viewData.length / simpleTableContext.pageRows),
-            },
-            (_, i) => i * simpleTableContext.pageRows,
-          ).map((rn) => (
-            <option
-              key={rn}
-              value={rn}
-            >
-              {rn + 1}
-            </option>
-          ))}
+          {simpleTableContext.pageRows === Infinity ? (
+            <option>1</option>
+          ) : (
+            Array.from(
+              {
+                length: Math.ceil(simpleTableContext.viewData.length / simpleTableContext.pageRows),
+              },
+              (_, i) => i * simpleTableContext.pageRows,
+            ).map((rn) => (
+              <option
+                key={rn}
+                value={rn}
+              >
+                {rn + 1}
+              </option>
+            ))
+          )}
         </select>
         <svg
           xmlns='http://www.w3.org/2000/svg'
@@ -114,10 +118,6 @@ export const SimpleTablePager = (): JSX.Element => {
                 Math.floor((simpleTableContext.viewData.length - 1) / simpleTableContext.pageRows) *
                   simpleTableContext.pageRows,
               );
-            console.log(
-              Math.floor((simpleTableContext.viewData.length - 1) / simpleTableContext.pageRows) *
-                simpleTableContext.pageRows,
-            );
           }}
         >
           <path d='M7.596 7.304a.802.802 0 0 1 0 1.392l-6.363 3.692C.713 12.69 0 12.345 0 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692Z' />

@@ -36,6 +36,10 @@ describe('Simple table body rendering', () => {
           totalRows: mockData.length,
           firstRow: 0,
           pageRows: 50,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <table>
@@ -57,6 +61,10 @@ describe('Simple table body rendering', () => {
           totalRows: mockData.length,
           firstRow: 0,
           pageRows: 50,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <table>

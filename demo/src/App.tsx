@@ -6,6 +6,7 @@ import {
   SimpleTable,
 } from '../../src/components';
 import { mockData } from '../../src/__mocks__/mock_data';
+import { simpleTableSortFn } from '../../src/main';
 
 // Main application
 const App = (): JSX.Element => {
@@ -30,7 +31,7 @@ const App = (): JSX.Element => {
       label: 'First name',
       searchFn: (rowData, searchText) =>
         (rowData.first_name as string).toLowerCase().includes(searchText.toLowerCase().trim()),
-      sortFn: (a, b) => (a.first_name as string).localeCompare(b.first_name as string),
+      sortFn: simpleTableSortFn,
       width: '100px',
     },
     {
@@ -40,6 +41,7 @@ const App = (): JSX.Element => {
         (rowData.last_name as string).toLowerCase().includes(searchText.toLowerCase().trim()),
       sortFn: (a, b) => (a.last_name as string).localeCompare(b.last_name as string),
       width: '120px',
+      canColumnFilter: true,
     },
     {
       name: 'car_make',
@@ -55,6 +57,7 @@ const App = (): JSX.Element => {
       },
       filterOutFn: (rowData) => (rowData.car_make as string | null) === null,
       width: '140px',
+      canColumnFilter: true,
     },
     {
       name: 'car_model',
@@ -63,12 +66,12 @@ const App = (): JSX.Element => {
         ((rowData.car_model as string | null) ?? '')
           .toLowerCase()
           .includes(searchText.toLowerCase().trim()),
-      sortFn: (a, b) =>
-        ((a.car_model as string | null) ?? '').localeCompare((b.car_model as string | null) ?? ''),
+      sortFn: simpleTableSortFn,
       renderFn: ({ rowData }: iSimpleTableCellRenderProps) => {
         return rowData.car_model ? <div>{rowData.car_model as string}</div> : <div>&nbsp;</div>;
       },
       width: '160px',
+      canColumnFilter: true,
     },
   ]);
 
@@ -109,19 +112,19 @@ const App = (): JSX.Element => {
                     <input
                       type='checkbox'
                       checked={showSearch}
-                      onClick={() => setShowSearch(!showSearch)}
+                      onChange={() => setShowSearch(!showSearch)}
                     />
                     &nbsp;&nbsp;&nbsp; Filter:{' '}
                     <input
                       type='checkbox'
                       checked={showFilter}
-                      onClick={() => setShowFilter(!showFilter)}
+                      onChange={() => setShowFilter(!showFilter)}
                     />
                     &nbsp;&nbsp;&nbsp; Pager:{' '}
                     <input
                       type='checkbox'
                       checked={showPager}
-                      onClick={() => setShowPager(!showPager)}
+                      onChange={() => setShowPager(!showPager)}
                     />
                   </td>
                   <td>

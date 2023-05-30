@@ -22,4 +22,5 @@ export interface iSimpleTableField {
   searchFn?: (a: iSimpleTableRow, searchText: string) => boolean;
   filterOutFn?: (a: iSimpleTableRow) => boolean;
   renderFn?: (a: iSimpleTableCellRenderProps) => JSX.Element;
+  canColumnFilter?: boolean;
 }

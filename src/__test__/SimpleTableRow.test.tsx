@@ -28,6 +28,10 @@ describe('Access rights row rendering', () => {
           firstRow: 0,
           pageRows: 50,
           selectable: true,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <table>
@@ -54,6 +58,10 @@ describe('Access rights row rendering', () => {
           selectable: true,
           currentSelection: [3],
           toggleSelection: mockToggle,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <table>

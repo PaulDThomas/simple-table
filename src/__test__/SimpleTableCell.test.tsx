@@ -63,6 +63,10 @@ describe('Bad cell rendering', () => {
           totalRows: mockAccesses.length,
           firstRow: 0,
           pageRows: 50,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <table>
@@ -92,6 +96,10 @@ describe('Bad cell rendering', () => {
           totalRows: mockAccesses.length,
           firstRow: 0,
           pageRows: 50,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <table>
@@ -121,6 +129,10 @@ describe('Bad cell rendering', () => {
           totalRows: mockAccesses.length,
           firstRow: 0,
           pageRows: 50,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <table>
@@ -152,6 +164,10 @@ describe('Cell render, show things', () => {
           totalRows: mockAccesses.length,
           firstRow: 0,
           pageRows: 50,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <table>
@@ -181,6 +197,10 @@ describe('Cell render, show things', () => {
           totalRows: mockAccesses.length,
           firstRow: 0,
           pageRows: 50,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <table>
@@ -210,6 +230,10 @@ describe('Cell render, show things', () => {
           totalRows: mockAccesses.length,
           firstRow: 0,
           pageRows: 50,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <table>
@@ -239,6 +263,10 @@ describe('Cell render, show things', () => {
           totalRows: mockAccesses.length,
           firstRow: 0,
           pageRows: 50,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <table>
@@ -268,6 +296,10 @@ describe('Cell render, show things', () => {
           totalRows: mockAccesses.length,
           firstRow: 0,
           pageRows: 50,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <table>

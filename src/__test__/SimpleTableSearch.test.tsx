@@ -31,6 +31,10 @@ describe('Simple table search rendering', () => {
           firstRow: 0,
           pageRows: 50,
           searchText: 'Hello',
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <SimpleTableSearch />
@@ -55,6 +59,10 @@ describe('Simple table search rendering', () => {
           pageRows: 50,
           searchLabel: 'BIG SEARCH',
           setSearchText: mockSetSearch,
+          columnWidths: [],
+          currentColumnItems: [],
+          currentColumnFilter: null,
+          currentColumnFilters: [],
         }}
       >
         <SimpleTableSearch />
