@@ -42,3 +42,5 @@ export const SimpleTableSelectHeader = (): JSX.Element => {
     </th>
   );
 };
+
+SimpleTableSelectHeader.displayName = 'SimpleTableSelectHeader';

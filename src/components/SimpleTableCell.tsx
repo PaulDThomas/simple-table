@@ -45,3 +45,5 @@ export const SimpleTableCell = ({
     </td>
   );
 };
+
+SimpleTableCell.displayName = 'SimpleTableCell';

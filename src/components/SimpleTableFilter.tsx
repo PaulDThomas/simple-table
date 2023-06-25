@@ -32,3 +32,5 @@ export const SimpleTableFilter = (): JSX.Element => {
     </div>
   );
 };
+
+SimpleTableFilter.displayName = 'SimpleTableFilter';

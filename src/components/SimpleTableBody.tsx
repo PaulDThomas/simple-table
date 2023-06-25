@@ -35,3 +35,5 @@ export const SimpleTableBody = (): JSX.Element => {
     </tbody>
   );
 };
+
+SimpleTableBody.displayName = 'SimpleTableBody';
