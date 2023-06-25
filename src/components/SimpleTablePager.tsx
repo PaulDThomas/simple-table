@@ -127,3 +127,5 @@ export const SimpleTablePager = (): JSX.Element => {
     </div>
   );
 };
+
+SimpleTablePager.displayName = 'SimpleTablePager';

@@ -349,3 +349,5 @@ export const SimpleTable = ({
     </SimpleTableContext.Provider>
   );
 };
+
+SimpleTable.displayName = 'SimpleTable';

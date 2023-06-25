@@ -156,3 +156,5 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
     </>
   );
 };
+
+SimpleTableColumnFilter.displayName = 'SimpleTableColumnFilter';

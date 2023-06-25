@@ -175,3 +175,5 @@ export const SimpleTableHeader = (): JSX.Element => {
     </>
   );
 };
+
+SimpleTableHeader.displayName = 'SimpleTableHeader';

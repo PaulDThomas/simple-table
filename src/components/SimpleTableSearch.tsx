@@ -37,3 +37,5 @@ export const SimpleTableSearch = (): JSX.Element => {
     </div>
   );
 };
+
+SimpleTableSearch.displayName = 'SimpleTableSearch';

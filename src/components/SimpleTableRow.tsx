@@ -47,3 +47,5 @@ export const SimpleTableRow = ({ rowId }: iSimpleTableRowProps): JSX.Element => 
     </tr>
   );
 };
+
+SimpleTableRow.displayName = 'SimpleTableRow';
