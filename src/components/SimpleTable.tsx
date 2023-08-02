@@ -110,10 +110,15 @@ export const SimpleTable = ({
 
   const sortFn = useCallback(
     (rowa: iSimpleTableRow, rowb: iSimpleTableRow) => {
-      const sortFn = fields.find((f) => f.name === sortBy?.name)?.sortFn;
-      if (sortFn && sortBy)
-        return sortBy.asc ? sortFn(rowa, rowb, sortBy) : -sortFn(rowa, rowb, sortBy);
-      else return 0;
+      try {
+        const sortFn = fields.find((f) => f.name === sortBy?.name)?.sortFn;
+        if (sortFn && sortBy)
+          return sortBy.asc ? sortFn(rowa, rowb, sortBy) : -sortFn(rowa, rowb, sortBy);
+        else return 0;
+      } catch (error) {
+        console.warn(`Sort failed because ${error}`);
+        return 0;
+      }
     },
     [fields, sortBy],
   );
@@ -130,7 +135,7 @@ export const SimpleTable = ({
               return cf.values.includes(
                 typeof row[cf.columnName] === 'number'
                   ? (row[cf.columnName] as number).toString()
-                  : ((row[cf.columnName] ?? '<blank>') as string),
+                  : `${row[cf.columnName] ?? '<blank>'}`,
               );
             } else return true;
           })
@@ -169,7 +174,7 @@ export const SimpleTable = ({
             tableData.map((t) =>
               typeof t[f.name] === 'number'
                 ? (t[f.name] as number).toString()
-                : ((t[f.name] ?? '<blank>') as string),
+                : `${t[f.name] ?? '<blank>'}`,
             ),
           ),
         ),

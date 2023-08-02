@@ -17,7 +17,7 @@ export const mockData = [
   {
     id: 3,
     first_name: 'Feodora',
-    last_name: 'Habbin',
+    last_name: new Date('2023-08-16'),
     car_make: 'Mazda',
     car_model: '626',
   },
