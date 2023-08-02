@@ -5,4 +5,4 @@
 import '@testing-library/jest-dom';
 import { localStorageMock } from './__mocks__/localStorageMock';
 
-Object.defineProperty(window, 'localStorage', localStorageMock);
+Object.defineProperty(window, 'localStorage', { value: localStorageMock() });
