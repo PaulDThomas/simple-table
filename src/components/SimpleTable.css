@@ -49,11 +49,23 @@
   width: 20px;
 }
 
-.simpletable-header > div,
-.simpletable-box-header > div {
+.simpletable-header-text {
   overflow-x: hidden;
   overflow-y: visible;
   text-overflow: ellipsis;
+  display: flex;
+}
+
+.simpletable-header-text > .simpletable-clickable {
+  flex-grow: 1;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  overflow-y: visible;
+}
+
+.simpletable-header .columnicon-holder {
+  justify-self: end;
+  min-width: max-content;
 }
 
 .simpletable th,
@@ -81,13 +93,6 @@
 
 .simpletable tr.selected td > div {
   background-color: rgba(0, 0, 0, 0.2);
-}
-
-.simpletable th span:not(.sorted):last-child {
-  padding-right: 16px;
-}
-.simpletable th span.sorted {
-  margin-right: 4px;
 }
 
 .simpletable-clickable {
@@ -252,4 +257,17 @@ h5.simpletable-title {
 .columnfilter-table td {
   text-align: left;
   font-weight: 400;
+}
+
+.columnfilter-table-close {
+  color: black;
+  background-color: white;
+  height: 16px;
+  width: 16px;
+  border-radius: 3px;
+  margin: 2px;
+}
+.columnfilter-table-close:hover {
+  background-color: black;
+  color: white;
 }

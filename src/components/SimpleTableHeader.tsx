@@ -72,7 +72,7 @@ export const SimpleTableHeader = (): JSX.Element => {
                   <SimpleTableColumnFilter columnName={field.name} />
                 </div>
               )}
-              <div>
+              <div className='simpletable-header-text'>
                 <span
                   className={field.sortFn ? 'simpletable-clickable' : 'simple-table-nosorting'}
                   onClick={() => {
@@ -88,6 +88,8 @@ export const SimpleTableHeader = (): JSX.Element => {
                   >
                     {field.label}
                   </span>
+                </span>
+                <div className='columnicon-holder'>
                   {field.canColumnFilter && (
                     <span>
                       {simpleTableContext.currentColumnItems.find(
@@ -163,7 +165,7 @@ export const SimpleTableHeader = (): JSX.Element => {
                       </>
                     )
                   ) : undefined}
-                </span>
+                </div>
               </div>
               <div
                 className='resize-handle'
