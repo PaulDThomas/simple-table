@@ -1,9 +1,9 @@
-import { useContext, useMemo } from 'react';
+import { Key, useContext, useMemo } from 'react';
 import { iSimpleTableField, iSimpleTableRow } from './interface';
 import { SimpleTableContext } from './SimpleTableContext';
 
 interface iSimpleTableCellProps {
-  rowId: string | number;
+  rowId: Key;
   columnNumber: number;
   cellField: string;
 }

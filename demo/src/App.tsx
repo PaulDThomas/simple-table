@@ -25,6 +25,7 @@ const App = (): JSX.Element => {
                   <td>Height</td>
                   <td>
                     <input
+                      id='height'
                       value={height}
                       onChange={(e) => setHeight(e.currentTarget.value)}
                     />
@@ -32,6 +33,7 @@ const App = (): JSX.Element => {
                   <td>Width</td>
                   <td>
                     <input
+                      id='width'
                       value={width}
                       onChange={(e) => setWidth(e.currentTarget.value)}
                     />
@@ -42,6 +44,7 @@ const App = (): JSX.Element => {
                   <td>Title</td>
                   <td>
                     <input
+                      id='title'
                       value={title}
                       onChange={(e) => setTitle(e.currentTarget.value)}
                     />
@@ -49,18 +52,21 @@ const App = (): JSX.Element => {
                   <td>
                     Search:{' '}
                     <input
+                      id='show-search'
                       type='checkbox'
                       checked={showSearch}
                       onChange={() => setShowSearch(!showSearch)}
                     />
                     &nbsp;&nbsp;&nbsp; Filter:{' '}
                     <input
+                      id='show-filter'
                       type='checkbox'
                       checked={showFilter}
                       onChange={() => setShowFilter(!showFilter)}
                     />
                     &nbsp;&nbsp;&nbsp; Pager:{' '}
                     <input
+                      id='show-pager'
                       type='checkbox'
                       checked={showPager}
                       onChange={() => setShowPager(!showPager)}

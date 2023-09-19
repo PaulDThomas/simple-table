@@ -130,7 +130,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
                 <tr key={i}>
                   <td>
                     <input
-                      id={`${simpleTableContext.id}-check-all`}
+                      id={`${simpleTableContext.id}-columnfilter-${columnName}-check-${i}`}
                       type='checkbox'
                       role='checkbox'
                       aria-label={v}
