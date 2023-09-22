@@ -76,6 +76,7 @@ describe('Bad cell rendering', () => {
                 rowId={'abc'}
                 cellField='col1'
                 columnNumber={1}
+                rowNumber={0}
               />
             </tr>
           </tbody>
@@ -106,6 +107,7 @@ describe('Bad cell rendering', () => {
           <tbody>
             <tr>
               <SimpleTableCell
+                rowNumber={0}
                 rowId={'abc'}
                 cellField='hierarchyId'
                 columnNumber={1}
@@ -142,6 +144,7 @@ describe('Bad cell rendering', () => {
                 rowId={1}
                 cellField='hierarchyLabel'
                 columnNumber={1}
+                rowNumber={0}
               />
             </tr>
           </tbody>
@@ -177,6 +180,7 @@ describe('Cell render, show things', () => {
                 rowId={2}
                 cellField='displayName'
                 columnNumber={0}
+                rowNumber={0}
               />
             </tr>
           </tbody>
@@ -210,6 +214,7 @@ describe('Cell render, show things', () => {
                 rowId={2}
                 cellField='userId'
                 columnNumber={0}
+                rowNumber={0}
               />
             </tr>
           </tbody>
@@ -243,6 +248,7 @@ describe('Cell render, show things', () => {
                 rowId={2}
                 cellField='allowed'
                 columnNumber={0}
+                rowNumber={0}
               />
             </tr>
           </tbody>
@@ -276,6 +282,7 @@ describe('Cell render, show things', () => {
                 rowId={2}
                 cellField='accessLevel'
                 columnNumber={0}
+                rowNumber={0}
               />
             </tr>
           </tbody>
@@ -309,6 +316,7 @@ describe('Cell render, show things', () => {
                 rowId={2}
                 cellField='customField'
                 columnNumber={0}
+                rowNumber={2}
               />
             </tr>
           </tbody>

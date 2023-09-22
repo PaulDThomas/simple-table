@@ -36,7 +36,10 @@ describe('Access rights row rendering', () => {
       >
         <table>
           <tbody>
-            <SimpleTableRow rowId={3} />
+            <SimpleTableRow
+              rowNumber={0}
+              rowId={3}
+            />
           </tbody>
         </table>
       </SimpleTableContext.Provider>,
@@ -66,7 +69,10 @@ describe('Access rights row rendering', () => {
       >
         <table>
           <tbody>
-            <SimpleTableRow rowId={3} />
+            <SimpleTableRow
+              rowNumber={0}
+              rowId={3}
+            />
           </tbody>
         </table>
       </SimpleTableContext.Provider>,

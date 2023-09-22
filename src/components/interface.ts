@@ -11,6 +11,7 @@ export interface iSimpleTableCellRenderProps {
   columnNumber: number;
   cellField: string;
   rowData: iSimpleTableRow;
+  rowNumber: number;
 }
 
 export interface iSimpleTableField {
