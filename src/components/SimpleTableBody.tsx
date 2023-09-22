@@ -20,6 +20,7 @@ export const SimpleTableBody = (): JSX.Element => {
             <SimpleTableRow
               key={row[simpleTableContext.keyField] as string | number}
               rowId={row[simpleTableContext.keyField] as string | number}
+              rowNumber={ri + simpleTableContext.firstRow}
             />
           ) : (
             <tr key={ri}>

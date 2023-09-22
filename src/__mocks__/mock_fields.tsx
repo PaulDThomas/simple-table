@@ -2,6 +2,7 @@ import { iSimpleTableField, simpleTableSortFn } from '../main';
 
 export const mock_fields: iSimpleTableField[] = [
   { name: 'id', hidden: true },
+  { name: 'n', label: 'N', renderFn: ({ rowNumber }) => <>{rowNumber}</> },
   {
     name: 'first_name',
     label: 'First name',

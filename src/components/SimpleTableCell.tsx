@@ -4,14 +4,16 @@ import { SimpleTableContext } from './SimpleTableContext';
 
 interface iSimpleTableCellProps {
   rowId: Key;
-  columnNumber: number;
   cellField: string;
+  columnNumber: number;
+  rowNumber: number;
 }
 
 export const SimpleTableCell = ({
   rowId,
   cellField,
   columnNumber,
+  rowNumber,
 }: iSimpleTableCellProps): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
 
@@ -39,7 +41,7 @@ export const SimpleTableCell = ({
               !field ? 'Field' : ''
             } not found`
           : field.renderFn
-          ? field.renderFn({ rowData, columnNumber, cellField: field.name })
+          ? field.renderFn({ rowData, columnNumber, cellField: field.name, rowNumber })
           : String(rowData[field.name])}
       </div>
     </td>

@@ -4,9 +4,10 @@ import { SimpleTableContext } from './SimpleTableContext';
 
 interface iSimpleTableRowProps {
   rowId: Key;
+  rowNumber: number;
 }
 
-export const SimpleTableRow = ({ rowId }: iSimpleTableRowProps): JSX.Element => {
+export const SimpleTableRow = ({ rowId, rowNumber }: iSimpleTableRowProps): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   return (
@@ -40,6 +41,7 @@ export const SimpleTableRow = ({ rowId }: iSimpleTableRowProps): JSX.Element => 
           <SimpleTableCell
             key={ci}
             rowId={rowId}
+            rowNumber={rowNumber}
             columnNumber={ci}
             cellField={field.name}
           />
