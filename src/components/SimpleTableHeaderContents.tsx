@@ -38,7 +38,13 @@ export const SimpleTableHeaderContents = ({
           }}
         >
           <span className={simpleTableContext.sortBy?.name === field.name ? 'sorted' : 'unsorted'}>
-            {field.label}
+            {field.headerRenderFn ? (
+              <div className='simpletable-header-text'>
+                {field.headerRenderFn({ field, columnNumber })}
+              </div>
+            ) : (
+              <>{field.label}</>
+            )}
           </span>
         </span>
         <div className='columnicon-holder'>

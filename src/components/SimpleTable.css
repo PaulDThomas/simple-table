@@ -227,7 +227,7 @@ h5.simpletable-title {
 
 .columnfilter-table {
   height: 100%;
-  width: 100%;
+  width: calc(100% - 2px);
   border-collapse: collapse;
 }
 .columnfilter-table tbody {

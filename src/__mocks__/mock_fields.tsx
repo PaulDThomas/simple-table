@@ -38,6 +38,7 @@ export const mock_fields: iSimpleTableField[] = [
         {columnNumber}: <span style={{ color: 'green' }}>{field.name}</span>
       </>
     ),
+    sortFn: simpleTableSortFn,
     renderFn: ({ rowData }) => {
       return rowData.car_make ? <div>{rowData.car_make as string}</div> : <div>No car</div>;
     },

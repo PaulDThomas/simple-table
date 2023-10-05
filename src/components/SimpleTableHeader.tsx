@@ -47,29 +47,23 @@ export const SimpleTableHeader = (): JSX.Element => {
     <>
       {simpleTableContext.fields
         .filter((f) => !f.hidden)
-        .map((field, hi) => {
+        .map((field, columnNumber) => {
           return (
             <th
               id={`${simpleTableContext.id}-header-${field.name}`}
-              key={hi}
-              data-key={hi}
+              key={field.name}
+              data-key={columnNumber}
               className={'simpletable-header'}
               style={{
                 backgroundColor: simpleTableContext.headerBackgroundColor,
                 opacity: 1,
-                width: simpleTableContext.columnWidths[hi] ?? '100px',
+                width: simpleTableContext.columnWidths[columnNumber] ?? '100px',
               }}
             >
-              {field.headerRenderFn ? (
-                <div className='simpletable-header-text'>
-                  {field.headerRenderFn({ field, columnNumber: hi })}
-                </div>
-              ) : (
-                <SimpleTableHeaderContents
-                  field={field}
-                  columnNumber={hi}
-                />
-              )}
+              <SimpleTableHeaderContents
+                field={field}
+                columnNumber={columnNumber}
+              />
               <div
                 className='resize-handle'
                 onMouseDown={mouseDown}

@@ -228,3 +228,40 @@ describe('Filter on column values', () => {
     expect(screen.queryByText('1 item selected')).toBeInTheDocument();
   });
 });
+
+describe('Custom render', () => {
+  test('Custom render', async () => {
+    const mockF = { ...mockFields[1], headerRenderFn: () => <>Woot!</> };
+    await act(async () => {
+      render(
+        <SimpleTableContext.Provider
+          value={{
+            id: 'testtable',
+            fields: [mockF],
+            keyField: 'userId',
+            viewData: mockData,
+            totalRows: mockData.length,
+            sortBy: mockSortUp,
+            firstRow: 0,
+            pageRows: 50,
+            updateSortBy: mockSorting,
+            columnWidths: [],
+            currentColumnItems: [
+              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+            ],
+            currentColumnFilter: null,
+            currentColumnFilters: [
+              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+            ],
+          }}
+        >
+          <SimpleTableHeaderContents
+            field={mockF}
+            columnNumber={0}
+          />
+        </SimpleTableContext.Provider>,
+      );
+    });
+    expect(screen.queryByText('Woot!')).toBeInTheDocument();
+  });
+});
