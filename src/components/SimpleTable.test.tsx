@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { iSimpleTableField, iSimpleTableRow } from '../components/interface';
-import { SimpleTable } from '../components/SimpleTable';
+import { iSimpleTableField, iSimpleTableRow } from './interface';
+import { SimpleTable } from './SimpleTable';
 import { act } from 'react-dom/test-utils';
 
 enum eAccessLevel {
@@ -87,6 +87,25 @@ describe('Simple table rendering', () => {
     expect(rows.length).toEqual(3);
     const cells = container.querySelectorAll('#test-table>tbody>tr>td');
     expect(cells.length).toEqual(9);
+  });
+
+  test('No header', async () => {
+    render(
+      <SimpleTable
+        id='test-table'
+        headerLabel='TEST TABLE'
+        searchLabel='SEARCH HERE'
+        filterLabel='FILTER HERE'
+        showHeader={false}
+        showFilter={true}
+        showSearch={false}
+        fields={mockFields}
+        keyField={'userId'}
+        data={mockAccesses}
+        selectable
+      />,
+    );
+    expect(screen.queryByText('TEST TABLE')).not.toBeInTheDocument();
   });
 });
 
@@ -219,6 +238,25 @@ describe('Toggle rows', () => {
     expect(rowCheck1).not.toBeChecked();
     expect(rowCheck2).not.toBeChecked();
     expect(rowCheck3).not.toBeChecked();
+  });
+
+  test('No header', async () => {
+    render(
+      <SimpleTable
+        id='test-table'
+        headerLabel='TEST TABLE'
+        searchLabel='SEARCH HERE'
+        filterLabel='FILTER HERE'
+        showHeader={false}
+        showFilter={true}
+        showSearch={false}
+        fields={mockFields}
+        keyField={'userId'}
+        data={mockAccesses}
+        selectable
+      />,
+    );
+    expect(screen.queryByText('TEST TABLE')).not.toBeInTheDocument();
   });
 
   test('Toggle all', async () => {

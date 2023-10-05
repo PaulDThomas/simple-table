@@ -10,6 +10,7 @@ const App = (): JSX.Element => {
   const [height, setHeight] = useState<string>('800px');
   const [width, setWidth] = useState<string>('600px');
   const [title, setTitle] = useState<string>('');
+  const [showHeader, setShowTitle] = useState<boolean>(true);
   const [showFilter, setShowFilter] = useState<boolean>(true);
   const [showPager, setShowPager] = useState<boolean>(true);
   const [showSearch, setShowSearch] = useState<boolean>(true);
@@ -50,7 +51,14 @@ const App = (): JSX.Element => {
                     />
                   </td>
                   <td>
-                    Search:{' '}
+                    Title:{' '}
+                    <input
+                      id='show-title'
+                      type='checkbox'
+                      checked={showHeader}
+                      onChange={() => setShowTitle(!showHeader)}
+                    />
+                    &nbsp;&nbsp;&nbsp; Search:{' '}
                     <input
                       id='show-search'
                       type='checkbox'
@@ -96,6 +104,7 @@ const App = (): JSX.Element => {
               keyField={'id'}
               data={data}
               headerLabel={title}
+              showHeader={showHeader}
               showSearch={showSearch}
               showFilter={showFilter}
               showPager={showPager}

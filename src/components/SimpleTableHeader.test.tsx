@@ -1,8 +1,9 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from '../components/interface';
-import { SimpleTableContext } from '../components/SimpleTableContext';
-import { SimpleTableHeader } from '../components/SimpleTableHeader';
+import { SimpleTableContext } from './SimpleTableContext';
+import { SimpleTableHeader } from './SimpleTableHeader';
+import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from './interface';
+
+jest.mock('./SimpleTableHeaderContents');
 
 const mockSort = jest.fn();
 
@@ -76,51 +77,8 @@ describe('Simple table header renders', () => {
         </table>
       </SimpleTableContext.Provider>,
     );
-    expect(screen.getByText('Name')).toBeInTheDocument();
-    expect(screen.getByText('Description')).toBeInTheDocument();
-  });
-
-  test('Test sorting clicks', async () => {
-    const user = userEvent.setup();
-    const { container } = render(
-      <SimpleTableContext.Provider
-        value={{
-          id: 'testtable',
-          fields: mockFields,
-          keyField: 'userId',
-          viewData: mockData,
-          totalRows: mockData.length,
-          sortBy: mockSortUp,
-          firstRow: 0,
-          pageRows: 50,
-          updateSortBy: mockSorting,
-          columnWidths: [],
-          currentColumnItems: [
-            { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
-          ],
-          currentColumnFilter: null,
-          currentColumnFilters: [
-            { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
-          ],
-        }}
-      >
-        <table>
-          <thead>
-            <tr>
-              <SimpleTableHeader />
-            </tr>
-          </thead>
-        </table>
-      </SimpleTableContext.Provider>,
-    );
-    const cells = container.querySelectorAll('th');
-    expect(cells.length).toEqual(2);
-
-    await user.click(screen.getByText('Name'));
-    expect(mockSorting).toHaveBeenCalledWith(mockFields[1]);
-
-    await user.click(screen.getByText('Description'));
-    expect(mockSorting).not.toHaveBeenCalledWith(mockFields[2]);
+    expect(screen.getByText('0:displayName')).toBeInTheDocument();
+    expect(screen.getByText('1:description')).toBeInTheDocument();
   });
 });
 
@@ -171,25 +129,20 @@ describe('Resize table cell', () => {
     fireEvent.mouseDown(rh);
     fireEvent.mouseMove(rh, { clientX: 300, clientY: 100 });
     fireEvent.mouseUp(rh);
-    // expect(th.style.width).toEqual('400px');
     fireEvent.mouseDown(rh);
     fireEvent.mouseMove(rh, { clientX: -100, clientY: -100 });
     fireEvent.mouseUp(rh);
-    // expect(th.style.width).toEqual('16px');
   });
 });
 
-describe('Filter on column values', () => {
-  test('Display all filter', async () => {
-    const user = userEvent.setup();
-    const mockSet = jest.fn();
-    const mockSetCurrentFilter = jest.fn();
+describe('Custom render', () => {
+  test('Custom render', async () => {
     await act(async () => {
       render(
         <SimpleTableContext.Provider
           value={{
             id: 'testtable',
-            fields: mockFields,
+            fields: [mockFields[0], { ...mockFields[1], headerRenderFn: () => <>Woot!</> }],
             keyField: 'userId',
             viewData: mockData,
             totalRows: mockData.length,
@@ -202,11 +155,9 @@ describe('Filter on column values', () => {
               { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
             ],
             currentColumnFilter: null,
-            setCurrentColumnFilter: mockSetCurrentFilter,
             currentColumnFilters: [
               { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
             ],
-            setCurrentColumnFilters: mockSet,
           }}
         >
           <div data-testid='container'>
@@ -221,62 +172,6 @@ describe('Filter on column values', () => {
         </SimpleTableContext.Provider>,
       );
     });
-    const filter = screen.getByLabelText('Column filter');
-    const selectTester = screen.getByLabelText('Tester');
-    expect(filter).toBeInTheDocument();
-    expect(selectTester).toBeInTheDocument();
-    expect(selectTester).not.toBeVisible();
-    await user.click(filter);
-    expect(mockSetCurrentFilter).toHaveBeenCalledTimes(1);
-    expect(mockSetCurrentFilter).toHaveBeenCalledWith(0);
-  });
-  test('Display partial filter', async () => {
-    const user = userEvent.setup();
-    const mockSet = jest.fn();
-    const mockSetCurrentFilter = jest.fn();
-    await act(async () => {
-      render(
-        <SimpleTableContext.Provider
-          value={{
-            id: 'testtable',
-            fields: mockFields,
-            keyField: 'userId',
-            viewData: mockData,
-            totalRows: mockData.length,
-            sortBy: mockSortUp,
-            firstRow: 0,
-            pageRows: 50,
-            updateSortBy: mockSorting,
-            columnWidths: [],
-            currentColumnItems: [
-              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
-            ],
-            currentColumnFilter: 0,
-            setCurrentColumnFilter: mockSetCurrentFilter,
-            currentColumnFilters: [{ columnName: 'displayName', values: ['Tester'] }],
-            setCurrentColumnFilters: mockSet,
-          }}
-        >
-          <div data-testid='container'>
-            <table>
-              <thead>
-                <tr>
-                  <SimpleTableHeader />
-                </tr>
-              </thead>
-            </table>
-          </div>
-        </SimpleTableContext.Provider>,
-      );
-    });
-    const filter = screen.getByLabelText('Column filter (Active)');
-    const selectTester = screen.getByLabelText('Tester');
-    expect(filter).toBeInTheDocument();
-    expect(selectTester).toBeInTheDocument();
-    expect(selectTester).toBeVisible();
-    await user.click(filter);
-    expect(mockSetCurrentFilter).toBeCalledTimes(1);
-    expect(mockSetCurrentFilter).toBeCalledWith(null);
-    expect(screen.queryByText('1 item selected')).toBeInTheDocument();
+    expect(screen.queryByText('Woot!')).toBeInTheDocument();
   });
 });

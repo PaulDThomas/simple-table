@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { SimpleTableContext } from '../components/SimpleTableContext';
-import { SimpleTablePager } from '../components/SimpleTablePager';
+import { SimpleTableContext } from './SimpleTableContext';
+import { SimpleTablePager } from './SimpleTablePager';
 import { mockData } from '../__mocks__/mock_data';
 
 describe('Simple table pager', () => {

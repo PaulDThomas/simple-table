@@ -116,6 +116,7 @@
   position: sticky;
   opacity: 1;
   z-index: 2;
+  height: 30px;
   padding-top: 8px;
   padding-bottom: 8px;
   overflow: hidden;

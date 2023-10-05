@@ -22,7 +22,7 @@ export const mock_fields: iSimpleTableField[] = [
       )
         .toLowerCase()
         .includes(searchText.toLowerCase().trim()),
-    sortFn: (a, b) => (a.last_name as string).localeCompare(b.last_name as string),
+    sortFn: simpleTableSortFn,
     width: '120px',
     canColumnFilter: true,
   },
@@ -33,8 +33,11 @@ export const mock_fields: iSimpleTableField[] = [
       ((rowData.car_make as string | null) ?? '')
         .toLowerCase()
         .includes(searchText.toLowerCase().trim()),
-    sortFn: (a, b) =>
-      ((a.car_make as string | null) ?? '').localeCompare((b.car_make as string | null) ?? ''),
+    headerRenderFn: ({ columnNumber, field }) => (
+      <>
+        {columnNumber}: <span style={{ color: 'green' }}>{field.name}</span>
+      </>
+    ),
     renderFn: ({ rowData }) => {
       return rowData.car_make ? <div>{rowData.car_make as string}</div> : <div>No car</div>;
     },
@@ -51,7 +54,7 @@ export const mock_fields: iSimpleTableField[] = [
         .includes(searchText.toLowerCase().trim()),
     sortFn: simpleTableSortFn,
     renderFn: ({ rowData }) => {
-      return rowData.car_model ? <div>{rowData.car_model as string}</div> : <div>&nbsp;</div>;
+      return rowData.car_model ? <div>{rowData.car_model as string}</div> : <div />;
     },
     width: '160px',
     canColumnFilter: true,

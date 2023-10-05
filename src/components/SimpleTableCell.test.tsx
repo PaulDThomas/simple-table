@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { iSimpleTableField, iSimpleTableRow } from '../components/interface';
-import { SimpleTableCell } from '../components/SimpleTableCell';
-import { SimpleTableContext } from '../components/SimpleTableContext';
+import { iSimpleTableField, iSimpleTableRow } from './interface';
+import { SimpleTableCell } from './SimpleTableCell';
+import { SimpleTableContext } from './SimpleTableContext';
 
 const mockFields: iSimpleTableField[] = [
   { name: 'userId', label: 'User ID' },

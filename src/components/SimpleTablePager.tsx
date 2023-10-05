@@ -9,6 +9,7 @@ export const SimpleTablePager = (): JSX.Element => {
       <span>
         Showing&nbsp;
         <select
+          id={`${simpleTableContext.id}-pager-visible-rows`}
           aria-label='Visible rows'
           value={`${
             simpleTableContext.pageRows === Infinity ? 'All' : simpleTableContext.pageRows
@@ -63,6 +64,7 @@ export const SimpleTablePager = (): JSX.Element => {
         row&nbsp;
         <select
           aria-label='First row'
+          id={`${simpleTableContext.id}-pager-first-row`}
           value={simpleTableContext.firstRow}
           onChange={(e) => {
             simpleTableContext.setFirstRow &&

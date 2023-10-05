@@ -28,7 +28,7 @@ code {
 }
 
 .app-inner {
-  width: 800px;
+  width: 95vw;
   position: relative;
   max-height: 95vh;
   opacity: 1;

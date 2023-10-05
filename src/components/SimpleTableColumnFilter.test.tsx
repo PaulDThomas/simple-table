@@ -1,8 +1,8 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SimpleTableColumnFilter } from '../components/SimpleTableColumnFilter';
-import { SimpleTableContext } from '../components/SimpleTableContext';
-import { iSimpleTableField, iSimpleTableRow } from '../components/interface';
+import { SimpleTableColumnFilter } from './SimpleTableColumnFilter';
+import { SimpleTableContext } from './SimpleTableContext';
+import { iSimpleTableField, iSimpleTableRow } from './interface';
 
 const mockFields: iSimpleTableField[] = [
   { name: 'userId', hidden: true, label: 'UserId' },
@@ -168,17 +168,10 @@ describe('Update toggle', () => {
         </SimpleTableContext.Provider>,
       );
     });
-    // const lead = screen.getByLabelText('Lead');
-    // const tester = screen.getByLabelText('Tester');
     const all = screen.getByLabelText('Column filter toggle');
-    // const other = screen.getByLabelText('Other user');
     await user.click(all);
     expect(mockSet).toHaveBeenLastCalledWith([
       { columnName: 'displayName', values: ['Lead', 'Other user', 'Tester'] },
     ]);
-    // await user.click(tester);
-    // expect(mockSet).toHaveBeenLastCalledWith([
-    //   { columnName: 'displayName', values: ['Lead', 'Tester'] },
-    // ]);
   });
 });
