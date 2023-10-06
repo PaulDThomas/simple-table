@@ -7,9 +7,10 @@ import { SimpleTable, iSimpleTableRow } from '../../src/components';
 const App = (): JSX.Element => {
   const [data, setData] = useState<iSimpleTableRow[]>(mockData);
   const [selected, setSelected] = useState<Key[]>([]);
-  const [height, setHeight] = useState<string>('800px');
+  const [height, setHeight] = useState<string>('600px');
   const [width, setWidth] = useState<string>('600px');
   const [title, setTitle] = useState<string>('');
+  const [receivedWidths, setReceivedWidths] = useState<(string | undefined)[]>([]);
   const [showHeader, setShowTitle] = useState<boolean>(true);
   const [showFilter, setShowFilter] = useState<boolean>(true);
   const [showPager, setShowPager] = useState<boolean>(true);
@@ -23,7 +24,7 @@ const App = (): JSX.Element => {
             <table>
               <tbody>
                 <tr>
-                  <td>Height</td>
+                  <td draggable>Height</td>
                   <td>
                     <input
                       id='height'
@@ -37,17 +38,6 @@ const App = (): JSX.Element => {
                       id='width'
                       value={width}
                       onChange={(e) => setWidth(e.currentTarget.value)}
-                    />
-                  </td>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr>
-                  <td>Title</td>
-                  <td>
-                    <input
-                      id='title'
-                      value={title}
-                      onChange={(e) => setTitle(e.currentTarget.value)}
                     />
                   </td>
                   <td>
@@ -80,6 +70,17 @@ const App = (): JSX.Element => {
                       onChange={() => setShowPager(!showPager)}
                     />
                   </td>
+                </tr>
+                <tr>
+                  <td>Title</td>
+                  <td>
+                    <input
+                      id='title'
+                      value={title}
+                      onChange={(e) => setTitle(e.currentTarget.value)}
+                    />
+                  </td>
+                  <td>&nbsp;</td>
                   <td>
                     <button
                       onClick={() => {
@@ -89,6 +90,7 @@ const App = (): JSX.Element => {
                       Remove selected
                     </button>
                   </td>
+                  <td>Widths: {receivedWidths.join('.')}</td>
                 </tr>
               </tbody>
             </table>
@@ -112,6 +114,7 @@ const App = (): JSX.Element => {
               selectable
               currentSelection={selected}
               setCurrentSelection={setSelected}
+              onWidthChange={(ret) => setReceivedWidths(ret)}
             />
           </div>
         </div>

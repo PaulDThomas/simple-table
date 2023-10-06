@@ -29,6 +29,7 @@ interface SimpleTableProps {
   initialFilterSelected?: boolean;
   filterLabel?: string;
   searchLabel?: string;
+  onWidthChange?: (ret: (string | undefined)[]) => void;
 
   tableClassName?: string;
   inputGroupClassName?: string;
@@ -62,6 +63,7 @@ export const SimpleTable = ({
   initialFilterSelected = false,
   filterLabel = 'Filter',
   searchLabel = 'Search',
+  onWidthChange,
   tableClassName = '',
   inputGroupClassName = 'form-group',
   filterLabelClassName = 'form-check-label',
@@ -78,9 +80,8 @@ export const SimpleTable = ({
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
   const [sortBy, setSortBy] = useState<iSimpleTableSort | null>(null);
   const [searchText, setSearchText] = useState<string>('');
-  const [columnWidths, setColumnWidths] = useState<(string | undefined)[]>(
-    fields.map((f) => f.width),
-  );
+  const [columnWidths, setColumnWidths] = useState<(string | undefined)[]>([]);
+  useEffect(() => setColumnWidths(fields.map((f) => f.width)), [fields]);
   const [firstRow, setFirstRow] = useState(0);
   const [pageRows, setPageRows] = useState(25);
   const [currentColumnFilter, setCurrentColumnFilter] = useState<number | null>(null);
@@ -285,6 +286,7 @@ export const SimpleTable = ({
             }
             setColumnWidths(newColumnWidths);
             updateLocalSettings('headerWidths', newColumnWidths);
+            onWidthChange && onWidthChange(newColumnWidths);
           },
           pageRows,
           setPageRows: (ret) => {

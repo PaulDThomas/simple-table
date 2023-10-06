@@ -35,7 +35,19 @@ export const mock_fields: iSimpleTableField[] = [
         .includes(searchText.toLowerCase().trim()),
     headerRenderFn: ({ columnNumber, field }) => (
       <>
-        {columnNumber}: <span style={{ color: 'green' }}>{field.name}</span>
+        {columnNumber}:{' '}
+        <span
+          style={{ color: 'green' }}
+          onDragOver={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onDrop={(e) => {
+            console.log('Drag end', e);
+          }}
+        >
+          {field.name}
+        </span>
       </>
     ),
     sortFn: simpleTableSortFn,

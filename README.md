@@ -28,29 +28,30 @@ import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort, SimpleTable } fro
 ... inside REACT component
 
 ```
-  <SimpleTable
-    id?: string;
-    headerLabel?: string;
-    fields: iSimpleTableField[];
-    keyField: string;
-    data: iSimpleTableRow[];
-    selectable?: boolean;
-    currentSelection?: Key[];
-    setCurrentSelection?: (ret: Key[]) => void;
-    showSearch?: boolean;
-    showFilter?: boolean;
-    showPager?: boolean;
-    initialFilterSelected?: boolean;
-    filterLabel?: string;
-    searchLabel?: string;
-    tableClassName?: string;
-    inputGroupClassName?: string;
-    filterLabelClassName?: string;
-    filterCheckClassName?: string;
-    searchLabelClassName?: string;
-    searchInputClassName?: string;
-    headerBackgroundColor?: string;
-  />
+<SimpleTable
+  id?: string;
+  headerLabel?: string;
+  fields: iSimpleTableField[];
+  keyField: string;
+  data: iSimpleTableRow[];
+  selectable?: boolean;
+  currentSelection?: Key[];
+  setCurrentSelection?: (ret: Key[]) => void;
+  showSearch?: boolean;
+  showFilter?: boolean;
+  showPager?: boolean;
+  initialFilterSelected?: boolean;
+  filterLabel?: string;
+  searchLabel?: string;
+  onWidthChange?: (ret: (string | undefined)[]) => void;
+  tableClassName?: string;
+  inputGroupClassName?: string;
+  filterLabelClassName?: string;
+  filterCheckClassName?: string;
+  searchLabelClassName?: string;
+  searchInputClassName?: string;
+  headerBackgroundColor?: string;
+/>
 ```
 
 ## Properties
@@ -71,6 +72,7 @@ import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort, SimpleTable } fro
 | initialFilterSelected    | Indicates whether the filter checkbox is checked on the initial render                                 |            `false`             |
 | filterLabel              | Label for the filter checkbox                                                                          |            'Filter'            |
 | searchLabel              | Label for the search input                                                                             |            'Search'            |
+| onWidthChange            | Callback after changing column widths by dragging                                                      |                                |
 | tableClassName           | Class names to apply to the table element.                                                             |               ''               |
 | ~~inputGroupClassName~~  | Not currently implemented                                                                              |          `form-group`          |
 | ~~filterLabelClassName~~ | Not currently implemented                                                                              |       `form-check-label`       |
@@ -93,14 +95,13 @@ interface iSimpleTableRow {
 e.g.
 
 ```
-  {
-    id: 2,
-    first_name: 'Paul',
-    last_name: 'Thomas',
-    car_make: 'Ferrari',
-    car_model: 'Penis extension',
-  },
-
+{
+  id: 2,
+  first_name: 'Paul',
+  last_name: 'Thomas',
+  car_make: 'Ferrari',
+  car_model: 'Penis extension',
+},
 ```
 
 however, there are no restrictions on data type for each element. Complex objects will require a render function to be supplied, and sort/search/filter functions if they are required.
@@ -118,6 +119,7 @@ interface iSimpleTableField {
     sortFn?: (a: iSimpleTableRow, b: iSimpleTableRow, sortBy: iSimpleTableSort) => number;
     searchFn?: (a: iSimpleTableRow, searchText: string) => boolean;
     filterOutFn?: (a: iSimpleTableRow) => boolean;
+    headerRenderFn?: (a: iSimpleTableHeaderRenderProps) => JSX.Element
     renderFn?: (a: iSimpleTableCellRenderProps) => JSX.Element;
 }
 ```
@@ -126,30 +128,30 @@ e.g.
 
 ```
 const fields: iSimpleTableField[] = [
-    { name: 'id', hidden: true },
-    {
-      name: 'first_name',
-      label: 'First name',
-      searchFn: (rowData, searchText) =>
-        (rowData.first_name as string).toLowerCase().includes(searchText.toLowerCase().trim()),
-      sortFn: (a, b) => (a.first_name as string).localeCompare(b.first_name as string),
+  { name: 'id', hidden: true },
+  {
+    name: 'first_name',
+    label: 'First name',
+    searchFn: (rowData, searchText) =>
+      (rowData.first_name as string).toLowerCase().includes(searchText.toLowerCase().trim()),
+    sortFn: (a, b) => (a.first_name as string).localeCompare(b.first_name as string),
+  },
+  ...,
+  {
+    name: 'car_make',
+    label: 'Make',
+    searchFn: (rowData, searchText) =>
+      ((rowData.car_make as string | null) ?? '')
+        .toLowerCase()
+        .includes(searchText.toLowerCase().trim()),
+    sortFn: (a, b) =>
+      ((a.car_make as string | null) ?? '').localeCompare((b.car_make as string | null) ?? ''),
+    renderFn: ({ rowData }) => {
+      return rowData.car_make ? <div>{rowData.car_make as string}</div> : <div>No car</div>;
     },
-    ...,
-    {
-      name: 'car_make',
-      label: 'Make',
-      searchFn: (rowData, searchText) =>
-        ((rowData.car_make as string | null) ?? '')
-          .toLowerCase()
-          .includes(searchText.toLowerCase().trim()),
-      sortFn: (a, b) =>
-        ((a.car_make as string | null) ?? '').localeCompare((b.car_make as string | null) ?? ''),
-      renderFn: ({ rowData }) => {
-        return rowData.car_make ? <div>{rowData.car_make as string}</div> : <div>No car</div>;
-      },
-      filterOutFn: (rowData) => (rowData.car_make as string | null) === null,
-    },
-    ...,
+    filterOutFn: (rowData) => (rowData.car_make as string | null) === null,
+  },
+  ...,
 ];
 ```
 
@@ -184,26 +186,40 @@ Should return a truthy or falsy value. **NB** A true value will remove the row.
 const filterOutFn = (rowData: iSimpleTableRow) => { return (rowData.car_make as string | null) === null; };
 ```
 
-## Cell rendering
+## Header Cell and Body Cell rendering
 
-If no custom render function for the field is specified, then the field will be rendered as a string.
+If no custom render function for the field is specified for the cell or the header, then the field will be rendered as a string.
 
 A custom render function can be supplied to alter this, which is supplied with the column number, field name and row data as an object. It must return a valid JSX element.
 
 ```
-interface iSimpleTableCellRenderProps {
+interface iSimpleTableHeaderRenderProps {
   columnNumber: number;
+  field: iSimpleTableField;
+}
+
+interface iSimpleTableCellRenderProps extends iSimpleTableHeaderRenderProps {
   cellField: string;
   rowData: iSimpleTableRow;
+  rowNumber: number;
 }
 ```
 
 e.g.
 
 ```
+const headerRenderFn({ columnNumber, field }) => (
+  <>
+    {columnNumber}:{' '}
+    <span>
+      {field.name}
+    </span>
+  </>
+);
+
 const renderFn = ({ columnNnumber, cellField, rowData }:iSimpleTableCellRenderProps):JSX.Element => {
   return rowData.car_make ? <div>{rowData.car_make as string}</div> : <div>No car</div>;
-});
+};
 ```
 
 # VS code launch settings
@@ -211,30 +227,31 @@ const renderFn = ({ columnNnumber, cellField, rowData }:iSimpleTableCellRenderPr
 Use these configurations to attach to chrome, then launch the server
 
 ```
-  "configurations": [
-    {
-      "type": "chrome",
-      "request": "attach",
-      "port": 9222,
-      "name": "Attach to Browser debug",
-      "webRoot": "${workspaceFolder}",
-      "sourceMapPathOverrides": {
-        "/__parcel_source_root/*": "${webRoot}/*"
-      }
-    },
-    {
-      "name": "Launch NPM web server",
-      "command": "npm start",
-      "request": "launch",
-      "type": "node-terminal",
-      "cwd": "${workspaceRoot}",
-      "env": {
-        "PORT": "1234"
-      },
-      "serverReadyAction": {
-        "pattern": "Server running at (http://localhost:[0-9]+)",
-        "uriFormat": "%s",
-        "action": "openExternally"
-      }
+"configurations": [
+  {
+    "type": "chrome",
+    "request": "attach",
+    "port": 9222,
+    "name": "Attach to Browser debug",
+    "webRoot": "${workspaceFolder}",
+    "sourceMapPathOverrides": {
+      "/__parcel_source_root/*": "${webRoot}/*"
     }
+  },
+  {
+    "name": "Launch NPM web server",
+    "command": "npm start",
+    "request": "launch",
+    "type": "node-terminal",
+    "cwd": "${workspaceRoot}",
+    "env": {
+      "PORT": "1234"
+    },
+    "serverReadyAction": {
+      "pattern": "Server running at (http://localhost:[0-9]+)",
+      "uriFormat": "%s",
+      "action": "openExternally"
+    }
+  }
+]
 ```
