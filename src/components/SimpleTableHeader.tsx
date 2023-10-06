@@ -1,6 +1,6 @@
-import React, { useCallback, useContext, useRef } from 'react';
-import { SimpleTableContext } from './SimpleTableContext';
-import { SimpleTableHeaderContents } from './SimpleTableHeaderContents';
+import React, { useCallback, useContext, useRef } from "react";
+import { SimpleTableContext } from "./SimpleTableContext";
+import { SimpleTableHeaderContents } from "./SimpleTableHeaderContents";
 
 export const SimpleTableHeader = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
@@ -18,15 +18,15 @@ export const SimpleTableHeader = (): JSX.Element => {
 
   const mouseUp = useCallback(() => {
     if (targetCell.current) {
-      const ix = parseInt(targetCell.current.dataset.key ?? '-1');
+      const ix = parseInt(targetCell.current.dataset.key ?? "-1");
       const width = targetCell.current.style.width;
       simpleTableContext &&
         simpleTableContext.setColumnWidth &&
         width &&
         simpleTableContext.setColumnWidth(ix, targetCell.current.style.width);
       targetCell.current = null;
-      window.removeEventListener('mousemove', mouseMove);
-      window.removeEventListener('mouseup', mouseUp);
+      window.removeEventListener("mousemove", mouseMove);
+      window.removeEventListener("mouseup", mouseUp);
     }
   }, [mouseMove, simpleTableContext]);
 
@@ -36,8 +36,8 @@ export const SimpleTableHeader = (): JSX.Element => {
       targetCell.current = (e.currentTarget as HTMLDivElement)
         .parentElement as HTMLTableCellElement;
       if (targetCell.current) {
-        window.addEventListener('mousemove', mouseMove);
-        window.addEventListener('mouseup', mouseUp);
+        window.addEventListener("mousemove", mouseMove);
+        window.addEventListener("mouseup", mouseUp);
       }
     },
     [mouseMove, mouseUp],
@@ -53,11 +53,11 @@ export const SimpleTableHeader = (): JSX.Element => {
               id={`${simpleTableContext.id}-header-${field.name}`}
               key={field.name}
               data-key={columnNumber}
-              className={'simpletable-header'}
+              className={"simpletable-header"}
               style={{
                 backgroundColor: simpleTableContext.headerBackgroundColor,
                 opacity: 1,
-                width: simpleTableContext.columnWidths[columnNumber] ?? '100px',
+                width: simpleTableContext.columnWidths[columnNumber] ?? "100px",
               }}
             >
               <SimpleTableHeaderContents
@@ -75,4 +75,4 @@ export const SimpleTableHeader = (): JSX.Element => {
   );
 };
 
-SimpleTableHeader.displayName = 'SimpleTableHeader';
+SimpleTableHeader.displayName = "SimpleTableHeader";

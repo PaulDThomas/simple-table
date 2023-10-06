@@ -1,5 +1,5 @@
-import React, { Key } from 'react';
-import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from './interface';
+import React, { Key } from "react";
+import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from "./interface";
 
 export interface iSimpleTableColumnFilter {
   columnName: string;
@@ -51,12 +51,12 @@ export interface iSimpleTableContext {
 }
 
 export const SimpleTableContext = React.createContext<iSimpleTableContext>({
-  id: 'simple-table',
+  id: "simple-table",
   fields: [],
-  keyField: '',
+  keyField: "",
   viewData: [],
   totalRows: 0,
-  headerBackgroundColor: 'white',
+  headerBackgroundColor: "white",
   firstRow: 0,
   pageRows: 50,
   columnWidths: [],

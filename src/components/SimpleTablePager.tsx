@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { SimpleTableContext } from './SimpleTableContext';
+import { useContext } from "react";
+import { SimpleTableContext } from "./SimpleTableContext";
 
 export const SimpleTablePager = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
@@ -12,12 +12,12 @@ export const SimpleTablePager = (): JSX.Element => {
           id={`${simpleTableContext.id}-pager-visible-rows`}
           aria-label='Visible rows'
           value={`${
-            simpleTableContext.pageRows === Infinity ? 'All' : simpleTableContext.pageRows
+            simpleTableContext.pageRows === Infinity ? "All" : simpleTableContext.pageRows
           }`}
           onChange={(e) =>
             simpleTableContext.setPageRows &&
             simpleTableContext.setPageRows(
-              e.currentTarget.value === 'All' ? Infinity : parseInt(e.currentTarget.value),
+              e.currentTarget.value === "All" ? Infinity : parseInt(e.currentTarget.value),
             )
           }
         >
@@ -130,4 +130,4 @@ export const SimpleTablePager = (): JSX.Element => {
   );
 };
 
-SimpleTablePager.displayName = 'SimpleTablePager';
+SimpleTablePager.displayName = "SimpleTablePager";

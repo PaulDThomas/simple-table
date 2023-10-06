@@ -1,38 +1,38 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
-import { SimpleTableContext } from './SimpleTableContext';
-import { SimpleTableHeader } from './SimpleTableHeader';
-import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from './interface';
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { SimpleTableContext } from "./SimpleTableContext";
+import { SimpleTableHeader } from "./SimpleTableHeader";
+import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from "./interface";
 
-jest.mock('./SimpleTableHeaderContents');
+jest.mock("./SimpleTableHeaderContents");
 
 const mockSort = jest.fn();
 
 const mockFields: iSimpleTableField[] = [
-  { name: 'tlfId', hidden: true },
+  { name: "tlfId", hidden: true },
   {
-    name: 'displayName',
+    name: "displayName",
     hidden: false,
-    label: 'Name',
+    label: "Name",
     sortFn: mockSort,
-    width: '200px',
+    width: "200px",
     canColumnFilter: true,
   },
-  { name: 'description', hidden: false, label: 'Description' },
+  { name: "description", hidden: false, label: "Description" },
 ];
 
 const mockData: iSimpleTableRow[] = [
-  { TlfId: 1, displayName: 'Lead', description: 'Magic lead' },
-  { TlfId: 2, displayName: 'Tester', description: 'A tester' },
-  { TlfId: 3, displayName: 'Other user', description: 'Important VIP' },
+  { TlfId: 1, displayName: "Lead", description: "Magic lead" },
+  { TlfId: 2, displayName: "Tester", description: "A tester" },
+  { TlfId: 3, displayName: "Other user", description: "Important VIP" },
 ];
 
-const mockSortUp: iSimpleTableSort = { name: 'displayName', asc: true };
-const mockSortDown: iSimpleTableSort = { name: 'description', asc: false };
+const mockSortUp: iSimpleTableSort = { name: "displayName", asc: true };
+const mockSortDown: iSimpleTableSort = { name: "description", asc: false };
 
 const mockSorting = jest.fn();
 
-describe('Simple table header renders', () => {
-  test('No context render', async () => {
+describe("Simple table header renders", () => {
+  test("No context render", async () => {
     render(
       <table>
         <thead>
@@ -42,17 +42,17 @@ describe('Simple table header renders', () => {
         </thead>
       </table>,
     );
-    expect(screen.queryByText('Name')).not.toBeInTheDocument();
-    expect(screen.queryByText('Description')).not.toBeInTheDocument();
+    expect(screen.queryByText("Name")).not.toBeInTheDocument();
+    expect(screen.queryByText("Description")).not.toBeInTheDocument();
   });
 
-  test('Basic render', async () => {
+  test("Basic render", async () => {
     render(
       <SimpleTableContext.Provider
         value={{
-          id: 'testtable',
+          id: "testtable",
           fields: mockFields,
-          keyField: 'userId',
+          keyField: "userId",
           viewData: mockData,
           totalRows: mockData.length,
           firstRow: 0,
@@ -60,11 +60,11 @@ describe('Simple table header renders', () => {
           sortBy: mockSortDown,
           columnWidths: [],
           currentColumnItems: [
-            { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+            { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
           ],
           currentColumnFilter: null,
           currentColumnFilters: [
-            { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+            { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
           ],
         }}
       >
@@ -77,20 +77,20 @@ describe('Simple table header renders', () => {
         </table>
       </SimpleTableContext.Provider>,
     );
-    expect(screen.getByText('0:displayName')).toBeInTheDocument();
-    expect(screen.getByText('1:description')).toBeInTheDocument();
+    expect(screen.getByText("0:displayName")).toBeInTheDocument();
+    expect(screen.getByText("1:description")).toBeInTheDocument();
   });
 });
 
-describe('Resize table cell', () => {
-  test('Resize', async () => {
+describe("Resize table cell", () => {
+  test("Resize", async () => {
     await act(async () => {
       render(
         <SimpleTableContext.Provider
           value={{
-            id: 'testtable',
+            id: "testtable",
             fields: mockFields,
-            keyField: 'userId',
+            keyField: "userId",
             viewData: mockData,
             totalRows: mockData.length,
             sortBy: mockSortUp,
@@ -99,11 +99,11 @@ describe('Resize table cell', () => {
             updateSortBy: mockSorting,
             columnWidths: [],
             currentColumnItems: [
-              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
             currentColumnFilter: null,
             currentColumnFilters: [
-              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
           }}
         >
@@ -119,9 +119,9 @@ describe('Resize table cell', () => {
         </SimpleTableContext.Provider>,
       );
     });
-    const container = await screen.findByTestId('container');
-    const cells = container.querySelectorAll('th');
-    const rhs = container.querySelectorAll('th div.resize-handle');
+    const container = await screen.findByTestId("container");
+    const cells = container.querySelectorAll("th");
+    const rhs = container.querySelectorAll("th div.resize-handle");
     const th = cells[0];
     const rh = rhs[0];
     expect(th).toBeInTheDocument();

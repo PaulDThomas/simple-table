@@ -1,15 +1,15 @@
-import { Key, useState } from 'react';
-import { mockData } from '../../src/__mocks__/mock_data';
-import { mock_fields } from '../../src/__mocks__/mock_fields';
-import { SimpleTable, iSimpleTableRow } from '../../src/components';
+import { Key, useState } from "react";
+import { mockData } from "../../src/__mocks__/mock_data";
+import { mock_fields } from "../../src/__mocks__/mock_fields";
+import { SimpleTable, iSimpleTableRow } from "../../src/components";
 
 // Main application
 const App = (): JSX.Element => {
   const [data, setData] = useState<iSimpleTableRow[]>(mockData);
   const [selected, setSelected] = useState<Key[]>([]);
-  const [height, setHeight] = useState<string>('600px');
-  const [width, setWidth] = useState<string>('600px');
-  const [title, setTitle] = useState<string>('');
+  const [height, setHeight] = useState<string>("600px");
+  const [width, setWidth] = useState<string>("600px");
+  const [title, setTitle] = useState<string>("");
   const [receivedWidths, setReceivedWidths] = useState<(string | undefined)[]>([]);
   const [showHeader, setShowTitle] = useState<boolean>(true);
   const [showFilter, setShowFilter] = useState<boolean>(true);
@@ -41,28 +41,28 @@ const App = (): JSX.Element => {
                     />
                   </td>
                   <td>
-                    Title:{' '}
+                    Title:{" "}
                     <input
                       id='show-title'
                       type='checkbox'
                       checked={showHeader}
                       onChange={() => setShowTitle(!showHeader)}
                     />
-                    &nbsp;&nbsp;&nbsp; Search:{' '}
+                    &nbsp;&nbsp;&nbsp; Search:{" "}
                     <input
                       id='show-search'
                       type='checkbox'
                       checked={showSearch}
                       onChange={() => setShowSearch(!showSearch)}
                     />
-                    &nbsp;&nbsp;&nbsp; Filter:{' '}
+                    &nbsp;&nbsp;&nbsp; Filter:{" "}
                     <input
                       id='show-filter'
                       type='checkbox'
                       checked={showFilter}
                       onChange={() => setShowFilter(!showFilter)}
                     />
-                    &nbsp;&nbsp;&nbsp; Pager:{' '}
+                    &nbsp;&nbsp;&nbsp; Pager:{" "}
                     <input
                       id='show-pager'
                       type='checkbox'
@@ -90,7 +90,7 @@ const App = (): JSX.Element => {
                       Remove selected
                     </button>
                   </td>
-                  <td>Widths: {receivedWidths.join('.')}</td>
+                  <td>Widths: {receivedWidths.join(".")}</td>
                 </tr>
               </tbody>
             </table>
@@ -98,12 +98,12 @@ const App = (): JSX.Element => {
 
           <div
             className='table-holder'
-            style={{ backgroundColor: 'cyan', height, width, maxWidth: '800px', padding: '1rem' }}
+            style={{ backgroundColor: "cyan", height, width, maxWidth: "800px", padding: "1rem" }}
           >
             <SimpleTable
               id='ais'
               fields={mock_fields}
-              keyField={'id'}
+              keyField={"id"}
               data={data}
               headerLabel={title}
               showHeader={showHeader}

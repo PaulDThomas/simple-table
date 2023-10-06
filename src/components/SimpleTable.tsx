@@ -1,17 +1,17 @@
-import { Key, useCallback, useEffect, useMemo, useState } from 'react';
-import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from './interface';
-import './SimpleTable.css';
-import { SimpleTableBody } from './SimpleTableBody';
+import { Key, useCallback, useEffect, useMemo, useState } from "react";
+import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from "./interface";
+import "./SimpleTable.css";
+import { SimpleTableBody } from "./SimpleTableBody";
 import {
   iSimpleTableColumnFilter,
   iSimpleTableContext,
   SimpleTableContext,
-} from './SimpleTableContext';
-import { SimpleTableFilter } from './SimpleTableFilter';
-import { SimpleTableHeader } from './SimpleTableHeader';
-import { SimpleTableSearch } from './SimpleTableSearch';
-import { SimpleTableSelectHeader } from './SimpleTableSelectHeader';
-import { SimpleTablePager } from './SimpleTablePager';
+} from "./SimpleTableContext";
+import { SimpleTableFilter } from "./SimpleTableFilter";
+import { SimpleTableHeader } from "./SimpleTableHeader";
+import { SimpleTableSearch } from "./SimpleTableSearch";
+import { SimpleTableSelectHeader } from "./SimpleTableSelectHeader";
+import { SimpleTablePager } from "./SimpleTablePager";
 
 interface SimpleTableProps {
   id?: string;
@@ -43,13 +43,13 @@ interface SimpleTableProps {
 }
 
 interface SimpleTableLocalSettings {
-  pageRows?: number | 'Infinity';
+  pageRows?: number | "Infinity";
   headerWidths?: (string | undefined)[];
 }
 
 export const SimpleTable = ({
-  id = 'simple-table',
-  headerLabel = 'Simple table',
+  id = "simple-table",
+  headerLabel = "Simple table",
   fields,
   keyField,
   data,
@@ -61,17 +61,17 @@ export const SimpleTable = ({
   showFilter = false,
   showPager = true,
   initialFilterSelected = false,
-  filterLabel = 'Filter',
-  searchLabel = 'Search',
+  filterLabel = "Filter",
+  searchLabel = "Search",
   onWidthChange,
-  tableClassName = '',
-  inputGroupClassName = 'form-group',
-  filterLabelClassName = 'form-check-label',
-  filterCheckClassName = 'form-check-input',
-  searchLabelClassName = 'form-label',
-  searchInputClassName = 'form-control form-control-sm',
-  mainBackgroundColor = 'white',
-  headerBackgroundColor = 'white',
+  tableClassName = "",
+  inputGroupClassName = "form-group",
+  filterLabelClassName = "form-check-label",
+  filterCheckClassName = "form-check-input",
+  searchLabelClassName = "form-label",
+  searchInputClassName = "form-control form-control-sm",
+  mainBackgroundColor = "white",
+  headerBackgroundColor = "white",
 }: SimpleTableProps): JSX.Element => {
   const [tableData, setTableData] = useState<iSimpleTableRow[]>(data);
   useEffect(() => {
@@ -79,7 +79,7 @@ export const SimpleTable = ({
   }, [data]);
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
   const [sortBy, setSortBy] = useState<iSimpleTableSort | null>(null);
-  const [searchText, setSearchText] = useState<string>('');
+  const [searchText, setSearchText] = useState<string>("");
   const [columnWidths, setColumnWidths] = useState<(string | undefined)[]>([]);
   useEffect(() => setColumnWidths(fields.map((f) => f.width)), [fields]);
   const [firstRow, setFirstRow] = useState(0);
@@ -136,9 +136,9 @@ export const SimpleTable = ({
           .map((cf) => {
             if (row[cf.columnName] !== undefined) {
               return cf.values.includes(
-                typeof row[cf.columnName] === 'number'
+                typeof row[cf.columnName] === "number"
                   ? (row[cf.columnName] as number).toString()
-                  : `${row[cf.columnName] ?? '<blank>'}`,
+                  : `${row[cf.columnName] ?? "<blank>"}`,
               );
             } else return true;
           })
@@ -175,9 +175,9 @@ export const SimpleTable = ({
         values: Array.from(
           new Set(
             tableData.map((t) =>
-              typeof t[f.name] === 'number'
+              typeof t[f.name] === "number"
                 ? (t[f.name] as number).toString()
-                : `${t[f.name] ?? '<blank>'}`,
+                : `${t[f.name] ?? "<blank>"}`,
             ),
           ),
         ),
@@ -191,7 +191,7 @@ export const SimpleTable = ({
     // Select available if some are not selected
     const viewedKeys: Key[] = viewData
       .filter(
-        (rowData) => typeof rowData[keyField] === 'string' || typeof rowData[keyField] === 'number',
+        (rowData) => typeof rowData[keyField] === "string" || typeof rowData[keyField] === "number",
       )
       .map((rowData) => rowData[keyField] as Key);
     // Add if any of the current selection are not selected
@@ -226,10 +226,10 @@ export const SimpleTable = ({
   const updateLocalSettings = useCallback(
     (setting: string, value: number | (string | undefined)[]) => {
       const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
-      const localSettings = JSON.parse(localSettingsText ?? '{}') as SimpleTableLocalSettings;
-      if (setting === 'pageRows' && value && !Array.isArray(value)) {
-        localSettings.pageRows = value === Infinity ? 'Infinity' : value;
-      } else if (setting === 'headerWidths' && value && Array.isArray(value)) {
+      const localSettings = JSON.parse(localSettingsText ?? "{}") as SimpleTableLocalSettings;
+      if (setting === "pageRows" && value && !Array.isArray(value)) {
+        localSettings.pageRows = value === Infinity ? "Infinity" : value;
+      } else if (setting === "headerWidths" && value && Array.isArray(value)) {
         localSettings.headerWidths = value;
       }
       window.localStorage.setItem(
@@ -246,7 +246,7 @@ export const SimpleTable = ({
     if (localSettingsText) {
       const localSettings = JSON.parse(localSettingsText) as SimpleTableLocalSettings;
       localSettings.pageRows &&
-        setPageRows(localSettings.pageRows === 'Infinity' ? Infinity : localSettings.pageRows);
+        setPageRows(localSettings.pageRows === "Infinity" ? Infinity : localSettings.pageRows);
       if (localSettings.headerWidths) {
         setColumnWidths(localSettings.headerWidths);
       }
@@ -285,13 +285,13 @@ export const SimpleTable = ({
               newColumnWidths[col] = width;
             }
             setColumnWidths(newColumnWidths);
-            updateLocalSettings('headerWidths', newColumnWidths);
+            updateLocalSettings("headerWidths", newColumnWidths);
             onWidthChange && onWidthChange(newColumnWidths);
           },
           pageRows,
           setPageRows: (ret) => {
             setPageRows(ret);
-            updateLocalSettings('pageRows', ret);
+            updateLocalSettings("pageRows", ret);
           },
           firstRow,
           setFirstRow,
@@ -321,7 +321,7 @@ export const SimpleTable = ({
             <h5 className='simpletable-title'>
               {headerLabel}
               {selectable && (currentSelection?.length ?? 0) > 0 && (
-                <small style={{ fontSize: 'small' }}>
+                <small style={{ fontSize: "small" }}>
                   {} {currentSelection?.length} selected
                 </small>
               )}
@@ -335,8 +335,8 @@ export const SimpleTable = ({
         className='simpletable-main small-scrollbar'
         style={{
           backgroundColor: mainBackgroundColor,
-          height: `calc(100% ${showHeader || showSearch || showFilter ? '- 46px' : ''} ${
-            showPager ? ' - 1.75rem' : ''
+          height: `calc(100% ${showHeader || showSearch || showFilter ? "- 46px" : ""} ${
+            showPager ? " - 1.75rem" : ""
           }`,
         }}
       >
@@ -365,4 +365,4 @@ export const SimpleTable = ({
   );
 };
 
-SimpleTable.displayName = 'SimpleTable';
+SimpleTable.displayName = "SimpleTable";

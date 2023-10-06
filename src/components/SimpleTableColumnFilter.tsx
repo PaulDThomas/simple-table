@@ -1,10 +1,10 @@
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { SimpleTableContext, iSimpleTableColumnFilter } from './SimpleTableContext';
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { SimpleTableContext, iSimpleTableColumnFilter } from "./SimpleTableContext";
 
 export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) => {
   const simpleTableContext = useContext(SimpleTableContext);
   const allCheck = useRef<HTMLInputElement | null>(null);
-  const [localFilter, setLocalFilter] = useState<string>('');
+  const [localFilter, setLocalFilter] = useState<string>("");
 
   const availableList = useMemo(() => {
     return simpleTableContext.currentColumnItems
@@ -75,12 +75,12 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
                 aria-label='Column filter search'
                 value={localFilter}
                 onChange={(e) => setLocalFilter(e.currentTarget.value)}
-                style={{ width: 'calc(100% - 16px)' }}
+                style={{ width: "calc(100% - 16px)" }}
               />
               <div
                 className='columnfilter-table-close'
                 style={{
-                  display: 'inline-block',
+                  display: "inline-block",
                 }}
               >
                 <svg
@@ -155,7 +155,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
         <tfoot>
           <tr>
             <td colSpan={2}>
-              {currentFilter.length} item{currentFilter.length !== 1 ? 's' : ''} selected
+              {currentFilter.length} item{currentFilter.length !== 1 ? "s" : ""} selected
             </td>
           </tr>
         </tfoot>
@@ -164,4 +164,4 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
   );
 };
 
-SimpleTableColumnFilter.displayName = 'SimpleTableColumnFilter';
+SimpleTableColumnFilter.displayName = "SimpleTableColumnFilter";

@@ -1,23 +1,23 @@
-import { act, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { SimpleTableColumnFilter } from './SimpleTableColumnFilter';
-import { SimpleTableContext } from './SimpleTableContext';
-import { iSimpleTableField, iSimpleTableRow } from './interface';
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { SimpleTableColumnFilter } from "./SimpleTableColumnFilter";
+import { SimpleTableContext } from "./SimpleTableContext";
+import { iSimpleTableField, iSimpleTableRow } from "./interface";
 
 const mockFields: iSimpleTableField[] = [
-  { name: 'userId', hidden: true, label: 'UserId' },
-  { name: 'displayName', label: 'Display name' },
+  { name: "userId", hidden: true, label: "UserId" },
+  { name: "displayName", label: "Display name" },
 ];
 
 const mockData: iSimpleTableRow[] = [
-  { userId: 1, displayName: 'User 1' },
-  { userId: 2, displayName: 'User 2' },
-  { userId: 3, displayName: 'User 3' },
-  { userId: 'four', displayName: 'Another user' },
+  { userId: 1, displayName: "User 1" },
+  { userId: 2, displayName: "User 2" },
+  { userId: 3, displayName: "User 3" },
+  { userId: "four", displayName: "Another user" },
 ];
 
-describe('Simple table column filter rendering', () => {
-  test('Basic render', async () => {
+describe("Simple table column filter rendering", () => {
+  test("Basic render", async () => {
     const user = userEvent.setup();
     const mockSet = jest.fn();
     const mockSetCurrentFilter = jest.fn();
@@ -25,9 +25,9 @@ describe('Simple table column filter rendering', () => {
       render(
         <SimpleTableContext.Provider
           value={{
-            id: 'testtable',
+            id: "testtable",
             fields: mockFields,
-            keyField: 'userId',
+            keyField: "userId",
             viewData: mockData,
             totalRows: mockData.length,
             firstRow: 0,
@@ -35,41 +35,41 @@ describe('Simple table column filter rendering', () => {
             selectable: true,
             columnWidths: [],
             currentColumnItems: [
-              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
             currentColumnFilter: 0,
             setCurrentColumnFilter: mockSetCurrentFilter,
             currentColumnFilters: [
-              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
             setCurrentColumnFilters: mockSet,
           }}
         >
-          <SimpleTableColumnFilter columnName={'displayName'} />
+          <SimpleTableColumnFilter columnName={"displayName"} />
         </SimpleTableContext.Provider>,
       );
     });
-    expect(screen.queryByText('3 items selected')).toBeInTheDocument();
-    expect(screen.queryByLabelText('Column filter search')).toBeInTheDocument();
-    expect(screen.queryByLabelText('Column filter toggle')).toBeInTheDocument();
-    expect(screen.queryByLabelText('Tester')).toBeInTheDocument();
-    await user.click(screen.queryByLabelText('Column filter toggle') as HTMLInputElement);
+    expect(screen.queryByText("3 items selected")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Column filter search")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Column filter toggle")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Tester")).toBeInTheDocument();
+    await user.click(screen.queryByLabelText("Column filter toggle") as HTMLInputElement);
     expect(mockSet).toHaveBeenCalledTimes(1);
-    expect(mockSet).toHaveBeenCalledWith([{ columnName: 'displayName', values: [] }]);
-    await user.click(screen.queryByLabelText('Close filter') as Element);
+    expect(mockSet).toHaveBeenCalledWith([{ columnName: "displayName", values: [] }]);
+    await user.click(screen.queryByLabelText("Close filter") as Element);
     expect(mockSetCurrentFilter).toHaveBeenCalledTimes(1);
     expect(mockSetCurrentFilter).toHaveBeenCalledWith(null);
   });
 
-  test('Add to filter', async () => {
+  test("Add to filter", async () => {
     const user = userEvent.setup();
     await act(async () => {
       render(
         <SimpleTableContext.Provider
           value={{
-            id: 'testtable',
+            id: "testtable",
             fields: mockFields,
-            keyField: 'userId',
+            keyField: "userId",
             viewData: mockData,
             totalRows: mockData.length,
             firstRow: 0,
@@ -77,29 +77,29 @@ describe('Simple table column filter rendering', () => {
             selectable: true,
             columnWidths: [],
             currentColumnItems: [
-              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
             currentColumnFilter: null,
             currentColumnFilters: [
-              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
           }}
         >
-          <SimpleTableColumnFilter columnName={'displayName'} />
+          <SimpleTableColumnFilter columnName={"displayName"} />
         </SimpleTableContext.Provider>,
       );
     });
-    const search = screen.queryByLabelText('Column filter search') as HTMLInputElement;
-    expect(screen.queryByLabelText('Lead')).toBeInTheDocument();
-    await user.type(search, 'Te');
-    expect(screen.queryByLabelText('Lead')).not.toBeInTheDocument();
+    const search = screen.queryByLabelText("Column filter search") as HTMLInputElement;
+    expect(screen.queryByLabelText("Lead")).toBeInTheDocument();
+    await user.type(search, "Te");
+    expect(screen.queryByLabelText("Lead")).not.toBeInTheDocument();
   });
 });
 
-describe('Update filter', () => {
-  test('Uncheck boxes', async () => {
+describe("Update filter", () => {
+  test("Uncheck boxes", async () => {
     const user = userEvent.setup();
-    let cf = [{ columnName: 'displayName', values: ['Lead'] }];
+    let cf = [{ columnName: "displayName", values: ["Lead"] }];
     const mockSet = jest.fn((newCf) => {
       cf = newCf;
     });
@@ -107,9 +107,9 @@ describe('Update filter', () => {
       render(
         <SimpleTableContext.Provider
           value={{
-            id: 'testtable',
+            id: "testtable",
             fields: mockFields,
-            keyField: 'userId',
+            keyField: "userId",
             viewData: mockData,
             totalRows: mockData.length,
             firstRow: 0,
@@ -117,39 +117,39 @@ describe('Update filter', () => {
             selectable: true,
             columnWidths: [],
             currentColumnItems: [
-              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
             currentColumnFilter: null,
             currentColumnFilters: cf,
             setCurrentColumnFilters: mockSet,
           }}
         >
-          <SimpleTableColumnFilter columnName={'displayName'} />
+          <SimpleTableColumnFilter columnName={"displayName"} />
         </SimpleTableContext.Provider>,
       );
     });
-    const lead = screen.getByLabelText('Lead');
-    const tester = screen.getByLabelText('Tester');
+    const lead = screen.getByLabelText("Lead");
+    const tester = screen.getByLabelText("Tester");
     await user.click(lead);
-    expect(mockSet).toHaveBeenLastCalledWith([{ columnName: 'displayName', values: [] }]);
+    expect(mockSet).toHaveBeenLastCalledWith([{ columnName: "displayName", values: [] }]);
     await user.click(tester);
     expect(mockSet).toHaveBeenLastCalledWith([
-      { columnName: 'displayName', values: ['Lead', 'Tester'] },
+      { columnName: "displayName", values: ["Lead", "Tester"] },
     ]);
   });
 });
 
-describe('Update toggle', () => {
-  test('Check all', async () => {
+describe("Update toggle", () => {
+  test("Check all", async () => {
     const user = userEvent.setup();
     const mockSet = jest.fn();
     await act(async () => {
       render(
         <SimpleTableContext.Provider
           value={{
-            id: 'testtable',
+            id: "testtable",
             fields: mockFields,
-            keyField: 'userId',
+            keyField: "userId",
             viewData: mockData,
             totalRows: mockData.length,
             firstRow: 0,
@@ -157,21 +157,21 @@ describe('Update toggle', () => {
             selectable: true,
             columnWidths: [],
             currentColumnItems: [
-              { columnName: 'displayName', values: ['Lead', 'Tester', 'Other user'] },
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
             currentColumnFilter: null,
             currentColumnFilters: [],
             setCurrentColumnFilters: mockSet,
           }}
         >
-          <SimpleTableColumnFilter columnName={'displayName'} />
+          <SimpleTableColumnFilter columnName={"displayName"} />
         </SimpleTableContext.Provider>,
       );
     });
-    const all = screen.getByLabelText('Column filter toggle');
+    const all = screen.getByLabelText("Column filter toggle");
     await user.click(all);
     expect(mockSet).toHaveBeenLastCalledWith([
-      { columnName: 'displayName', values: ['Lead', 'Other user', 'Tester'] },
+      { columnName: "displayName", values: ["Lead", "Other user", "Tester"] },
     ]);
   });
 });

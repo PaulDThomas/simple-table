@@ -1,4 +1,4 @@
-import { iSimpleTableField } from '../interface';
+import { iSimpleTableField } from "../interface";
 
 interface iSimspleTableHeaderContentsProps {
   field: iSimpleTableField;

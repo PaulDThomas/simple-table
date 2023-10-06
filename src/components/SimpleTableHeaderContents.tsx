@@ -1,7 +1,7 @@
-import { useContext } from 'react';
-import { SimpleTableColumnFilter } from './SimpleTableColumnFilter';
-import { SimpleTableContext } from './SimpleTableContext';
-import { iSimpleTableField } from './interface';
+import { useContext } from "react";
+import { SimpleTableColumnFilter } from "./SimpleTableColumnFilter";
+import { SimpleTableContext } from "./SimpleTableContext";
+import { iSimpleTableField } from "./interface";
 
 interface iSimspleTableHeaderContentsProps {
   field: iSimpleTableField;
@@ -22,7 +22,7 @@ export const SimpleTableHeaderContents = ({
           style={{
             backgroundColor: simpleTableContext.headerBackgroundColor,
             visibility:
-              simpleTableContext.currentColumnFilter === columnNumber ? 'visible' : 'hidden',
+              simpleTableContext.currentColumnFilter === columnNumber ? "visible" : "hidden",
           }}
         >
           <SimpleTableColumnFilter columnName={field.name} />
@@ -30,14 +30,14 @@ export const SimpleTableHeaderContents = ({
       )}
       <div className='simpletable-header-text'>
         <span
-          className={field.sortFn ? 'simpletable-clickable' : 'simple-table-nosorting'}
+          className={field.sortFn ? "simpletable-clickable" : "simple-table-nosorting"}
           onClick={() => {
             field.sortFn &&
               simpleTableContext.updateSortBy &&
               simpleTableContext.updateSortBy(field);
           }}
         >
-          <span className={simpleTableContext.sortBy?.name === field.name ? 'sorted' : 'unsorted'}>
+          <span className={simpleTableContext.sortBy?.name === field.name ? "sorted" : "unsorted"}>
             {field.headerRenderFn ? (
               <div className='simpletable-header-text'>
                 {field.headerRenderFn({ field, columnNumber })}
@@ -131,4 +131,4 @@ export const SimpleTableHeaderContents = ({
   );
 };
 
-SimpleTableHeaderContents.displayName = 'SimpleTableHeaderContents';
+SimpleTableHeaderContents.displayName = "SimpleTableHeaderContents";

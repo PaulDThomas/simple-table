@@ -1,6 +1,6 @@
-import { Key, useContext } from 'react';
-import { SimpleTableCell } from './SimpleTableCell';
-import { SimpleTableContext } from './SimpleTableContext';
+import { Key, useContext } from "react";
+import { SimpleTableCell } from "./SimpleTableCell";
+import { SimpleTableContext } from "./SimpleTableContext";
 
 interface iSimpleTableRowProps {
   rowId: Key;
@@ -15,8 +15,8 @@ export const SimpleTableRow = ({ rowId, rowNumber }: iSimpleTableRowProps): JSX.
       id={`${simpleTableContext.id}-row-${rowId}`}
       className={`${
         (simpleTableContext.currentSelection?.findIndex((s) => s === rowId) ?? -1) > -1
-          ? 'selected'
-          : ''
+          ? "selected"
+          : ""
       }`}
     >
       {simpleTableContext.selectable && (
@@ -50,4 +50,4 @@ export const SimpleTableRow = ({ rowId, rowNumber }: iSimpleTableRowProps): JSX.
   );
 };
 
-SimpleTableRow.displayName = 'SimpleTableRow';
+SimpleTableRow.displayName = "SimpleTableRow";
