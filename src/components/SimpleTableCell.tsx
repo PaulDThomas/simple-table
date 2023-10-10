@@ -1,6 +1,6 @@
-import { Key, useContext, useMemo } from 'react';
-import { iSimpleTableField, iSimpleTableRow } from './interface';
-import { SimpleTableContext } from './SimpleTableContext';
+import { Key, useContext, useMemo } from "react";
+import { iSimpleTableField, iSimpleTableRow } from "./interface";
+import { SimpleTableContext } from "./SimpleTableContext";
 
 interface iSimpleTableCellProps {
   rowId: Key;
@@ -33,19 +33,19 @@ export const SimpleTableCell = ({
         field?.name ?? columnNumber
       }`}
       key={cellField}
-      className={'simpletable-cell'}
+      className={"simpletable-cell"}
     >
       <div>
         {!field || !rowData
-          ? `${!rowData ? 'Row data' : ''}${!rowData && !field ? ', ' : ''}${
-              !field ? 'Field' : ''
+          ? `${!rowData ? "Row data" : ""}${!rowData && !field ? ", " : ""}${
+              !field ? "Field" : ""
             } not found`
           : field.renderFn
-          ? field.renderFn({ rowData, columnNumber, cellField: field.name, rowNumber })
+          ? field.renderFn({ rowData, columnNumber, field, cellField: field.name, rowNumber })
           : String(rowData[field.name])}
       </div>
     </td>
   );
 };
 
-SimpleTableCell.displayName = 'SimpleTableCell';
+SimpleTableCell.displayName = "SimpleTableCell";

@@ -7,8 +7,12 @@ export interface iSimpleTableSort {
   asc: boolean;
 }
 
-export interface iSimpleTableCellRenderProps {
+export interface iSimpleTableHeaderRenderProps {
   columnNumber: number;
+  field: iSimpleTableField;
+}
+
+export interface iSimpleTableCellRenderProps extends iSimpleTableHeaderRenderProps {
   cellField: string;
   rowData: iSimpleTableRow;
   rowNumber: number;
@@ -22,6 +26,7 @@ export interface iSimpleTableField {
   sortFn?: (a: iSimpleTableRow, b: iSimpleTableRow, sortBy: iSimpleTableSort) => number;
   searchFn?: (a: iSimpleTableRow, searchText: string) => boolean;
   filterOutFn?: (a: iSimpleTableRow) => boolean;
+  headerRenderFn?: (a: iSimpleTableHeaderRenderProps) => JSX.Element;
   renderFn?: (a: iSimpleTableCellRenderProps) => JSX.Element;
   canColumnFilter?: boolean;
 }

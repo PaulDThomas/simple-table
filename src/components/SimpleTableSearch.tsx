@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { SimpleTableContext } from './SimpleTableContext';
+import { useContext } from "react";
+import { SimpleTableContext } from "./SimpleTableContext";
 
 export const SimpleTableSearch = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
@@ -13,20 +13,20 @@ export const SimpleTableSearch = (): JSX.Element => {
         style={{
           marginTop: 0,
           marginBottom: 0,
-          alignSelf: 'center',
-          marginRight: '0.5rem',
+          alignSelf: "center",
+          marginRight: "0.5rem",
         }}
       >
-        {simpleTableContext.searchLabel ?? 'Search'}
+        {simpleTableContext.searchLabel ?? "Search"}
       </label>
       <div>
         <input
           id={`${simpleTableContext.id}-search`}
           className={simpleTableContext.searchInputClassName}
-          style={{ margin: '4px' }}
+          style={{ margin: "4px" }}
           role='searchbox'
           type='string'
-          value={simpleTableContext.searchText ?? ''}
+          value={simpleTableContext.searchText ?? ""}
           disabled={!simpleTableContext.setSearchText}
           onChange={(e) => {
             simpleTableContext.setSearchText &&
@@ -38,4 +38,4 @@ export const SimpleTableSearch = (): JSX.Element => {
   );
 };
 
-SimpleTableSearch.displayName = 'SimpleTableSearch';
+SimpleTableSearch.displayName = "SimpleTableSearch";

@@ -1,28 +1,28 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
-import { iSimpleTableField, iSimpleTableRow } from '../components/interface';
-import { SimpleTableContext } from '../components/SimpleTableContext';
-import { SimpleTableRow } from '../components/SimpleTableRow';
+import { fireEvent, render, screen } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
+import { iSimpleTableField, iSimpleTableRow } from "./interface";
+import { SimpleTableContext } from "./SimpleTableContext";
+import { SimpleTableRow } from "./SimpleTableRow";
 
 const mockFields: iSimpleTableField[] = [
-  { name: 'userId', hidden: true, label: 'UserId' },
-  { name: 'displayName', label: 'Display name' },
+  { name: "userId", hidden: true, label: "UserId" },
+  { name: "displayName", label: "Display name" },
 ];
 
 const mockData: iSimpleTableRow = {
   userId: 3,
-  displayName: 'Some user',
+  displayName: "Some user",
 };
 
 const mockToggle = jest.fn();
-describe('Access rights row rendering', () => {
-  test('Basic render', async () => {
+describe("Access rights row rendering", () => {
+  test("Basic render", async () => {
     render(
       <SimpleTableContext.Provider
         value={{
-          id: 'testtable',
+          id: "testtable",
           fields: mockFields,
-          keyField: 'userId',
+          keyField: "userId",
           viewData: [mockData],
           totalRows: [mockData].length,
           firstRow: 0,
@@ -44,16 +44,16 @@ describe('Access rights row rendering', () => {
         </table>
       </SimpleTableContext.Provider>,
     );
-    expect(screen.queryByText('3')).not.toBeInTheDocument();
-    expect(screen.queryByText('Some user')).toBeInTheDocument();
+    expect(screen.queryByText("3")).not.toBeInTheDocument();
+    expect(screen.queryByText("Some user")).toBeInTheDocument();
   });
-  test('Render and click', async () => {
+  test("Render and click", async () => {
     render(
       <SimpleTableContext.Provider
         value={{
-          id: 'testtable',
+          id: "testtable",
           fields: mockFields,
-          keyField: 'userId',
+          keyField: "userId",
           viewData: [mockData],
           totalRows: [mockData].length,
           firstRow: 0,
@@ -77,7 +77,7 @@ describe('Access rights row rendering', () => {
         </table>
       </SimpleTableContext.Provider>,
     );
-    const check = screen.getByRole('checkbox');
+    const check = screen.getByRole("checkbox");
     expect(check).toBeInTheDocument();
     act(() => {
       fireEvent.click(check);

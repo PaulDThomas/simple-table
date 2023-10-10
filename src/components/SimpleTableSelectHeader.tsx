@@ -1,5 +1,5 @@
-import { useContext, useEffect, useRef } from 'react';
-import { SimpleTableContext } from './SimpleTableContext';
+import { useContext, useEffect, useRef } from "react";
+import { SimpleTableContext } from "./SimpleTableContext";
 
 export const SimpleTableSelectHeader = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
@@ -43,4 +43,4 @@ export const SimpleTableSelectHeader = (): JSX.Element => {
   );
 };
 
-SimpleTableSelectHeader.displayName = 'SimpleTableSelectHeader';
+SimpleTableSelectHeader.displayName = "SimpleTableSelectHeader";

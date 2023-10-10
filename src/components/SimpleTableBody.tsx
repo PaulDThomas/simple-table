@@ -1,6 +1,6 @@
-import { useContext } from 'react';
-import { SimpleTableContext } from './SimpleTableContext';
-import { SimpleTableRow } from './SimpleTableRow';
+import { useContext } from "react";
+import { SimpleTableContext } from "./SimpleTableContext";
+import { SimpleTableRow } from "./SimpleTableRow";
 
 export const SimpleTableBody = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
@@ -14,8 +14,8 @@ export const SimpleTableBody = (): JSX.Element => {
         )
         .map((row, ri) => {
           const chk =
-            typeof row[simpleTableContext.keyField] === 'string' ||
-            typeof row[simpleTableContext.keyField] === 'number';
+            typeof row[simpleTableContext.keyField] === "string" ||
+            typeof row[simpleTableContext.keyField] === "number";
           return chk ? (
             <SimpleTableRow
               key={row[simpleTableContext.keyField] as string | number}
@@ -37,4 +37,4 @@ export const SimpleTableBody = (): JSX.Element => {
   );
 };
 
-SimpleTableBody.displayName = 'SimpleTableBody';
+SimpleTableBody.displayName = "SimpleTableBody";

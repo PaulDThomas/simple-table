@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { SimpleTableContext } from './SimpleTableContext';
+import { useContext } from "react";
+import { SimpleTableContext } from "./SimpleTableContext";
 
 export const SimpleTableFilter = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
@@ -27,10 +27,10 @@ export const SimpleTableFilter = (): JSX.Element => {
         id={`${simpleTableContext.id}-filter-label`}
         className='simpletable-filter-label'
       >
-        {simpleTableContext.filterLabel ?? 'Filter'}
+        {simpleTableContext.filterLabel ?? "Filter"}
       </span>
     </div>
   );
 };
 
-SimpleTableFilter.displayName = 'SimpleTableFilter';
+SimpleTableFilter.displayName = "SimpleTableFilter";
