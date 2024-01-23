@@ -30,6 +30,7 @@ interface SimpleTableProps {
   filterLabel?: string;
   searchLabel?: string;
   onWidthChange?: (ret: (string | undefined)[]) => void;
+  onPagerChange?: (ret: { firstRow: number; pageRows: number }) => void;
 
   tableClassName?: string;
   inputGroupClassName?: string;
@@ -64,6 +65,7 @@ export const SimpleTable = ({
   filterLabel = "Filter",
   searchLabel = "Search",
   onWidthChange,
+  onPagerChange,
   tableClassName = "",
   inputGroupClassName = "form-group",
   filterLabelClassName = "form-check-label",
@@ -292,9 +294,13 @@ export const SimpleTable = ({
           setPageRows: (ret) => {
             setPageRows(ret);
             updateLocalSettings("pageRows", ret);
+            onPagerChange && onPagerChange({ firstRow, pageRows: ret });
           },
           firstRow,
-          setFirstRow,
+          setFirstRow: (ret) => {
+            setFirstRow(ret);
+            onPagerChange && onPagerChange({ firstRow: ret, pageRows });
+          },
 
           currentColumnItems,
           currentColumnFilter,

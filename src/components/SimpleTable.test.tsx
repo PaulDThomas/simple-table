@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { iSimpleTableField, iSimpleTableRow } from "./interface";
 import { SimpleTable } from "./SimpleTable";
@@ -412,5 +412,63 @@ describe("Local settings", () => {
     });
 
     expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+  });
+});
+
+describe("Test callbacks", () => {
+  test("onPagerChange callback number of rows", async () => {
+    const user = userEvent.setup();
+    const mockOnPagerChange = jest.fn();
+    await act(async () =>
+      render(
+        <SimpleTable
+          id='test-table'
+          headerLabel='TEST TABLE'
+          searchLabel='SEARCH HERE'
+          filterLabel='FILTER HERE'
+          showFilter={true}
+          showSearch={true}
+          fields={mockFields}
+          keyField={"userId"}
+          data={Array(200)
+            .fill(mockAccesses)
+            .map((_, i) => ({ ..._, userId: i }))
+            .flat()}
+          onPagerChange={mockOnPagerChange}
+        />,
+      ),
+    );
+    const rows = screen.getByLabelText("Visible rows");
+    await user.selectOptions(rows, "100");
+    expect(mockOnPagerChange).toBeCalledWith({ firstRow: 0, pageRows: 100 });
+    const next = screen.getByLabelText("Go to next page");
+    await user.click(next);
+    expect(mockOnPagerChange).toBeCalledWith({ firstRow: 100, pageRows: 100 });
+  });
+
+  test("onWidthChange callback", async () => {
+    const mockOnWidthChange = jest.fn();
+    await act(async () =>
+      render(
+        <SimpleTable
+          id='test-table'
+          headerLabel='TEST TABLE'
+          searchLabel='SEARCH HERE'
+          filterLabel='FILTER HERE'
+          showFilter={true}
+          showSearch={true}
+          fields={mockFields}
+          keyField={"userId"}
+          data={mockAccesses}
+          onWidthChange={mockOnWidthChange}
+        />,
+      ),
+    );
+    const handles = screen.getAllByRole("separator");
+    const firstHandle = handles[0];
+    fireEvent.mouseDown(firstHandle);
+    fireEvent.mouseMove(firstHandle, { clientX: 200 });
+    fireEvent.mouseUp(firstHandle);
+    expect(mockOnWidthChange).toBeCalledWith(["200px", undefined, undefined, undefined]);
   });
 });
