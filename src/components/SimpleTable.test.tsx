@@ -471,4 +471,32 @@ describe("Test callbacks", () => {
     fireEvent.mouseUp(firstHandle);
     expect(mockOnWidthChange).toBeCalledWith(["200px", undefined, undefined, undefined]);
   });
+
+  test("All rows shown when no pager", async () => {
+    await act(async () =>
+      render(
+        <div data-testid='container'>
+          <SimpleTable
+            id='test-table'
+            headerLabel='TEST TABLE'
+            searchLabel='SEARCH HERE'
+            filterLabel='FILTER HERE'
+            showFilter={true}
+            showSearch={true}
+            fields={mockFields}
+            keyField={"userId"}
+            data={Array(500)
+              .fill(mockAccesses)
+              .flat()
+              .map((_, i) => ({ ..._, userId: i }))}
+            showPager={false}
+          />
+        </div>,
+      ),
+    );
+    const container = screen.getByTestId("container");
+    expect(container.querySelectorAll("tr.simpletable-bodyrow").length).toEqual(
+      mockAccesses.length * 500,
+    );
+  });
 });
