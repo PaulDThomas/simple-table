@@ -5,8 +5,7 @@
 
 [![npm][npm]][npm-url]
 [![size][size]][size-url]
-![npm bundle size](https://img.shields.io/bundlephobia/min/@asup/simple-table)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/PaulDThomas/tree-of-nodes/master/LICENCE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/PaulDThomas/simple-table/master/LICENCE)
 
 # @asup/simple-table
 
@@ -44,6 +43,7 @@ import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort, SimpleTable } fro
   filterLabel?: string;
   searchLabel?: string;
   onWidthChange?: (ret: (string | undefined)[]) => void;
+  onPagerChange?: (ret: {firstRow: number; pageRows: number}) => void
   tableClassName?: string;
   inputGroupClassName?: string;
   filterLabelClassName?: string;
@@ -73,6 +73,7 @@ import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort, SimpleTable } fro
 | filterLabel              | Label for the filter checkbox                                                                          |            'Filter'            |
 | searchLabel              | Label for the search input                                                                             |            'Search'            |
 | onWidthChange            | Callback after changing column widths by dragging                                                      |                                |
+| onPagerChange            | Callback after changing pager                                                                          |
 | tableClassName           | Class names to apply to the table element.                                                             |               ''               |
 | ~~inputGroupClassName~~  | Not currently implemented                                                                              |          `form-group`          |
 | ~~filterLabelClassName~~ | Not currently implemented                                                                              |       `form-check-label`       |

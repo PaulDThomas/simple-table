@@ -27,10 +27,11 @@ const config: Config = {
   collectCoverage: true,
   coverageProvider: "v8",
   collectCoverageFrom: [
-    "src/components/**/*.{js,jsx}",
-    "src/components/**/*.{ts,tsx}",
-    "!**/index.ts",
-    "!**/interface.ts",
+    "src/**/*.{js,jsx}",
+    "src/**/*.{ts,tsx}",
+    "!src/**main.ts",
+    "!src/**/index.ts",
+    "!src/**/interface.ts",
   ],
   testEnvironment: "jsdom",
   moduleNameMapper: {

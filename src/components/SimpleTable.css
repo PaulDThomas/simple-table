@@ -151,6 +151,11 @@ h5.simpletable-title {
   margin-right: 4px;
 }
 
+.simpletable-footer > span {
+  display: flex;
+  align-items: center;
+}
+
 .simpletable-search-holder {
   order: 2;
   display: inline-flex;
@@ -260,13 +265,20 @@ h5.simpletable-title {
   font-weight: 400;
 }
 
+.columnfilter-table-search {
+  display: flex;
+  width: calc(100% + 8px);
+  align-items: top;
+}
+
 .columnfilter-table-close {
   color: black;
   background-color: white;
   height: 16px;
   width: 16px;
   border-radius: 3px;
-  margin: 2px;
+  margin-left: 2px;
+  cursor: pointer;
 }
 .columnfilter-table-close:hover {
   background-color: black;

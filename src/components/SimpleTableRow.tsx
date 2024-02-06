@@ -13,9 +13,9 @@ export const SimpleTableRow = ({ rowId, rowNumber }: iSimpleTableRowProps): JSX.
   return (
     <tr
       id={`${simpleTableContext.id}-row-${rowId}`}
-      className={`${
+      className={`simpletable-bodyrow${
         (simpleTableContext.currentSelection?.findIndex((s) => s === rowId) ?? -1) > -1
-          ? "selected"
+          ? " selected"
           : ""
       }`}
     >

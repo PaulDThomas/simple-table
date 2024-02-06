@@ -30,6 +30,7 @@ interface SimpleTableProps {
   filterLabel?: string;
   searchLabel?: string;
   onWidthChange?: (ret: (string | undefined)[]) => void;
+  onPagerChange?: (ret: { firstRow: number; pageRows: number }) => void;
 
   tableClassName?: string;
   inputGroupClassName?: string;
@@ -64,6 +65,7 @@ export const SimpleTable = ({
   filterLabel = "Filter",
   searchLabel = "Search",
   onWidthChange,
+  onPagerChange,
   tableClassName = "",
   inputGroupClassName = "form-group",
   filterLabelClassName = "form-check-label",
@@ -82,8 +84,16 @@ export const SimpleTable = ({
   const [searchText, setSearchText] = useState<string>("");
   const [columnWidths, setColumnWidths] = useState<(string | undefined)[]>([]);
   useEffect(() => setColumnWidths(fields.map((f) => f.width)), [fields]);
+
   const [firstRow, setFirstRow] = useState(0);
   const [pageRows, setPageRows] = useState(25);
+  useEffect(() => {
+    if (showPager === false) {
+      setFirstRow(0);
+      setPageRows(Infinity);
+    }
+  }, [showPager]);
+
   const [currentColumnFilter, setCurrentColumnFilter] = useState<number | null>(null);
   const [currentColumnFilters, setCurrentColumnFilters] = useState<iSimpleTableColumnFilter[]>([]);
 
@@ -246,12 +256,13 @@ export const SimpleTable = ({
     if (localSettingsText) {
       const localSettings = JSON.parse(localSettingsText) as SimpleTableLocalSettings;
       localSettings.pageRows &&
+        showPager &&
         setPageRows(localSettings.pageRows === "Infinity" ? Infinity : localSettings.pageRows);
       if (localSettings.headerWidths) {
         setColumnWidths(localSettings.headerWidths);
       }
     }
-  }, [fields, id]);
+  }, [fields, id, showPager]);
 
   return (
     <SimpleTableContext.Provider
@@ -292,9 +303,13 @@ export const SimpleTable = ({
           setPageRows: (ret) => {
             setPageRows(ret);
             updateLocalSettings("pageRows", ret);
+            onPagerChange && onPagerChange({ firstRow, pageRows: ret });
           },
           firstRow,
-          setFirstRow,
+          setFirstRow: (ret) => {
+            setFirstRow(ret);
+            onPagerChange && onPagerChange({ firstRow: ret, pageRows });
+          },
 
           currentColumnItems,
           currentColumnFilter,
