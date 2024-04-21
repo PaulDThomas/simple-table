@@ -2,11 +2,11 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableHeaderContents } from "./SimpleTableHeaderContents";
-import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from "./interface";
+import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
 
 const mockSort = jest.fn();
 
-const mockFields: iSimpleTableField[] = [
+const mockFields: ISimpleTableField[] = [
   { name: "tlfId", hidden: true },
   {
     name: "displayName",
@@ -19,14 +19,14 @@ const mockFields: iSimpleTableField[] = [
   { name: "description", hidden: false, label: "Description" },
 ];
 
-const mockData: iSimpleTableRow[] = [
+const mockData: ISimpleTableRow[] = [
   { TlfId: 1, displayName: "Lead", description: "Magic lead" },
   { TlfId: 2, displayName: "Tester", description: "A tester" },
   { TlfId: 3, displayName: "Other user", description: "Important VIP" },
 ];
 
-const mockSortUp: iSimpleTableSort = { name: "displayName", asc: true };
-const mockSortDown: iSimpleTableSort = { name: "displayName", asc: false };
+const mockSortUp: ISimpleTableSort = { name: "displayName", asc: true };
+const mockSortDown: ISimpleTableSort = { name: "displayName", asc: false };
 
 const mockSorting = jest.fn();
 

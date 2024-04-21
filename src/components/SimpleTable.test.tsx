@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { iSimpleTableField, iSimpleTableRow } from "./interface";
+import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTable } from "./SimpleTable";
 import { act } from "react-dom/test-utils";
 
@@ -11,7 +11,7 @@ enum eAccessLevel {
   admin,
 }
 
-const mockFields: iSimpleTableField[] = [
+const mockFields: ISimpleTableField[] = [
   { name: "userid", label: "User ID", hidden: true },
   {
     name: "hierarchyLabel",
@@ -33,7 +33,7 @@ const mockFields: iSimpleTableField[] = [
   },
 ];
 
-const mockAccesses: iSimpleTableRow[] = [
+const mockAccesses: ISimpleTableRow[] = [
   {
     userId: 2,
     hierarchyId: 4,
@@ -128,7 +128,7 @@ describe("Interactive renders", () => {
     expect(screen.queryByText("SEARCH HERE")).toBeInTheDocument();
     expect(screen.queryByText("FILTER HERE")).not.toBeInTheDocument();
     const searchBox = screen.getByRole("searchbox");
-    await user.type(searchBox, "TA");
+    await act(async () => await user.type(searchBox, "TA"));
     expect(searchBox).toHaveValue("TA");
     const cols = container.querySelectorAll("#test-table>thead>tr>th");
     expect(cols.length).toEqual(3);
@@ -159,7 +159,7 @@ describe("Interactive renders", () => {
     expect(screen.queryByText("SEARCH HERE")).not.toBeInTheDocument();
     expect(screen.queryByText("FILTER HERE")).toBeInTheDocument();
     const filter = screen.getByRole("checkbox");
-    await user.click(filter);
+    await act(async () => await user.click(filter));
     const cols = container.querySelectorAll("#test-table>thead>tr>th");
     expect(cols.length).toEqual(3);
     const rows = container.querySelectorAll("#test-table>tbody>tr");
@@ -189,7 +189,7 @@ describe("Interactive renders", () => {
     expect(screen.queryByText("SEARCH HERE")).not.toBeInTheDocument();
     expect(screen.queryByText("FILTER HERE")).toBeInTheDocument();
     const hierarchyLabel = screen.getByText("Hierarchy");
-    await user.click(hierarchyLabel);
+    await act(async () => await user.click(hierarchyLabel));
     const cols = container.querySelectorAll("#test-table>thead>tr>th");
     expect(cols.length).toEqual(3);
     const rows = container.querySelectorAll("#test-table>tbody>tr");
@@ -202,11 +202,11 @@ describe("Interactive renders", () => {
     expect(rows[0].children[0].textContent).toEqual("Corporate");
     expect(rows[1].children[0].textContent).toEqual("Some TA");
     expect(rows[2].children[0].textContent).toEqual("SubHierarchy");
-    await user.click(hierarchyLabel);
+    await act(async () => await user.click(hierarchyLabel));
     expect(rows[2].children[0].textContent).toEqual("SubHierarchy");
     expect(rows[1].children[0].textContent).toEqual("Some TA");
     expect(rows[0].children[0].textContent).toEqual("Corporate");
-    await user.click(hierarchyLabel);
+    await act(async () => await user.click(hierarchyLabel));
     expect(rows[1].children[0].textContent).toEqual("Some TA");
     expect(rows[2].children[0].textContent).toEqual("SubHierarchy");
     expect(rows[0].children[0].textContent).toEqual("Corporate");
@@ -328,7 +328,7 @@ describe("Toggle rows", () => {
     const checkAll = container.querySelector("#test-table-check-all") as HTMLInputElement;
     expect(checkAll).toBeChecked();
     const searchBox = screen.getByRole("searchbox");
-    await user.type(searchBox, "TA");
+    await act(async () => await user.type(searchBox, "TA"));
     expect(searchBox).toHaveValue("TA");
     await user.click(checkAll);
     expect(mockSetSelection).toBeCalledWith([1, 3]);
@@ -354,7 +354,7 @@ describe("Toggle rows", () => {
     const checkAll = container.querySelector("#test-table-check-all") as HTMLInputElement;
     expect(checkAll).not.toBeChecked();
     const searchBox = screen.getByRole("searchbox");
-    await user.type(searchBox, "TA");
+    await act(async () => await user.type(searchBox, "TA"));
     expect(searchBox).toHaveValue("TA");
     await user.click(checkAll);
     expect(mockSetSelection).toBeCalledWith([2]);
@@ -439,11 +439,11 @@ describe("Test callbacks", () => {
       ),
     );
     const rows = screen.getByLabelText("Visible rows");
-    await user.selectOptions(rows, "100");
+    await act(async () => await user.selectOptions(rows, "100"));
     expect(mockOnPagerChange).toBeCalledWith({ firstRow: 0, pageRows: 100 });
     const next = screen.getByLabelText("Go to next page");
-    await user.click(next);
-    expect(mockOnPagerChange).toBeCalledWith({ firstRow: 100, pageRows: 100 });
+    await act(async () => await user.click(next));
+    expect(mockOnPagerChange).toHaveBeenCalledWith({ firstRow: 100, pageRows: 100 });
   });
 
   test("onWidthChange callback", async () => {

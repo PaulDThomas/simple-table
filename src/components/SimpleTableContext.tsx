@@ -1,5 +1,5 @@
 import React, { Key } from "react";
-import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from "./interface";
+import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
 
 export interface iSimpleTableColumnFilter {
   columnName: string;
@@ -8,11 +8,11 @@ export interface iSimpleTableColumnFilter {
 
 export interface iSimpleTableContext {
   id: string;
-  fields: iSimpleTableField[];
+  fields: ISimpleTableField[];
   keyField: string;
-  viewData: iSimpleTableRow[];
+  viewData: ISimpleTableRow[];
   totalRows: number;
-  setTableData?: (ret: iSimpleTableRow[]) => void;
+  setTableData?: (ret: ISimpleTableRow[]) => void;
   selectable?: boolean;
   showSearch?: boolean;
   showFilter?: boolean;
@@ -22,8 +22,8 @@ export interface iSimpleTableContext {
   searchLabel?: string;
   searchText?: string;
   setSearchText?: (ret: string) => void;
-  sortBy?: iSimpleTableSort;
-  updateSortBy?: (ret: iSimpleTableField) => void;
+  sortBy?: ISimpleTableSort;
+  updateSortBy?: (ret: ISimpleTableField) => void;
   currentSelection?: Key[];
   toggleAllCurrentSelection?: () => void;
   toggleSelection?: (ret: Key) => void;

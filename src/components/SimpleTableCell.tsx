@@ -1,5 +1,5 @@
 import { Key, useContext, useMemo } from "react";
-import { iSimpleTableField, iSimpleTableRow } from "./interface";
+import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTableContext } from "./SimpleTableContext";
 
 interface iSimpleTableCellProps {
@@ -17,12 +17,12 @@ export const SimpleTableCell = ({
 }: iSimpleTableCellProps): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
 
-  const field: iSimpleTableField | undefined = useMemo(
+  const field: ISimpleTableField | undefined = useMemo(
     () => simpleTableContext.fields.find((f) => f.name === cellField),
     [cellField, simpleTableContext.fields],
   );
 
-  const rowData: iSimpleTableRow | undefined = useMemo(
+  const rowData: ISimpleTableRow | undefined = useMemo(
     () => simpleTableContext.viewData.find((d) => d[simpleTableContext.keyField] === rowId),
     [rowId, simpleTableContext.keyField, simpleTableContext.viewData],
   );
@@ -41,8 +41,8 @@ export const SimpleTableCell = ({
               !field ? "Field" : ""
             } not found`
           : field.renderFn
-          ? field.renderFn({ rowData, columnNumber, field, cellField: field.name, rowNumber })
-          : String(rowData[field.name])}
+            ? field.renderFn({ rowData, columnNumber, field, cellField: field.name, rowNumber })
+            : String(rowData[field.name])}
       </div>
     </td>
   );

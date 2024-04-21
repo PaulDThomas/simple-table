@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { SimpleTableColumnFilter } from "./SimpleTableColumnFilter";
 import { SimpleTableContext } from "./SimpleTableContext";
-import { iSimpleTableField } from "./interface";
+import { ISimpleTableField } from "./interface";
 
 interface iSimspleTableHeaderContentsProps {
-  field: iSimpleTableField;
+  field: ISimpleTableField;
   columnNumber: number;
 }
 

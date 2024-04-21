@@ -1,15 +1,15 @@
 import { render, screen } from "@testing-library/react";
-import { iSimpleTableField, iSimpleTableRow } from "./interface";
+import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTableBody } from "./SimpleTableBody";
 import { SimpleTableContext } from "./SimpleTableContext";
 
-const mockFields: iSimpleTableField[] = [
+const mockFields: ISimpleTableField[] = [
   { name: "tlfId", hidden: true },
   { name: "displayName", hidden: false, label: "Name" },
   { name: "description", label: "Description" },
 ];
 
-const mockData: iSimpleTableRow[] = [
+const mockData: ISimpleTableRow[] = [
   { tlfId: 1, displayName: "Lead", description: "Magic lead" },
   { tlfId: 2, displayName: "Tester", description: "A tester" },
   { tlfId: 3, displayName: "Other user", description: "Important VIP" },

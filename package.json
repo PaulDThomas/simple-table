@@ -27,11 +27,12 @@
     "dist"
   ],
   "scripts": {
-    "build": "parcel build src/main.ts",
-    "start": "parcel demo/index.html --dist-dir demo/dist",
     "prepare": "husky install",
-    "test": "jest --watch",
-    "test:coverage-report": "npm test -- --coverage --watchAll=false"
+    "start": "parcel demo/index.html --dist-dir demo/dist",
+    "test": "jest --maxWorkers=1",
+    "test-watch": "jest --watch --collectCoverage=true --maxWorkers=4",
+    "test-coverage": "jest --collectCoverage=true --maxWorkers=4",
+    "build": "parcel build src/main.ts"
   },
   "eslintConfig": {
     "extends": [

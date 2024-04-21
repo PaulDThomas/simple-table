@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import { iSimpleTableField, iSimpleTableRow } from "./interface";
+import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTableCell } from "./SimpleTableCell";
 import { SimpleTableContext } from "./SimpleTableContext";
 
-const mockFields: iSimpleTableField[] = [
+const mockFields: ISimpleTableField[] = [
   { name: "userId", label: "User ID" },
   { name: "hierarchyId", label: "Hierarchy ID" },
   { name: "displayName", label: "Name" },
@@ -22,7 +22,7 @@ enum mockEnum {
   three = "THREE",
 }
 
-const mockAccesses: iSimpleTableRow[] = [
+const mockAccesses: ISimpleTableRow[] = [
   {
     userId: 1,
     hierarchyId: 10,

@@ -1,7 +1,7 @@
-import { iSimpleTableField } from "../interface";
+import { ISimpleTableField } from "../interface";
 
 interface iSimspleTableHeaderContentsProps {
-  field: iSimpleTableField;
+  field: ISimpleTableField;
   columnNumber: number;
 }
 

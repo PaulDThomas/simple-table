@@ -2,14 +2,14 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SimpleTableColumnFilter } from "./SimpleTableColumnFilter";
 import { SimpleTableContext } from "./SimpleTableContext";
-import { iSimpleTableField, iSimpleTableRow } from "./interface";
+import { ISimpleTableField, ISimpleTableRow } from "./interface";
 
-const mockFields: iSimpleTableField[] = [
+const mockFields: ISimpleTableField[] = [
   { name: "userId", hidden: true, label: "UserId" },
   { name: "displayName", label: "Display name" },
 ];
 
-const mockData: iSimpleTableRow[] = [
+const mockData: ISimpleTableRow[] = [
   { userId: 1, displayName: "User 1" },
   { userId: 2, displayName: "User 2" },
   { userId: 3, displayName: "User 3" },
@@ -91,7 +91,7 @@ describe("Simple table column filter rendering", () => {
     });
     const search = screen.queryByLabelText("Column filter search") as HTMLInputElement;
     expect(screen.queryByLabelText("Lead")).toBeInTheDocument();
-    await user.type(search, "Te");
+    await act(async () => await user.type(search, "Te"));
     expect(screen.queryByLabelText("Lead")).not.toBeInTheDocument();
   });
 });

@@ -1,14 +1,14 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { iSimpleTableField, iSimpleTableRow } from "./interface";
+import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableSelectHeader } from "./SimpleTableSelectHeader";
 
-const mockFields: iSimpleTableField[] = [
+const mockFields: ISimpleTableField[] = [
   { name: "userId", hidden: true, label: "UserId" },
   { name: "displayName", label: "Display name" },
 ];
 
-const mockData: iSimpleTableRow[] = [
+const mockData: ISimpleTableRow[] = [
   { userId: 1, displayName: "User 1" },
   { userId: 2, displayName: "User 2" },
   { userId: 3, displayName: "User 3" },

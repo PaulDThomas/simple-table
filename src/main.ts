@@ -1,5 +1,14 @@
-import { simpleTableNullDate } from "./functions/simpleTableNullDate";
+import {
+  convertDateToLocaleString,
+  convertLocaleDateToUTCString,
+  simpleTableNullDate,
+} from "./functions/simpleTableNullDate";
 import { simpleTableSortFn } from "./functions/simpleTableSortFn";
 
 export * from "./components";
-export { simpleTableSortFn, simpleTableNullDate };
+export {
+  simpleTableSortFn,
+  simpleTableNullDate,
+  convertDateToLocaleString,
+  convertLocaleDateToUTCString,
+};

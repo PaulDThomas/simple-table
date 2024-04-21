@@ -1,18 +1,18 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { iSimpleTableField, iSimpleTableRow } from "./interface";
+import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableFilter } from "./SimpleTableFilter";
 
 const mockFilter = jest.fn();
 
-const mockFields: iSimpleTableField[] = [
+const mockFields: ISimpleTableField[] = [
   { name: "tlfId", hidden: false },
   { name: "displayName", hidden: true, label: "Name", sortFn: mockFilter },
   { name: "description", hidden: true, label: "Description" },
 ];
 
-const mockData: iSimpleTableRow[] = [
+const mockData: ISimpleTableRow[] = [
   { TlfId: 1, displayName: "Lead", description: "Magic lead" },
   { TlfId: 2, displayName: "Tester", description: "A tester" },
   { TlfId: 3, displayName: "Other user", description: "Important VIP" },

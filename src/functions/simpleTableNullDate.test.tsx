@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { convertDateToLocaleString } from "./convertDates";
-import { simpleTableNullDate } from "./simpleTableNullDate";
+import { convertDateToLocaleString, simpleTableNullDate } from "./simpleTableNullDate";
 
 describe("Test print date function", () => {
   test("Correctly process null", async () => {

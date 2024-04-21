@@ -1,5 +1,5 @@
 import { Key, useCallback, useEffect, useMemo, useState } from "react";
-import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from "./interface";
+import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
 import "./SimpleTable.css";
 import { SimpleTableBody } from "./SimpleTableBody";
 import {
@@ -16,9 +16,9 @@ import { SimpleTablePager } from "./SimpleTablePager";
 interface SimpleTableProps {
   id?: string;
   headerLabel?: string;
-  fields: iSimpleTableField[];
+  fields: ISimpleTableField[];
   keyField: string;
-  data: iSimpleTableRow[];
+  data: ISimpleTableRow[];
   selectable?: boolean;
   currentSelection?: Key[];
   setCurrentSelection?: (ret: Key[]) => void;
@@ -75,12 +75,12 @@ export const SimpleTable = ({
   mainBackgroundColor = "white",
   headerBackgroundColor = "white",
 }: SimpleTableProps): JSX.Element => {
-  const [tableData, setTableData] = useState<iSimpleTableRow[]>(data);
+  const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
   useEffect(() => {
     setTableData(data);
   }, [data]);
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
-  const [sortBy, setSortBy] = useState<iSimpleTableSort | null>(null);
+  const [sortBy, setSortBy] = useState<ISimpleTableSort | null>(null);
   const [searchText, setSearchText] = useState<string>("");
   const [columnWidths, setColumnWidths] = useState<(string | undefined)[]>([]);
   useEffect(() => setColumnWidths(fields.map((f) => f.width)), [fields]);
@@ -98,11 +98,11 @@ export const SimpleTable = ({
   const [currentColumnFilters, setCurrentColumnFilters] = useState<iSimpleTableColumnFilter[]>([]);
 
   const filterFn = useCallback(
-    (row: iSimpleTableRow) => {
+    (row: ISimpleTableRow) => {
       if (showFilter && filterData) {
         const filterFns = fields
           .filter((f) => f.filterOutFn)
-          .map((f) => f.filterOutFn as (a: iSimpleTableRow) => boolean);
+          .map((f) => f.filterOutFn as (a: ISimpleTableRow) => boolean);
         return !filterFns.some((fn) => fn(row));
       } else return true;
     },
@@ -110,11 +110,11 @@ export const SimpleTable = ({
   );
 
   const searchFn = useCallback(
-    (row: iSimpleTableRow) => {
+    (row: ISimpleTableRow) => {
       if (showSearch && searchText.trim().length > 0) {
         const searchFns = fields
           .filter((f) => f.searchFn)
-          .map((f) => f.searchFn as (a: iSimpleTableRow, searchText: string) => boolean);
+          .map((f) => f.searchFn as (a: ISimpleTableRow, searchText: string) => boolean);
         return searchFns.some((fn) => fn(row, searchText));
       } else return true;
     },
@@ -122,7 +122,7 @@ export const SimpleTable = ({
   );
 
   const sortFn = useCallback(
-    (rowa: iSimpleTableRow, rowb: iSimpleTableRow) => {
+    (rowa: ISimpleTableRow, rowb: ISimpleTableRow) => {
       try {
         const sortFn = fields.find((f) => f.name === sortBy?.name)?.sortFn;
         if (sortFn && sortBy)
@@ -163,7 +163,7 @@ export const SimpleTable = ({
 
   // Update sort order
   const updateSortBy = useCallback(
-    (field: iSimpleTableField) => {
+    (field: ISimpleTableField) => {
       if (field.name === sortBy?.name && sortBy?.asc === false) {
         setSortBy(null);
       } else {
