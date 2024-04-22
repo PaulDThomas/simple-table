@@ -3,7 +3,7 @@ import { SimpleTableColumnFilter } from "./SimpleTableColumnFilter";
 import { SimpleTableContext } from "./SimpleTableContext";
 import { ISimpleTableField } from "./interface";
 
-interface iSimspleTableHeaderContentsProps {
+interface ISimspleTableHeaderContentsProps {
   field: ISimpleTableField;
   columnNumber: number;
 }
@@ -11,7 +11,7 @@ interface iSimspleTableHeaderContentsProps {
 export const SimpleTableHeaderContents = ({
   field,
   columnNumber,
-}: iSimspleTableHeaderContentsProps): JSX.Element => {
+}: ISimspleTableHeaderContentsProps): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   return (

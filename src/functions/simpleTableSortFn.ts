@@ -1,9 +1,9 @@
-import { iSimpleTableRow, iSimpleTableSort } from "../components";
+import { ISimpleTableRow, ISimpleTableSort } from "../components";
 
 export const simpleTableSortFn = (
-  a: iSimpleTableRow,
-  b: iSimpleTableRow,
-  sortBy: iSimpleTableSort,
+  a: ISimpleTableRow,
+  b: ISimpleTableRow,
+  sortBy: ISimpleTableSort,
 ) => {
   return typeof a[sortBy.name] === "number" || typeof b[sortBy.name] === "number"
     ? ((typeof a[sortBy.name] === "number" ? a[sortBy.name] : -Infinity) as number) -

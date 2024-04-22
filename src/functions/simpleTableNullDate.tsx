@@ -1,4 +1,4 @@
-import { iSimpleTableCellRenderProps } from "../components";
+import { ISimpleTableCellRenderProps } from "../components";
 
 export const convertDateToLocaleString = (s: string | Date): string => {
   const d = s instanceof Date ? s : new Date(s);
@@ -20,7 +20,7 @@ export const convertLocaleDateToUTCString = (s: string): string => {
 export const simpleTableNullDate = ({
   rowData,
   cellField,
-}: iSimpleTableCellRenderProps): JSX.Element => {
+}: ISimpleTableCellRenderProps): JSX.Element => {
   return (
     <>
       {rowData[cellField] instanceof Date

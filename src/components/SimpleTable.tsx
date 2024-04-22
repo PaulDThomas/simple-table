@@ -3,8 +3,8 @@ import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interfac
 import "./SimpleTable.css";
 import { SimpleTableBody } from "./SimpleTableBody";
 import {
-  iSimpleTableColumnFilter,
-  iSimpleTableContext,
+  ISimpleTableColumnFilter,
+  ISimpleTableContext,
   SimpleTableContext,
 } from "./SimpleTableContext";
 import { SimpleTableFilter } from "./SimpleTableFilter";
@@ -96,7 +96,7 @@ export const SimpleTable = ({
   }, [showPager]);
 
   const [currentColumnFilter, setCurrentColumnFilter] = useState<number | null>(null);
-  const [currentColumnFilters, setCurrentColumnFilters] = useState<iSimpleTableColumnFilter[]>([]);
+  const [currentColumnFilters, setCurrentColumnFilters] = useState<ISimpleTableColumnFilter[]>([]);
 
   const filterFn = useCallback(
     (row: ISimpleTableRow) => {
@@ -325,7 +325,7 @@ export const SimpleTable = ({
           searchInputClassName,
 
           headerBackgroundColor,
-        } as iSimpleTableContext
+        } as ISimpleTableContext
       }
     >
       {(showHeader || showSearch || showFilter) && (

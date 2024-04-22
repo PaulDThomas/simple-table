@@ -1,11 +1,11 @@
 import { Key, useState } from "react";
 import { mockData } from "../../src/__dummy__/mock_data";
 import { mock_fields } from "../../src/__dummy__/mock_fields";
-import { SimpleTable, iSimpleTableRow } from "../../src/components";
+import { SimpleTable, ISimpleTableRow } from "../../src/components";
 
 // Main application
 const App = (): JSX.Element => {
-  const [data, setData] = useState<iSimpleTableRow[]>(mockData);
+  const [data, setData] = useState<ISimpleTableRow[]>(mockData);
   const [selected, setSelected] = useState<Key[]>([]);
   const [height, setHeight] = useState<string>("600px");
   const [width, setWidth] = useState<string>("600px");

@@ -1,12 +1,12 @@
 import React, { Key } from "react";
 import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
 
-export interface iSimpleTableColumnFilter {
+export interface ISimpleTableColumnFilter {
   columnName: string;
   values: string[];
 }
 
-export interface iSimpleTableContext {
+export interface ISimpleTableContext {
   id: string;
   fields: ISimpleTableField[];
   keyField: string;
@@ -35,11 +35,11 @@ export interface iSimpleTableContext {
   firstRow: number;
   setFirstRow?: (ret: number) => void;
 
-  currentColumnItems: iSimpleTableColumnFilter[];
+  currentColumnItems: ISimpleTableColumnFilter[];
   currentColumnFilter: number | null;
   setCurrentColumnFilter?: (ret: number | null) => void;
-  currentColumnFilters: iSimpleTableColumnFilter[];
-  setCurrentColumnFilters?: (ret: iSimpleTableColumnFilter[]) => void;
+  currentColumnFilters: ISimpleTableColumnFilter[];
+  setCurrentColumnFilters?: (ret: ISimpleTableColumnFilter[]) => void;
 
   inputGroupClassName?: string;
   filterLabelClassName?: string;
@@ -50,7 +50,7 @@ export interface iSimpleTableContext {
   headerBackgroundColor?: string;
 }
 
-export const SimpleTableContext = React.createContext<iSimpleTableContext>({
+export const SimpleTableContext = React.createContext<ISimpleTableContext>({
   id: "simple-table",
   fields: [],
   keyField: "",

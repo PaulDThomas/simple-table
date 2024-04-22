@@ -2,7 +2,7 @@ import { Key, useContext, useMemo } from "react";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTableContext } from "./SimpleTableContext";
 
-interface iSimpleTableCellProps {
+interface SimpleTableCellProps {
   rowId: Key;
   cellField: string;
   columnNumber: number;
@@ -14,7 +14,7 @@ export const SimpleTableCell = ({
   cellField,
   columnNumber,
   rowNumber,
-}: iSimpleTableCellProps): JSX.Element => {
+}: SimpleTableCellProps): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   const field: ISimpleTableField | undefined = useMemo(

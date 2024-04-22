@@ -1,6 +1,6 @@
-import { iSimpleTableField, simpleTableSortFn } from "../main";
+import { ISimpleTableField, simpleTableSortFn } from "../main";
 
-export const mock_fields: iSimpleTableField[] = [
+export const mock_fields: ISimpleTableField[] = [
   { name: "id", hidden: true },
   { name: "n", label: "N", renderFn: ({ rowNumber }) => <>{rowNumber}</> },
   {

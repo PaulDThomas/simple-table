@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { SimpleTableContext, iSimpleTableColumnFilter } from "./SimpleTableContext";
+import { SimpleTableContext, ISimpleTableColumnFilter } from "./SimpleTableContext";
 
 export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) => {
   const simpleTableContext = useContext(SimpleTableContext);
@@ -21,7 +21,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
     (values: string[]) => {
       if (simpleTableContext && simpleTableContext.setCurrentColumnFilters) {
         const newColumnFilters = [...simpleTableContext.currentColumnFilters];
-        const newColumnFilter: iSimpleTableColumnFilter = {
+        const newColumnFilter: ISimpleTableColumnFilter = {
           columnName,
           values,
         };

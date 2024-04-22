@@ -2,12 +2,12 @@ import { Key, useContext } from "react";
 import { SimpleTableCell } from "./SimpleTableCell";
 import { SimpleTableContext } from "./SimpleTableContext";
 
-interface iSimpleTableRowProps {
+interface SimpleTableRowProps {
   rowId: Key;
   rowNumber: number;
 }
 
-export const SimpleTableRow = ({ rowId, rowNumber }: iSimpleTableRowProps): JSX.Element => {
+export const SimpleTableRow = ({ rowId, rowNumber }: SimpleTableRowProps): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   return (
