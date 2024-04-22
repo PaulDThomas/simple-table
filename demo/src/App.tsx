@@ -17,9 +17,9 @@ const App = (): JSX.Element => {
   const [showSearch, setShowSearch] = useState<boolean>(true);
 
   return (
-    <div className='app-holder'>
-      <div className='app-border'>
-        <div className='app-inner'>
+    <div className="app-holder">
+      <div className="app-border">
+        <div className="app-inner">
           <div>
             <table>
               <tbody>
@@ -27,7 +27,7 @@ const App = (): JSX.Element => {
                   <td draggable>Height</td>
                   <td>
                     <input
-                      id='height'
+                      id="height"
                       value={height}
                       onChange={(e) => setHeight(e.currentTarget.value)}
                     />
@@ -35,7 +35,7 @@ const App = (): JSX.Element => {
                   <td>Width</td>
                   <td>
                     <input
-                      id='width'
+                      id="width"
                       value={width}
                       onChange={(e) => setWidth(e.currentTarget.value)}
                     />
@@ -43,29 +43,29 @@ const App = (): JSX.Element => {
                   <td>
                     Title:{" "}
                     <input
-                      id='show-title'
-                      type='checkbox'
+                      id="show-title"
+                      type="checkbox"
                       checked={showHeader}
                       onChange={() => setShowTitle(!showHeader)}
                     />
                     &nbsp;&nbsp;&nbsp; Search:{" "}
                     <input
-                      id='show-search'
-                      type='checkbox'
+                      id="show-search"
+                      type="checkbox"
                       checked={showSearch}
                       onChange={() => setShowSearch(!showSearch)}
                     />
                     &nbsp;&nbsp;&nbsp; Filter:{" "}
                     <input
-                      id='show-filter'
-                      type='checkbox'
+                      id="show-filter"
+                      type="checkbox"
                       checked={showFilter}
                       onChange={() => setShowFilter(!showFilter)}
                     />
                     &nbsp;&nbsp;&nbsp; Pager:{" "}
                     <input
-                      id='show-pager'
-                      type='checkbox'
+                      id="show-pager"
+                      type="checkbox"
                       checked={showPager}
                       onChange={() => setShowPager(!showPager)}
                     />
@@ -75,7 +75,7 @@ const App = (): JSX.Element => {
                   <td>Title</td>
                   <td>
                     <input
-                      id='title'
+                      id="title"
                       value={title}
                       onChange={(e) => setTitle(e.currentTarget.value)}
                     />
@@ -97,11 +97,11 @@ const App = (): JSX.Element => {
           </div>
 
           <div
-            className='table-holder'
+            className="table-holder"
             style={{ backgroundColor: "cyan", height, width, maxWidth: "800px", padding: "1rem" }}
           >
             <SimpleTable
-              id='ais'
+              id="ais"
               fields={mock_fields}
               keyField={"id"}
               data={data}
@@ -110,7 +110,7 @@ const App = (): JSX.Element => {
               showSearch={showSearch}
               showFilter={showFilter}
               showPager={showPager}
-              filterLabel='Cars only'
+              filterLabel="Cars only"
               selectable
               currentSelection={selected}
               setCurrentSelection={setSelected}

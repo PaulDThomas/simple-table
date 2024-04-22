@@ -107,7 +107,7 @@ describe("Resize table cell", () => {
             ],
           }}
         >
-          <div data-testid='container'>
+          <div data-testid="container">
             <table>
               <thead>
                 <tr>

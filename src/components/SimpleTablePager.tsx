@@ -5,12 +5,12 @@ export const SimpleTablePager = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   return (
-    <div className='simpletable-footer'>
+    <div className="simpletable-footer">
       <span>
         Showing&nbsp;
         <select
           id={`${simpleTableContext.id}-pager-visible-rows`}
-          aria-label='Visible rows'
+          aria-label="Visible rows"
           value={`${
             simpleTableContext.pageRows === Infinity ? "All" : simpleTableContext.pageRows
           }`}
@@ -34,24 +34,24 @@ export const SimpleTablePager = (): JSX.Element => {
           ` (${simpleTableContext.totalRows} unfiltered)`}
         &nbsp;from&nbsp;
         <svg
-          xmlns='http://www.w3.org/2000/svg'
-          width='16'
-          height='12'
-          fill='currentColor'
-          viewBox='0 0 16 16'
-          aria-label='Go to first page'
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="12"
+          fill="currentColor"
+          viewBox="0 0 16 16"
+          aria-label="Go to first page"
           onClick={() => simpleTableContext.setFirstRow && simpleTableContext.setFirstRow(0)}
         >
-          <path d='M8.404 7.304a.802.802 0 0 0 0 1.392l6.363 3.692c.52.302 1.233-.043 1.233-.696V4.308c0-.653-.713-.998-1.233-.696L8.404 7.304Z' />
-          <path d='M.404 7.304a.802.802 0 0 0 0 1.392l6.363 3.692c.52.302 1.233-.043 1.233-.696V4.308c0-.653-.713-.998-1.233-.696L.404 7.304Z' />
+          <path d="M8.404 7.304a.802.802 0 0 0 0 1.392l6.363 3.692c.52.302 1.233-.043 1.233-.696V4.308c0-.653-.713-.998-1.233-.696L8.404 7.304Z" />
+          <path d="M.404 7.304a.802.802 0 0 0 0 1.392l6.363 3.692c.52.302 1.233-.043 1.233-.696V4.308c0-.653-.713-.998-1.233-.696L.404 7.304Z" />
         </svg>
         <svg
-          xmlns='http://www.w3.org/2000/svg'
-          width='16'
-          height='12'
-          fill='currentColor'
-          viewBox='0 0 16 16'
-          aria-label='Go to previous page'
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="12"
+          fill="currentColor"
+          viewBox="0 0 16 16"
+          aria-label="Go to previous page"
           onClick={() =>
             simpleTableContext.setFirstRow &&
             simpleTableContext.setFirstRow(
@@ -59,11 +59,11 @@ export const SimpleTablePager = (): JSX.Element => {
             )
           }
         >
-          <path d='m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z' />
+          <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
         </svg>
         row&nbsp;
         <select
-          aria-label='First row'
+          aria-label="First row"
           id={`${simpleTableContext.id}-pager-first-row`}
           value={simpleTableContext.firstRow}
           onChange={(e) => {
@@ -90,12 +90,12 @@ export const SimpleTablePager = (): JSX.Element => {
           )}
         </select>
         <svg
-          xmlns='http://www.w3.org/2000/svg'
-          width='16'
-          height='12'
-          fill='currentColor'
-          viewBox='0 0 16 16'
-          aria-label='Go to next page'
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="12"
+          fill="currentColor"
+          viewBox="0 0 16 16"
+          aria-label="Go to next page"
           onClick={() =>
             simpleTableContext.setFirstRow &&
             simpleTableContext.firstRow + simpleTableContext.pageRows <
@@ -105,15 +105,15 @@ export const SimpleTablePager = (): JSX.Element => {
             )
           }
         >
-          <path d='m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z' />
+          <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
         </svg>
         <svg
-          xmlns='http://www.w3.org/2000/svg'
-          width='16'
-          height='12'
-          fill='currentColor'
-          viewBox='0 0 16 16'
-          aria-label='Go to last page'
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="12"
+          fill="currentColor"
+          viewBox="0 0 16 16"
+          aria-label="Go to last page"
           onClick={() => {
             simpleTableContext.setFirstRow &&
               simpleTableContext.setFirstRow(
@@ -122,8 +122,8 @@ export const SimpleTablePager = (): JSX.Element => {
               );
           }}
         >
-          <path d='M7.596 7.304a.802.802 0 0 1 0 1.392l-6.363 3.692C.713 12.69 0 12.345 0 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692Z' />
-          <path d='M15.596 7.304a.802.802 0 0 1 0 1.392l-6.363 3.692C8.713 12.69 8 12.345 8 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692Z' />
+          <path d="M7.596 7.304a.802.802 0 0 1 0 1.392l-6.363 3.692C.713 12.69 0 12.345 0 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692Z" />
+          <path d="M15.596 7.304a.802.802 0 0 1 0 1.392l-6.363 3.692C8.713 12.69 8 12.345 8 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692Z" />
         </svg>
       </span>
     </div>

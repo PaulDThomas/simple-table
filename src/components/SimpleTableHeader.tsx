@@ -65,10 +65,10 @@ export const SimpleTableHeader = (): JSX.Element => {
                 columnNumber={columnNumber}
               />
               <div
-                aria-orientation='vertical'
+                aria-orientation="vertical"
                 tabIndex={columnNumber}
-                className='resize-handle'
-                role='separator'
+                className="resize-handle"
+                role="separator"
                 onMouseDown={mouseDown}
               />
             </th>

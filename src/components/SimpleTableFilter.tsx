@@ -6,7 +6,7 @@ export const SimpleTableFilter = (): JSX.Element => {
 
   return (
     <div
-      className='simpletable-filter-holder'
+      className="simpletable-filter-holder"
       onClick={() =>
         simpleTableContext.setFilterData &&
         simpleTableContext.setFilterData(!simpleTableContext.filterData)
@@ -14,8 +14,8 @@ export const SimpleTableFilter = (): JSX.Element => {
     >
       <input
         id={`${simpleTableContext.id}-filter`}
-        type='checkbox'
-        role='checkbox'
+        type="checkbox"
+        role="checkbox"
         className={simpleTableContext.filterCheckClassName}
         checked={
           simpleTableContext.filterData !== undefined ? simpleTableContext.filterData : false
@@ -25,7 +25,7 @@ export const SimpleTableFilter = (): JSX.Element => {
       />
       <span
         id={`${simpleTableContext.id}-filter-label`}
-        className='simpletable-filter-label'
+        className="simpletable-filter-label"
       >
         {simpleTableContext.filterLabel ?? "Filter"}
       </span>
