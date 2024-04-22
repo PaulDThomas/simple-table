@@ -51,12 +51,13 @@ const config: Config = {
     "!**/index.ts",
     "!**/interface.ts",
     "!**/main.ts",
+    "!**/__dummy__/**",
     "!**/node_modules/**",
   ],
 
   // Map css type modules to blank module
   moduleNameMapper: {
-    "\\.(css|less|scss)$": "<rootDir>/src/__mocks__/styleMock.ts",
+    "\\.(css|less|scss)$": "<rootDir>/src/__dummy__/styleMock.ts",
   },
 
   // Plugin for watch patterns

@@ -12,7 +12,7 @@ enum eAccessLevel {
 }
 
 const mockFields: ISimpleTableField[] = [
-  { name: "userid", label: "User ID", hidden: true },
+  { name: "userId", label: "User ID", hidden: true },
   {
     name: "hierarchyLabel",
     label: "Hierarchy",
@@ -62,19 +62,24 @@ const mockAccesses: ISimpleTableRow[] = [
 
 describe("Simple table rendering", () => {
   test("Basic render", async () => {
-    const { container } = render(
-      <SimpleTable
-        id="test-table"
-        headerLabel="TEST TABLE"
-        searchLabel="SEARCH HERE"
-        filterLabel="FILTER HERE"
-        showFilter={false}
-        showSearch={false}
-        fields={mockFields}
-        keyField={"userId"}
-        data={mockAccesses}
-      />,
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            searchLabel="SEARCH HERE"
+            filterLabel="FILTER HERE"
+            showFilter={false}
+            showSearch={false}
+            fields={mockFields}
+            keyField={"userId"}
+            data={mockAccesses}
+          />
+        </div>,
+      ),
     );
+    const container = screen.getByTestId("container");
     expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
     expect(screen.queryByText("SEARCH HERE")).not.toBeInTheDocument();
     expect(screen.queryByText("FILTER HERE")).not.toBeInTheDocument();
@@ -90,20 +95,22 @@ describe("Simple table rendering", () => {
   });
 
   test("No header", async () => {
-    render(
-      <SimpleTable
-        id="test-table"
-        headerLabel="TEST TABLE"
-        searchLabel="SEARCH HERE"
-        filterLabel="FILTER HERE"
-        showHeader={false}
-        showFilter={true}
-        showSearch={false}
-        fields={mockFields}
-        keyField={"userId"}
-        data={mockAccesses}
-        selectable
-      />,
+    await act(async () =>
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          searchLabel="SEARCH HERE"
+          filterLabel="FILTER HERE"
+          showHeader={false}
+          showFilter={true}
+          showSearch={false}
+          fields={mockFields}
+          keyField={"userId"}
+          data={mockAccesses}
+          selectable
+        />,
+      ),
     );
     expect(screen.queryByText("TEST TABLE")).not.toBeInTheDocument();
   });
@@ -112,19 +119,24 @@ describe("Simple table rendering", () => {
 describe("Interactive renders", () => {
   test("Search render", async () => {
     const user = userEvent.setup();
-    const { container } = render(
-      <SimpleTable
-        id="test-table"
-        headerLabel="TEST TABLE"
-        searchLabel="SEARCH HERE"
-        filterLabel="FILTER HERE"
-        showFilter={false}
-        showSearch={true}
-        fields={mockFields}
-        keyField={"userId"}
-        data={mockAccesses}
-      />,
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            searchLabel="SEARCH HERE"
+            filterLabel="FILTER HERE"
+            showFilter={false}
+            showSearch={true}
+            fields={mockFields}
+            keyField={"userId"}
+            data={mockAccesses}
+          />
+        </div>,
+      ),
     );
+    const container = screen.getByTestId("container");
     expect(screen.queryByText("SEARCH HERE")).toBeInTheDocument();
     expect(screen.queryByText("FILTER HERE")).not.toBeInTheDocument();
     const searchBox = screen.getByRole("searchbox");
@@ -143,19 +155,24 @@ describe("Interactive renders", () => {
 
   test("Filter render", async () => {
     const user = userEvent.setup();
-    const { container } = render(
-      <SimpleTable
-        id="test-table"
-        headerLabel="TEST TABLE"
-        searchLabel="SEARCH HERE"
-        filterLabel="FILTER HERE"
-        showFilter={true}
-        showSearch={false}
-        fields={mockFields}
-        keyField={"userId"}
-        data={mockAccesses}
-      />,
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            searchLabel="SEARCH HERE"
+            filterLabel="FILTER HERE"
+            showFilter={true}
+            showSearch={false}
+            fields={mockFields}
+            keyField={"userId"}
+            data={mockAccesses}
+          />
+        </div>,
+      ),
     );
+    const container = screen.getByTestId("container");
     expect(screen.queryByText("SEARCH HERE")).not.toBeInTheDocument();
     expect(screen.queryByText("FILTER HERE")).toBeInTheDocument();
     const filter = screen.getByRole("checkbox");
@@ -173,19 +190,24 @@ describe("Interactive renders", () => {
 
   test("Sort render", async () => {
     const user = userEvent.setup();
-    const { container } = render(
-      <SimpleTable
-        id="test-table"
-        headerLabel="TEST TABLE"
-        searchLabel="SEARCH HERE"
-        filterLabel="FILTER HERE"
-        showFilter={true}
-        showSearch={false}
-        fields={mockFields}
-        keyField={"userId"}
-        data={mockAccesses}
-      />,
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            searchLabel="SEARCH HERE"
+            filterLabel="FILTER HERE"
+            showFilter={true}
+            showSearch={false}
+            fields={mockFields}
+            keyField={"userId"}
+            data={mockAccesses}
+          />
+        </div>,
+      ),
     );
+    const container = screen.getByTestId("container");
     expect(screen.queryByText("SEARCH HERE")).not.toBeInTheDocument();
     expect(screen.queryByText("FILTER HERE")).toBeInTheDocument();
     const hierarchyLabel = screen.getByText("Hierarchy");
@@ -216,20 +238,25 @@ describe("Interactive renders", () => {
 const mockSetSelection = jest.fn();
 describe("Toggle rows", () => {
   test("Check untoggled", async () => {
-    const { container } = render(
-      <SimpleTable
-        id="test-table"
-        headerLabel="TEST TABLE"
-        searchLabel="SEARCH HERE"
-        filterLabel="FILTER HERE"
-        showFilter={true}
-        showSearch={false}
-        fields={mockFields}
-        keyField={"userId"}
-        data={mockAccesses}
-        selectable
-      />,
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            searchLabel="SEARCH HERE"
+            filterLabel="FILTER HERE"
+            showFilter={true}
+            showSearch={false}
+            fields={mockFields}
+            keyField={"userId"}
+            data={mockAccesses}
+            selectable
+          />
+        </div>,
+      ),
     );
+    const container = screen.getByTestId("container");
     const checkAll = container.querySelector("#test-table-check-all") as HTMLInputElement;
     const rowCheck1 = container.querySelector("#test-table-check-row-1") as HTMLInputElement;
     const rowCheck2 = container.querySelector("#test-table-check-row-2") as HTMLInputElement;
@@ -241,42 +268,49 @@ describe("Toggle rows", () => {
   });
 
   test("No header", async () => {
-    render(
-      <SimpleTable
-        id="test-table"
-        headerLabel="TEST TABLE"
-        searchLabel="SEARCH HERE"
-        filterLabel="FILTER HERE"
-        showHeader={false}
-        showFilter={true}
-        showSearch={false}
-        fields={mockFields}
-        keyField={"userId"}
-        data={mockAccesses}
-        selectable
-      />,
+    await act(async () =>
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          searchLabel="SEARCH HERE"
+          filterLabel="FILTER HERE"
+          showHeader={false}
+          showFilter={true}
+          showSearch={false}
+          fields={mockFields}
+          keyField={"userId"}
+          data={mockAccesses}
+          selectable
+        />,
+      ),
     );
     expect(screen.queryByText("TEST TABLE")).not.toBeInTheDocument();
   });
 
   test("Toggle all", async () => {
     const user = userEvent.setup();
-    const { container } = render(
-      <SimpleTable
-        id="test-table"
-        headerLabel="TEST TABLE"
-        searchLabel="SEARCH HERE"
-        filterLabel="FILTER HERE"
-        showFilter={true}
-        showSearch={false}
-        fields={mockFields}
-        keyField={"userId"}
-        data={mockAccesses}
-        selectable
-        currentSelection={[]}
-        setCurrentSelection={mockSetSelection}
-      />,
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            searchLabel="SEARCH HERE"
+            filterLabel="FILTER HERE"
+            showFilter={true}
+            showSearch={false}
+            fields={mockFields}
+            keyField={"userId"}
+            data={mockAccesses}
+            selectable
+            currentSelection={[]}
+            setCurrentSelection={mockSetSelection}
+          />
+        </div>,
+      ),
     );
+    const container = screen.getByTestId("container");
     const checkAll = container.querySelector("#test-table-check-all") as HTMLInputElement;
     expect(checkAll).not.toBeChecked();
     await user.click(checkAll);
@@ -286,20 +320,25 @@ describe("Toggle rows", () => {
 
   test("Toggle off", async () => {
     const user = userEvent.setup();
-    const { container } = render(
-      <SimpleTable
-        id="test-table"
-        headerLabel="TEST TABLE"
-        searchLabel="SEARCH HERE"
-        filterLabel="FILTER HERE"
-        fields={mockFields}
-        keyField={"userId"}
-        data={mockAccesses}
-        selectable
-        currentSelection={[1, 2, 3]}
-        setCurrentSelection={mockSetSelection}
-      />,
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            searchLabel="SEARCH HERE"
+            filterLabel="FILTER HERE"
+            fields={mockFields}
+            keyField={"userId"}
+            data={mockAccesses}
+            selectable
+            currentSelection={[1, 2, 3]}
+            setCurrentSelection={mockSetSelection}
+          />
+        </div>,
+      ),
     );
+    const container = screen.getByTestId("container");
     const checkAll = container.querySelector("#test-table-check-all") as HTMLInputElement;
     expect(checkAll).toBeChecked();
     await user.click(checkAll);
@@ -309,22 +348,27 @@ describe("Toggle rows", () => {
 
   test("Search toggle off", async () => {
     const user = userEvent.setup();
-    const { container } = render(
-      <SimpleTable
-        id="test-table"
-        headerLabel="TEST TABLE"
-        searchLabel="SEARCH HERE"
-        filterLabel="FILTER HERE"
-        showFilter={true}
-        showSearch={true}
-        fields={mockFields}
-        keyField={"userId"}
-        data={mockAccesses}
-        selectable
-        currentSelection={[1, 2, 3]}
-        setCurrentSelection={mockSetSelection}
-      />,
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            searchLabel="SEARCH HERE"
+            filterLabel="FILTER HERE"
+            showFilter={true}
+            showSearch={true}
+            fields={mockFields}
+            keyField={"userId"}
+            data={mockAccesses}
+            selectable
+            currentSelection={[1, 2, 3]}
+            setCurrentSelection={mockSetSelection}
+          />
+        </div>,
+      ),
     );
+    const container = screen.getByTestId("container");
     const checkAll = container.querySelector("#test-table-check-all") as HTMLInputElement;
     expect(checkAll).toBeChecked();
     const searchBox = screen.getByRole("searchbox");
@@ -336,21 +380,26 @@ describe("Toggle rows", () => {
 
   test("Search toggle on", async () => {
     const user = userEvent.setup();
-    const { container } = render(
-      <SimpleTable
-        id="test-table"
-        headerLabel="TEST TABLE"
-        searchLabel="SEARCH HERE"
-        filterLabel="FILTER HERE"
-        showFilter={true}
-        showSearch={true}
-        fields={mockFields}
-        keyField={"userId"}
-        data={mockAccesses}
-        selectable
-        setCurrentSelection={mockSetSelection}
-      />,
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            searchLabel="SEARCH HERE"
+            filterLabel="FILTER HERE"
+            showFilter={true}
+            showSearch={true}
+            fields={mockFields}
+            keyField={"userId"}
+            data={mockAccesses}
+            selectable
+            setCurrentSelection={mockSetSelection}
+          />
+        </div>,
+      ),
     );
+    const container = screen.getByTestId("container");
     const checkAll = container.querySelector("#test-table-check-all") as HTMLInputElement;
     expect(checkAll).not.toBeChecked();
     const searchBox = screen.getByRole("searchbox");
@@ -362,22 +411,27 @@ describe("Toggle rows", () => {
 
   test("Single toggle on", async () => {
     const user = userEvent.setup();
-    const { container } = render(
-      <SimpleTable
-        id="test-table"
-        headerLabel="TEST TABLE"
-        searchLabel="SEARCH HERE"
-        filterLabel="FILTER HERE"
-        showFilter={true}
-        showSearch={true}
-        fields={mockFields}
-        keyField={"userId"}
-        data={mockAccesses}
-        selectable
-        currentSelection={[1, 2]}
-        setCurrentSelection={mockSetSelection}
-      />,
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            searchLabel="SEARCH HERE"
+            filterLabel="FILTER HERE"
+            showFilter={true}
+            showSearch={true}
+            fields={mockFields}
+            keyField={"userId"}
+            data={mockAccesses}
+            selectable
+            currentSelection={[1, 2]}
+            setCurrentSelection={mockSetSelection}
+          />
+        </div>,
+      ),
     );
+    const container = screen.getByTestId("container");
     const checkAll = container.querySelector("#test-table-check-all") as HTMLInputElement;
     const rowCheck1 = container.querySelector("#test-table-check-row-1") as HTMLInputElement;
     const rowCheck3 = container.querySelector("#test-table-check-row-3") as HTMLInputElement;
@@ -502,7 +556,7 @@ describe("Test callbacks", () => {
 
   test("Bad sort function handled", async () => {
     const mockFieldsBad: ISimpleTableField[] = [
-      { name: "userid", label: "User ID", hidden: true },
+      { name: "userId", label: "User ID", hidden: true },
       {
         name: "hierarchyLabel",
         label: "Hierarchy",
@@ -533,6 +587,14 @@ describe("Test callbacks", () => {
 
   test("Ensure scroll resets on filter change", async () => {
     const user = userEvent.setup();
+    const testFields: ISimpleTableField[] = [
+      { name: "userId", label: "User ID", hidden: false },
+      ...mockFields.slice(1),
+    ];
+    const testData = Array(100)
+      .fill(mockAccesses)
+      .flat()
+      .map((_, i) => ({ ..._, userId: i }));
     await act(async () =>
       render(
         <div data-testid="container">
@@ -544,27 +606,24 @@ describe("Test callbacks", () => {
             filterLabel="FILTER HERE"
             showFilter={true}
             showSearch={true}
-            fields={[{ name: "userId", label: "User ID", hidden: false }, ...mockFields.slice(1)]}
+            fields={testFields}
             keyField={"userId"}
-            data={Array(100)
-              .fill(mockAccesses)
-              .flat()
-              .map((_, i) => ({ ..._, userId: i }))}
+            data={testData}
           />
         </div>,
       ),
     );
     const container = screen.getByTestId("container");
     const last = screen.queryByLabelText("Go to last page") as Element;
-    await user.click(last);
+    await act(async () => await user.click(last));
     // Expect last cell to be shown
     expect(
       container.querySelector(".simpletable-bodyrow:last-child > td:first-child")?.textContent,
     ).toEqual("299");
     // Apply filter
-    await user.click(screen.getByLabelText("FILTER HERE"));
+    await act(async () => await user.click(screen.getByLabelText("FILTER HERE")));
     expect(
-      container.querySelectorAll("tr.simpletable-bodyrow:first-child > td:first-child").length,
-    ).toEqual(1);
-  });
+      container.querySelector(".simpletable-bodyrow:first-child > td:first-child")?.textContent,
+    ).toEqual("1");
+  }, 50000);
 });

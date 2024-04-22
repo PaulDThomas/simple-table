@@ -156,7 +156,7 @@ export const SimpleTable = ({
           .reduce((prev, cur) => prev && cur, true);
       })
       .sort(sortFn);
-    if (_viewData.length < firstRow) {
+    if (_viewData.length <= firstRow) {
       setFirstRow(0);
     }
     return _viewData;
