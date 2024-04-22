@@ -328,55 +328,57 @@ export const SimpleTable = ({
         } as ISimpleTableContext
       }
     >
-      {(showHeader || showSearch || showFilter) && (
+      <div className="simpletable-main">
+        {(showHeader || showSearch || showFilter) && (
+          <div
+            className="simpletable-title-holder"
+            style={{ backgroundColor: mainBackgroundColor }}
+          >
+            {showHeader && (
+              <h5 className="simpletable-title">
+                {headerLabel}
+                {selectable && (currentSelection?.length ?? 0) > 0 && (
+                  <small style={{ fontSize: "small" }}>
+                    {} {currentSelection?.length} selected
+                  </small>
+                )}
+              </h5>
+            )}
+            {showSearch && fields.filter((f) => f.searchFn).length > 0 && <SimpleTableSearch />}
+            {showFilter && fields.filter((f) => f.filterOutFn).length > 0 && <SimpleTableFilter />}
+          </div>
+        )}
         <div
-          className="simpletable-title-holder"
+          className="simpletable-scroll small-scrollbar"
+          style={{
+            backgroundColor: mainBackgroundColor,
+            height: `calc(100% ${showHeader || showSearch || showFilter ? "- 46px" : ""} ${
+              showPager ? " - 1.75rem" : ""
+            }`,
+          }}
+        >
+          <div className="simpletable-holder">
+            <table
+              {...rest}
+              id={id}
+              className={`simpletable ${tableClassName}`}
+            >
+              <thead className="simpletable-tableheader">
+                <tr>
+                  {selectable && <SimpleTableSelectHeader />}
+                  <SimpleTableHeader />
+                </tr>
+              </thead>
+              <SimpleTableBody />
+            </table>
+          </div>
+        </div>
+        <div
+          className="simpletable-footer-holder"
           style={{ backgroundColor: mainBackgroundColor }}
         >
-          {showHeader && (
-            <h5 className="simpletable-title">
-              {headerLabel}
-              {selectable && (currentSelection?.length ?? 0) > 0 && (
-                <small style={{ fontSize: "small" }}>
-                  {} {currentSelection?.length} selected
-                </small>
-              )}
-            </h5>
-          )}
-          {showSearch && fields.filter((f) => f.searchFn).length > 0 && <SimpleTableSearch />}
-          {showFilter && fields.filter((f) => f.filterOutFn).length > 0 && <SimpleTableFilter />}
+          {showPager && <SimpleTablePager />}
         </div>
-      )}
-      <div
-        className="simpletable-main small-scrollbar"
-        style={{
-          backgroundColor: mainBackgroundColor,
-          height: `calc(100% ${showHeader || showSearch || showFilter ? "- 46px" : ""} ${
-            showPager ? " - 1.75rem" : ""
-          }`,
-        }}
-      >
-        <div className="simpletable-holder">
-          <table
-            {...rest}
-            id={id}
-            className={`simpletable ${tableClassName}`}
-          >
-            <thead className="simpletable-tableheader">
-              <tr>
-                {selectable && <SimpleTableSelectHeader />}
-                <SimpleTableHeader />
-              </tr>
-            </thead>
-            <SimpleTableBody />
-          </table>
-        </div>
-      </div>
-      <div
-        className="simpletable-footer-holder"
-        style={{ backgroundColor: mainBackgroundColor }}
-      >
-        {showPager && <SimpleTablePager />}
       </div>
     </SimpleTableContext.Provider>
   );
