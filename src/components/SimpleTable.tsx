@@ -13,7 +13,7 @@ import { SimpleTableSearch } from "./SimpleTableSearch";
 import { SimpleTableSelectHeader } from "./SimpleTableSelectHeader";
 import { SimpleTablePager } from "./SimpleTablePager";
 
-interface SimpleTableProps {
+interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
   id?: string;
   headerLabel?: string;
   fields: ISimpleTableField[];
@@ -74,6 +74,7 @@ export const SimpleTable = ({
   searchInputClassName = "form-control form-control-sm",
   mainBackgroundColor = "white",
   headerBackgroundColor = "white",
+  ...rest
 }: SimpleTableProps): JSX.Element => {
   const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
   useEffect(() => {
@@ -357,6 +358,7 @@ export const SimpleTable = ({
       >
         <div className="simpletable-holder">
           <table
+            {...rest}
             id={id}
             className={`simpletable ${tableClassName}`}
           >

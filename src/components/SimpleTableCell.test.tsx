@@ -74,7 +74,7 @@ describe("Bad cell rendering", () => {
             <tr>
               <SimpleTableCell
                 rowId={"abc"}
-                cellField='col1'
+                cellField="col1"
                 columnNumber={1}
                 rowNumber={0}
               />
@@ -109,7 +109,7 @@ describe("Bad cell rendering", () => {
               <SimpleTableCell
                 rowNumber={0}
                 rowId={"abc"}
-                cellField='hierarchyId'
+                cellField="hierarchyId"
                 columnNumber={1}
               />
             </tr>
@@ -142,7 +142,7 @@ describe("Bad cell rendering", () => {
             <tr>
               <SimpleTableCell
                 rowId={1}
-                cellField='hierarchyLabel'
+                cellField="hierarchyLabel"
                 columnNumber={1}
                 rowNumber={0}
               />
@@ -178,7 +178,7 @@ describe("Cell render, show things", () => {
             <tr>
               <SimpleTableCell
                 rowId={2}
-                cellField='displayName'
+                cellField="displayName"
                 columnNumber={0}
                 rowNumber={0}
               />
@@ -212,7 +212,7 @@ describe("Cell render, show things", () => {
             <tr>
               <SimpleTableCell
                 rowId={2}
-                cellField='userId'
+                cellField="userId"
                 columnNumber={0}
                 rowNumber={0}
               />
@@ -246,7 +246,7 @@ describe("Cell render, show things", () => {
             <tr>
               <SimpleTableCell
                 rowId={2}
-                cellField='allowed'
+                cellField="allowed"
                 columnNumber={0}
                 rowNumber={0}
               />
@@ -280,7 +280,7 @@ describe("Cell render, show things", () => {
             <tr>
               <SimpleTableCell
                 rowId={2}
-                cellField='accessLevel'
+                cellField="accessLevel"
                 columnNumber={0}
                 rowNumber={0}
               />
@@ -292,7 +292,7 @@ describe("Cell render, show things", () => {
     expect(screen.queryByText("false")).toBeInTheDocument();
   });
 
-  test("Basic render, boolean", async () => {
+  test("Basic render, customField", async () => {
     render(
       <SimpleTableContext.Provider
         value={{
@@ -314,7 +314,7 @@ describe("Cell render, show things", () => {
             <tr>
               <SimpleTableCell
                 rowId={2}
-                cellField='customField'
+                cellField="customField"
                 columnNumber={0}
                 rowNumber={2}
               />

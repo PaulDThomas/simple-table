@@ -64,10 +64,10 @@ describe("Simple table rendering", () => {
   test("Basic render", async () => {
     const { container } = render(
       <SimpleTable
-        id='test-table'
-        headerLabel='TEST TABLE'
-        searchLabel='SEARCH HERE'
-        filterLabel='FILTER HERE'
+        id="test-table"
+        headerLabel="TEST TABLE"
+        searchLabel="SEARCH HERE"
+        filterLabel="FILTER HERE"
         showFilter={false}
         showSearch={false}
         fields={mockFields}
@@ -92,10 +92,10 @@ describe("Simple table rendering", () => {
   test("No header", async () => {
     render(
       <SimpleTable
-        id='test-table'
-        headerLabel='TEST TABLE'
-        searchLabel='SEARCH HERE'
-        filterLabel='FILTER HERE'
+        id="test-table"
+        headerLabel="TEST TABLE"
+        searchLabel="SEARCH HERE"
+        filterLabel="FILTER HERE"
         showHeader={false}
         showFilter={true}
         showSearch={false}
@@ -114,10 +114,10 @@ describe("Interactive renders", () => {
     const user = userEvent.setup();
     const { container } = render(
       <SimpleTable
-        id='test-table'
-        headerLabel='TEST TABLE'
-        searchLabel='SEARCH HERE'
-        filterLabel='FILTER HERE'
+        id="test-table"
+        headerLabel="TEST TABLE"
+        searchLabel="SEARCH HERE"
+        filterLabel="FILTER HERE"
         showFilter={false}
         showSearch={true}
         fields={mockFields}
@@ -145,10 +145,10 @@ describe("Interactive renders", () => {
     const user = userEvent.setup();
     const { container } = render(
       <SimpleTable
-        id='test-table'
-        headerLabel='TEST TABLE'
-        searchLabel='SEARCH HERE'
-        filterLabel='FILTER HERE'
+        id="test-table"
+        headerLabel="TEST TABLE"
+        searchLabel="SEARCH HERE"
+        filterLabel="FILTER HERE"
         showFilter={true}
         showSearch={false}
         fields={mockFields}
@@ -175,10 +175,10 @@ describe("Interactive renders", () => {
     const user = userEvent.setup();
     const { container } = render(
       <SimpleTable
-        id='test-table'
-        headerLabel='TEST TABLE'
-        searchLabel='SEARCH HERE'
-        filterLabel='FILTER HERE'
+        id="test-table"
+        headerLabel="TEST TABLE"
+        searchLabel="SEARCH HERE"
+        filterLabel="FILTER HERE"
         showFilter={true}
         showSearch={false}
         fields={mockFields}
@@ -218,10 +218,10 @@ describe("Toggle rows", () => {
   test("Check untoggled", async () => {
     const { container } = render(
       <SimpleTable
-        id='test-table'
-        headerLabel='TEST TABLE'
-        searchLabel='SEARCH HERE'
-        filterLabel='FILTER HERE'
+        id="test-table"
+        headerLabel="TEST TABLE"
+        searchLabel="SEARCH HERE"
+        filterLabel="FILTER HERE"
         showFilter={true}
         showSearch={false}
         fields={mockFields}
@@ -243,10 +243,10 @@ describe("Toggle rows", () => {
   test("No header", async () => {
     render(
       <SimpleTable
-        id='test-table'
-        headerLabel='TEST TABLE'
-        searchLabel='SEARCH HERE'
-        filterLabel='FILTER HERE'
+        id="test-table"
+        headerLabel="TEST TABLE"
+        searchLabel="SEARCH HERE"
+        filterLabel="FILTER HERE"
         showHeader={false}
         showFilter={true}
         showSearch={false}
@@ -263,10 +263,10 @@ describe("Toggle rows", () => {
     const user = userEvent.setup();
     const { container } = render(
       <SimpleTable
-        id='test-table'
-        headerLabel='TEST TABLE'
-        searchLabel='SEARCH HERE'
-        filterLabel='FILTER HERE'
+        id="test-table"
+        headerLabel="TEST TABLE"
+        searchLabel="SEARCH HERE"
+        filterLabel="FILTER HERE"
         showFilter={true}
         showSearch={false}
         fields={mockFields}
@@ -281,17 +281,17 @@ describe("Toggle rows", () => {
     expect(checkAll).not.toBeChecked();
     await user.click(checkAll);
     expect(checkAll).toBeChecked();
-    expect(mockSetSelection).toBeCalledWith([2, 1, 3]);
+    expect(mockSetSelection).toHaveBeenCalledWith([2, 1, 3]);
   });
 
   test("Toggle off", async () => {
     const user = userEvent.setup();
     const { container } = render(
       <SimpleTable
-        id='test-table'
-        headerLabel='TEST TABLE'
-        searchLabel='SEARCH HERE'
-        filterLabel='FILTER HERE'
+        id="test-table"
+        headerLabel="TEST TABLE"
+        searchLabel="SEARCH HERE"
+        filterLabel="FILTER HERE"
         fields={mockFields}
         keyField={"userId"}
         data={mockAccesses}
@@ -304,17 +304,17 @@ describe("Toggle rows", () => {
     expect(checkAll).toBeChecked();
     await user.click(checkAll);
     expect(checkAll).not.toBeChecked();
-    expect(mockSetSelection).toBeCalledWith([]);
+    expect(mockSetSelection).toHaveBeenCalledWith([]);
   });
 
   test("Search toggle off", async () => {
     const user = userEvent.setup();
     const { container } = render(
       <SimpleTable
-        id='test-table'
-        headerLabel='TEST TABLE'
-        searchLabel='SEARCH HERE'
-        filterLabel='FILTER HERE'
+        id="test-table"
+        headerLabel="TEST TABLE"
+        searchLabel="SEARCH HERE"
+        filterLabel="FILTER HERE"
         showFilter={true}
         showSearch={true}
         fields={mockFields}
@@ -331,17 +331,17 @@ describe("Toggle rows", () => {
     await act(async () => await user.type(searchBox, "TA"));
     expect(searchBox).toHaveValue("TA");
     await user.click(checkAll);
-    expect(mockSetSelection).toBeCalledWith([1, 3]);
+    expect(mockSetSelection).toHaveBeenCalledWith([1, 3]);
   });
 
   test("Search toggle on", async () => {
     const user = userEvent.setup();
     const { container } = render(
       <SimpleTable
-        id='test-table'
-        headerLabel='TEST TABLE'
-        searchLabel='SEARCH HERE'
-        filterLabel='FILTER HERE'
+        id="test-table"
+        headerLabel="TEST TABLE"
+        searchLabel="SEARCH HERE"
+        filterLabel="FILTER HERE"
         showFilter={true}
         showSearch={true}
         fields={mockFields}
@@ -357,17 +357,17 @@ describe("Toggle rows", () => {
     await act(async () => await user.type(searchBox, "TA"));
     expect(searchBox).toHaveValue("TA");
     await user.click(checkAll);
-    expect(mockSetSelection).toBeCalledWith([2]);
+    expect(mockSetSelection).toHaveBeenCalledWith([2]);
   });
 
   test("Single toggle on", async () => {
     const user = userEvent.setup();
     const { container } = render(
       <SimpleTable
-        id='test-table'
-        headerLabel='TEST TABLE'
-        searchLabel='SEARCH HERE'
-        filterLabel='FILTER HERE'
+        id="test-table"
+        headerLabel="TEST TABLE"
+        searchLabel="SEARCH HERE"
+        filterLabel="FILTER HERE"
         showFilter={true}
         showSearch={true}
         fields={mockFields}
@@ -384,9 +384,9 @@ describe("Toggle rows", () => {
     expect(checkAll).not.toBeChecked();
     expect(checkAll.indeterminate).toEqual(true);
     await user.click(rowCheck1);
-    expect(mockSetSelection).toBeCalledWith([2]);
+    expect(mockSetSelection).toHaveBeenCalledWith([2]);
     await user.click(rowCheck3);
-    expect(mockSetSelection).toBeCalledWith([1, 2, 3]);
+    expect(mockSetSelection).toHaveBeenCalledWith([1, 2, 3]);
   });
 });
 
@@ -395,10 +395,10 @@ describe("Local settings", () => {
     await act(async () => {
       render(
         <SimpleTable
-          id='test-table'
-          headerLabel='TEST TABLE'
-          searchLabel='SEARCH HERE'
-          filterLabel='FILTER HERE'
+          id="test-table"
+          headerLabel="TEST TABLE"
+          searchLabel="SEARCH HERE"
+          filterLabel="FILTER HERE"
           showFilter={true}
           showSearch={true}
           fields={mockFields}
@@ -422,10 +422,10 @@ describe("Test callbacks", () => {
     await act(async () =>
       render(
         <SimpleTable
-          id='test-table'
-          headerLabel='TEST TABLE'
-          searchLabel='SEARCH HERE'
-          filterLabel='FILTER HERE'
+          id="test-table"
+          headerLabel="TEST TABLE"
+          searchLabel="SEARCH HERE"
+          filterLabel="FILTER HERE"
           showFilter={true}
           showSearch={true}
           fields={mockFields}
@@ -440,7 +440,7 @@ describe("Test callbacks", () => {
     );
     const rows = screen.getByLabelText("Visible rows");
     await act(async () => await user.selectOptions(rows, "100"));
-    expect(mockOnPagerChange).toBeCalledWith({ firstRow: 0, pageRows: 100 });
+    expect(mockOnPagerChange).toHaveBeenCalledWith({ firstRow: 0, pageRows: 100 });
     const next = screen.getByLabelText("Go to next page");
     await act(async () => await user.click(next));
     expect(mockOnPagerChange).toHaveBeenCalledWith({ firstRow: 100, pageRows: 100 });
@@ -451,10 +451,10 @@ describe("Test callbacks", () => {
     await act(async () =>
       render(
         <SimpleTable
-          id='test-table'
-          headerLabel='TEST TABLE'
-          searchLabel='SEARCH HERE'
-          filterLabel='FILTER HERE'
+          id="test-table"
+          headerLabel="TEST TABLE"
+          searchLabel="SEARCH HERE"
+          filterLabel="FILTER HERE"
           showFilter={true}
           showSearch={true}
           fields={mockFields}
@@ -469,18 +469,18 @@ describe("Test callbacks", () => {
     fireEvent.mouseDown(firstHandle);
     fireEvent.mouseMove(firstHandle, { clientX: 200 });
     fireEvent.mouseUp(firstHandle);
-    expect(mockOnWidthChange).toBeCalledWith(["200px", undefined, undefined, undefined]);
+    expect(mockOnWidthChange).toHaveBeenCalledWith(["200px", undefined, undefined, undefined]);
   });
 
   test("All rows shown when no pager", async () => {
     await act(async () =>
       render(
-        <div data-testid='container'>
+        <div data-testid="container">
           <SimpleTable
-            id='test-table'
-            headerLabel='TEST TABLE'
-            searchLabel='SEARCH HERE'
-            filterLabel='FILTER HERE'
+            id="test-table"
+            headerLabel="TEST TABLE"
+            searchLabel="SEARCH HERE"
+            filterLabel="FILTER HERE"
             showFilter={true}
             showSearch={true}
             fields={mockFields}
@@ -498,5 +498,73 @@ describe("Test callbacks", () => {
     expect(container.querySelectorAll("tr.simpletable-bodyrow").length).toEqual(
       mockAccesses.length * 500,
     );
+  });
+
+  test("Bad sort function handled", async () => {
+    const mockFieldsBad: ISimpleTableField[] = [
+      { name: "userid", label: "User ID", hidden: true },
+      {
+        name: "hierarchyLabel",
+        label: "Hierarchy",
+        sortFn: () => {
+          throw new Error("Bad sort function");
+        },
+      },
+    ];
+    await act(async () =>
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          searchLabel="SEARCH HERE"
+          filterLabel="FILTER HERE"
+          showFilter={true}
+          showSearch={true}
+          fields={mockFieldsBad}
+          keyField={"userId"}
+          data={mockAccesses}
+        />,
+      ),
+    );
+    const hierarchyLabel = screen.getByText("Hierarchy");
+    expect(hierarchyLabel).toBeInTheDocument();
+    await userEvent.click(hierarchyLabel);
+  });
+
+  test("Ensure scroll resets on filter change", async () => {
+    const user = userEvent.setup();
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            data-testid="test-table"
+            id="test-table"
+            headerLabel="TEST TABLE"
+            searchLabel="SEARCH HERE"
+            filterLabel="FILTER HERE"
+            showFilter={true}
+            showSearch={true}
+            fields={[{ name: "userId", label: "User ID", hidden: false }, ...mockFields.slice(1)]}
+            keyField={"userId"}
+            data={Array(100)
+              .fill(mockAccesses)
+              .flat()
+              .map((_, i) => ({ ..._, userId: i }))}
+          />
+        </div>,
+      ),
+    );
+    const container = screen.getByTestId("container");
+    const last = screen.queryByLabelText("Go to last page") as Element;
+    await user.click(last);
+    // Expect last cell to be shown
+    expect(
+      container.querySelector(".simpletable-bodyrow:last-child > td:first-child")?.textContent,
+    ).toEqual("299");
+    // Apply filter
+    await user.click(screen.getByLabelText("FILTER HERE"));
+    expect(
+      container.querySelectorAll("tr.simpletable-bodyrow:first-child > td:first-child").length,
+    ).toEqual(1);
   });
 });

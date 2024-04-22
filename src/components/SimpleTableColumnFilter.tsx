@@ -65,33 +65,33 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
 
   return (
     <>
-      <table className='columnfilter-table'>
+      <table className="columnfilter-table">
         <thead>
           <tr>
             <td>&nbsp;</td>
             <td>
-              <div className='columnfilter-table-search'>
+              <div className="columnfilter-table-search">
                 <input
                   id={`${simpleTableContext.id}-columnfilter-${columnName}-filter`}
-                  aria-label='Column filter search'
+                  aria-label="Column filter search"
                   value={localFilter}
                   onChange={(e) => setLocalFilter(e.currentTarget.value)}
                   style={{ width: "calc(100% - 16px)" }}
                 />
-                <div className='columnfilter-table-close'>
+                <div className="columnfilter-table-close">
                   <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='16'
-                    height='16'
-                    fill='currentColor'
-                    viewBox='0 0 16 16'
-                    aria-label='Close filter'
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                    aria-label="Close filter"
                     onClick={() =>
                       simpleTableContext.setCurrentColumnFilter &&
                       simpleTableContext.setCurrentColumnFilter(null)
                     }
                   >
-                    <path d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z' />
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                   </svg>
                 </div>
               </div>
@@ -99,7 +99,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
           </tr>
           <tr>
             <td
-              className='columnfilter-box-header'
+              className="columnfilter-box-header"
               style={{
                 backgroundColor: simpleTableContext.headerBackgroundColor,
                 opacity: 1,
@@ -107,11 +107,11 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
             >
               <input
                 id={`${simpleTableContext.id}-columnfilter-${columnName}-check-all`}
-                aria-label='Column filter toggle'
+                aria-label="Column filter toggle"
                 className={simpleTableContext.filterCheckClassName}
                 ref={allCheck}
-                type='checkbox'
-                role='checkbox'
+                type="checkbox"
+                role="checkbox"
                 onChange={() => toggleCurrentColumnFilter()}
               />
             </td>
@@ -119,7 +119,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
           </tr>
         </thead>
 
-        <tbody className='small-scrollbar'>
+        <tbody className="small-scrollbar">
           {availableList &&
             availableList
               .filter((v) => v.toLowerCase().includes(localFilter.toLowerCase()))
@@ -128,8 +128,8 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
                   <td>
                     <input
                       id={`${simpleTableContext.id}-columnfilter-${columnName}-check-${i}`}
-                      type='checkbox'
-                      role='checkbox'
+                      type="checkbox"
+                      role="checkbox"
                       aria-label={v}
                       className={simpleTableContext.filterCheckClassName}
                       checked={currentFilter.includes(v)}

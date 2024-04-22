@@ -93,7 +93,7 @@ describe("Simple table header contents renders", () => {
     expect(screen.getByText("Name")).toBeInTheDocument();
   });
 
-  test("Test sorting clicks", async () => {
+  test("Check sorting clicks", async () => {
     const user = userEvent.setup();
     await act(async () =>
       render(
@@ -162,7 +162,7 @@ describe("Filter on column values", () => {
             setCurrentColumnFilters: mockSet,
           }}
         >
-          <div data-testid='container'>
+          <div data-testid="container">
             <SimpleTableHeaderContents
               field={mockFields[1]}
               columnNumber={0}
@@ -208,7 +208,7 @@ describe("Filter on column values", () => {
             setCurrentColumnFilters: mockSet,
           }}
         >
-          <div data-testid='container'>
+          <div data-testid="container">
             <SimpleTableHeaderContents
               field={mockFields[1]}
               columnNumber={1}
@@ -223,8 +223,8 @@ describe("Filter on column values", () => {
     expect(selectTester).toBeInTheDocument();
     expect(selectTester).toBeVisible();
     await user.click(filter);
-    expect(mockSetCurrentFilter).toBeCalledTimes(1);
-    expect(mockSetCurrentFilter).toBeCalledWith(null);
+    expect(mockSetCurrentFilter).toHaveBeenCalledTimes(1);
+    expect(mockSetCurrentFilter).toHaveBeenCalledWith(null);
     expect(screen.queryByText("1 item selected")).toBeInTheDocument();
   });
 });
