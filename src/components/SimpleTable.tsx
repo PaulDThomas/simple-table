@@ -329,11 +329,11 @@ export const SimpleTable = ({
     >
       {(showHeader || showSearch || showFilter) && (
         <div
-          className='simpletable-title-holder'
+          className="simpletable-title-holder"
           style={{ backgroundColor: mainBackgroundColor }}
         >
           {showHeader && (
-            <h5 className='simpletable-title'>
+            <h5 className="simpletable-title">
               {headerLabel}
               {selectable && (currentSelection?.length ?? 0) > 0 && (
                 <small style={{ fontSize: "small" }}>
@@ -347,7 +347,7 @@ export const SimpleTable = ({
         </div>
       )}
       <div
-        className='simpletable-main small-scrollbar'
+        className="simpletable-main small-scrollbar"
         style={{
           backgroundColor: mainBackgroundColor,
           height: `calc(100% ${showHeader || showSearch || showFilter ? "- 46px" : ""} ${
@@ -355,12 +355,12 @@ export const SimpleTable = ({
           }`,
         }}
       >
-        <div className='simpletable-holder'>
+        <div className="simpletable-holder">
           <table
             id={id}
             className={`simpletable ${tableClassName}`}
           >
-            <thead>
+            <thead className="simpletable-tableheader">
               <tr>
                 {selectable && <SimpleTableSelectHeader />}
                 <SimpleTableHeader />
@@ -371,7 +371,7 @@ export const SimpleTable = ({
         </div>
       </div>
       <div
-        className='simpletable-footer-holder'
+        className="simpletable-footer-holder"
         style={{ backgroundColor: mainBackgroundColor }}
       >
         {showPager && <SimpleTablePager />}

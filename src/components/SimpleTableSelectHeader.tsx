@@ -22,23 +22,24 @@ export const SimpleTableSelectHeader = (): JSX.Element => {
 
   return (
     <th
-      className='simpletable-box-header'
+      className="simpletable-box-header simpletable-firstcol"
       style={{
         backgroundColor: simpleTableContext.headerBackgroundColor,
-        opacity: 1,
       }}
     >
-      <input
-        id={`${simpleTableContext.id}-check-all`}
-        type='checkbox'
-        role='checkbox'
-        className={simpleTableContext.filterCheckClassName}
-        ref={allCheck}
-        onChange={() => {
-          simpleTableContext.toggleAllCurrentSelection &&
-            simpleTableContext.toggleAllCurrentSelection();
-        }}
-      />
+      <div className="simpletable-header-text">
+        <input
+          id={`${simpleTableContext.id}-check-all`}
+          type="checkbox"
+          role="checkbox"
+          className={simpleTableContext.filterCheckClassName}
+          ref={allCheck}
+          onChange={() => {
+            simpleTableContext.toggleAllCurrentSelection &&
+              simpleTableContext.toggleAllCurrentSelection();
+          }}
+        />
+      </div>
     </th>
   );
 };

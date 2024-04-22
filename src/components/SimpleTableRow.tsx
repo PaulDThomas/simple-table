@@ -20,19 +20,26 @@ export const SimpleTableRow = ({ rowId, rowNumber }: iSimpleTableRowProps): JSX.
       }`}
     >
       {simpleTableContext.selectable && (
-        <td className='simpletable-firstcol'>
-          <input
-            id={`${simpleTableContext.id}-check-row-${rowId}`}
-            role='checkbox'
-            type='checkbox'
-            className={simpleTableContext.filterCheckClassName}
-            checked={
-              (simpleTableContext.currentSelection?.findIndex((s) => s === rowId) ?? -1) > -1
-            }
-            onChange={() =>
-              simpleTableContext.toggleSelection && simpleTableContext.toggleSelection(rowId)
-            }
-          />
+        <td
+          className="simpletable-firstcol"
+          style={{
+            backgroundColor: simpleTableContext.headerBackgroundColor,
+          }}
+        >
+          <div className="simpletable-header-text">
+            <input
+              id={`${simpleTableContext.id}-check-row-${rowId}`}
+              role="checkbox"
+              type="checkbox"
+              className={simpleTableContext.filterCheckClassName}
+              checked={
+                (simpleTableContext.currentSelection?.findIndex((s) => s === rowId) ?? -1) > -1
+              }
+              onChange={() =>
+                simpleTableContext.toggleSelection && simpleTableContext.toggleSelection(rowId)
+              }
+            />
+          </div>
         </td>
       )}
       {simpleTableContext.fields

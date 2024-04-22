@@ -71,16 +71,49 @@
   align-items: center;
 }
 
-.simpletable th,
-.simpletable td {
+.simpletable > thead > tr > th,
+.simpletable > tbody > tr > td {
   border-left: 1px dotted transparent;
   border-right: 1px dotted transparent;
 }
 
-.simpletable > thead th:hover,
-.simpletable > tbody td:hover {
+.simpletable > thead > tr > th:hover,
+.simpletable > tbody > tr > td:hover {
   border-left: 1px solid rgba(0, 0, 0, 0.75);
   border-right: 1px solid rgba(0, 0, 0, 0.75);
+}
+
+.simpletable > thead > tr > th.simpletable-firstcol {
+  position: sticky;
+  top: 0;
+  left: 0;
+  opacity: 1;
+  z-index: 100;
+  border-left: 0;
+  border-right: 1px dotted transparent;
+}
+.simpletable > tbody > tr > td.simpletable-firstcol {
+  position: sticky;
+  left: 0;
+  opacity: 1;
+  z-index: 1;
+  border-left: 0;
+  border-right: 1px dotted transparent;
+}
+
+.simpletable th:first-child:hover,
+.simpletable td:first-child:hover {
+  border-right: 1px solid rgba(0, 0, 0, 0.75);
+}
+
+.simpletable > thead > th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.simpletable > tbody {
+  overflow-y: auto;
 }
 
 .simpletable td {
@@ -100,13 +133,6 @@
 
 .simpletable-clickable {
   cursor: pointer;
-}
-
-.simpletable-firstcol {
-  position: sticky;
-  z-index: 1;
-  left: 0;
-  opacity: 1;
 }
 
 .simpletable-title-holder {
