@@ -10,12 +10,6 @@ export const SimpleTableSearch = (): JSX.Element => {
         id={`${simpleTableContext.id}-search-label`}
         htmlFor={`${simpleTableContext.id}-search`}
         className={simpleTableContext.searchLabelClassName}
-        style={{
-          marginTop: 0,
-          marginBottom: 0,
-          alignSelf: "center",
-          marginRight: "0.5rem",
-        }}
       >
         {simpleTableContext.searchLabel ?? "Search"}
       </label>
@@ -23,7 +17,6 @@ export const SimpleTableSearch = (): JSX.Element => {
         <input
           id={`${simpleTableContext.id}-search`}
           className={simpleTableContext.searchInputClassName}
-          style={{ margin: "4px" }}
           role="searchbox"
           type="string"
           value={simpleTableContext.searchText ?? ""}

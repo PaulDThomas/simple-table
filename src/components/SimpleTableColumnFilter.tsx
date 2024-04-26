@@ -76,7 +76,6 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
                   aria-label="Column filter search"
                   value={localFilter}
                   onChange={(e) => setLocalFilter(e.currentTarget.value)}
-                  style={{ width: "calc(100% - 16px)" }}
                 />
                 <div className="columnfilter-table-close">
                   <svg
@@ -102,7 +101,6 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
               className="columnfilter-box-header"
               style={{
                 backgroundColor: simpleTableContext.headerBackgroundColor,
-                opacity: 1,
               }}
             >
               <input

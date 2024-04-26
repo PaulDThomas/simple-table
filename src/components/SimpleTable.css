@@ -53,6 +53,9 @@
 .simpletable-box-header {
   width: 20px;
 }
+.simpletable-title small {
+  font-size: small;
+}
 
 .simpletable-header-text {
   overflow-x: hidden;
@@ -106,8 +109,8 @@
   border-right: 1px dotted transparent;
 }
 
-.simpletable th:first-child:hover,
-.simpletable td:first-child:hover {
+.simpletable > thead > tr > th:first-child:hover,
+.simpletable > thead > tr > td:first-child:hover {
   border-right: 1px solid rgba(0, 0, 0, 0.75);
 }
 
@@ -163,9 +166,7 @@ h5.simpletable-title {
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
-  align-items: flex-end;
   justify-content: flex-end;
-
   white-space: nowrap;
 }
 
@@ -174,6 +175,9 @@ h5.simpletable-title {
   overflow: hidden;
   text-overflow: ellipsis;
   margin-right: 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .simpletable-footer > span {
@@ -184,6 +188,18 @@ h5.simpletable-title {
 .simpletable-search-holder {
   order: 2;
   display: inline-flex;
+}
+.simpletable-search-holder input {
+  border-radius: 4px;
+  border: 1px solid black;
+  margin: 0.5rem;
+  padding: 0.25rem;
+}
+.simpletable-search-holder label {
+  margin-top: 0;
+  margin-bottom: 0;
+  align-self: center;
+  margin-right: 0.5rem;
 }
 
 .simpletable-search-holder:last-child {
@@ -215,8 +231,8 @@ h5.simpletable-title {
   display: inline-block;
   position: absolute;
   cursor: col-resize;
-  width: 0.5rem;
-  right: 0;
+  width: 8px;
+  right: -6px;
   top: 0;
   z-index: 10;
   height: 100%;
@@ -250,20 +266,17 @@ h5.simpletable-title {
   min-width: 60px;
 }
 
-.simpletable-columnfilter-holder input {
-  border-radius: 4px;
-  border: 1px solid black;
-}
-
 .columnfilter-table {
   height: 100%;
+  /* line-height: 1rem; */
   width: calc(100% - 2px);
   border-collapse: collapse;
 }
-.columnfilter-table tbody {
+.columnfilter-table > tbody {
   display: block;
   height: calc(100% - 48px);
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .columnfilter-table thead,
 .columnfilter-table tbody tr {
@@ -275,25 +288,38 @@ h5.simpletable-title {
   width: calc(100% - 8px);
   height: 50px;
 }
+.columnfilter-table .columnfilter-box-header {
+  opacity: 1;
+}
 .columnfilter-table tbody {
   border-top: 1px dotted black;
+  border-bottom: 1px dotted black;
 }
-.columnfilter-table tfoot {
-  border-top: 1px dotted black;
+.columnfilter-table tfoot td {
+  text-align: left;
+  font-weight: 400;
+  padding-top: 0;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 .columnfilter-table tr td:first-child,
 .columnfilter-table tr th:first-child {
   width: 2rem;
 }
-.columnfilter-table td {
-  text-align: left;
-  font-weight: 400;
-}
 
 .columnfilter-table-search {
   display: flex;
+  flex-direction: row;
   width: calc(100% + 8px);
-  align-items: top;
+  align-items: center;
+}
+
+.columnfilter-table-search input {
+  width: calc(100% - 24px);
+  line-height: 1px;
+  border-radius: 4px;
+  border: 1px solid black;
+  margin-left: 4px;
 }
 
 .columnfilter-table-close {
@@ -304,6 +330,7 @@ h5.simpletable-title {
   border-radius: 3px;
   margin-left: 2px;
   cursor: pointer;
+  line-height: 1rem;
 }
 .columnfilter-table-close:hover {
   background-color: black;

@@ -338,7 +338,7 @@ export const SimpleTable = ({
               <h5 className="simpletable-title">
                 {headerLabel}
                 {selectable && (currentSelection?.length ?? 0) > 0 && (
-                  <small style={{ fontSize: "small" }}>
+                  <small>
                     {} {currentSelection?.length} selected
                   </small>
                 )}

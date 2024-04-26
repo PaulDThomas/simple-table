@@ -56,7 +56,6 @@ export const SimpleTableHeader = (): JSX.Element => {
               className={"simpletable-header"}
               style={{
                 backgroundColor: simpleTableContext.headerBackgroundColor,
-                opacity: 1,
                 width: simpleTableContext.columnWidths[columnNumber] ?? "100px",
               }}
             >
