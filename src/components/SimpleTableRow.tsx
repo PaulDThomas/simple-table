@@ -1,6 +1,7 @@
 import { Key, useContext } from "react";
 import { SimpleTableCell } from "./SimpleTableCell";
 import { SimpleTableContext } from "./SimpleTableContext";
+import styles from "./SimpleTableRow.module.css";
 
 interface SimpleTableRowProps {
   rowId: Key;
@@ -13,20 +14,20 @@ export const SimpleTableRow = ({ rowId, rowNumber }: SimpleTableRowProps): JSX.E
   return (
     <tr
       id={`${simpleTableContext.id}-row-${rowId}`}
-      className={`simpletable-bodyrow${
+      className={
         (simpleTableContext.currentSelection?.findIndex((s) => s === rowId) ?? -1) > -1
-          ? " selected"
-          : ""
-      }`}
+          ? styles.selected
+          : undefined
+      }
     >
       {simpleTableContext.selectable && (
         <td
-          className="simpletable-firstcol"
+          className={styles.firstcol}
           style={{
             backgroundColor: simpleTableContext.headerBackgroundColor,
           }}
         >
-          <div className="simpletable-header-text">
+          <div>
             <input
               id={`${simpleTableContext.id}-check-row-${rowId}`}
               role="checkbox"

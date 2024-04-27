@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { SimpleTableContext } from "./SimpleTableContext";
+import styles from "./SimpleTablePager.module.css";
 
 export const SimpleTablePager = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   return (
-    <div className="simpletable-footer">
+    <div className={styles.footer}>
       <span>
         Showing&nbsp;
         <select

@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef } from "react";
 import { SimpleTableContext } from "./SimpleTableContext";
+import styles from "./SimpleTableSelectHeader.module.css";
 
 export const SimpleTableSelectHeader = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
@@ -22,12 +23,12 @@ export const SimpleTableSelectHeader = (): JSX.Element => {
 
   return (
     <th
-      className="simpletable-box-header simpletable-firstcol"
+      className={styles.cell}
       style={{
         backgroundColor: simpleTableContext.headerBackgroundColor,
       }}
     >
-      <div className="simpletable-header-text">
+      <div>
         <input
           id={`${simpleTableContext.id}-check-all`}
           type="checkbox"

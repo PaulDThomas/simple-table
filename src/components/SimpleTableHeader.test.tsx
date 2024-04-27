@@ -121,7 +121,7 @@ describe("Resize table cell", () => {
     });
     const container = await screen.findByTestId("container");
     const cells = container.querySelectorAll("th");
-    const rhs = container.querySelectorAll("th div.resize-handle");
+    const rhs = container.querySelectorAll("th div.resizeHandle");
     const th = cells[0];
     const rh = rhs[0];
     expect(th).toBeInTheDocument();

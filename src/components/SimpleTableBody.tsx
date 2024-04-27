@@ -1,12 +1,13 @@
 import { useContext } from "react";
 import { SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableRow } from "./SimpleTableRow";
+import styles from "./SimpleTableBody.module.css";
 
 export const SimpleTableBody = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   return (
-    <tbody>
+    <tbody className={styles.tbody}>
       {simpleTableContext.viewData
         .slice(
           simpleTableContext.firstRow,
@@ -26,7 +27,7 @@ export const SimpleTableBody = (): JSX.Element => {
             <tr key={ri}>
               <td
                 colSpan={simpleTableContext.fields.filter((f) => !f.hidden ?? true).length}
-                className="simpletable-cell"
+                className={styles.noKeyField}
               >
                 keyField has not been found
               </td>

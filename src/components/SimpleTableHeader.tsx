@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useRef } from "react";
 import { SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableHeaderContents } from "./SimpleTableHeaderContents";
+import styles from "./SimpleTableHeader.module.css";
 
 export const SimpleTableHeader = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
@@ -53,7 +54,7 @@ export const SimpleTableHeader = (): JSX.Element => {
               id={`${simpleTableContext.id}-header-${field.name}`}
               key={field.name}
               data-key={columnNumber}
-              className={"simpletable-header"}
+              className={styles.cell}
               style={{
                 backgroundColor: simpleTableContext.headerBackgroundColor,
                 width: simpleTableContext.columnWidths[columnNumber] ?? "100px",
@@ -66,7 +67,7 @@ export const SimpleTableHeader = (): JSX.Element => {
               <div
                 aria-orientation="vertical"
                 tabIndex={columnNumber}
-                className="resize-handle"
+                className={styles.resizeHandle}
                 role="separator"
                 onMouseDown={mouseDown}
               />

@@ -1,5 +1,6 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { SimpleTableContext, ISimpleTableColumnFilter } from "./SimpleTableContext";
+import styles from "./SimpleTableColumnFilter.module.css";
 
 export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) => {
   const simpleTableContext = useContext(SimpleTableContext);
@@ -65,19 +66,19 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
 
   return (
     <>
-      <table className="columnfilter-table">
+      <table className={styles.table}>
         <thead>
           <tr>
-            <td>&nbsp;</td>
-            <td>
-              <div className="columnfilter-table-search">
+            <th>&nbsp;</th>
+            <th>
+              <div className={styles.search}>
                 <input
                   id={`${simpleTableContext.id}-columnfilter-${columnName}-filter`}
                   aria-label="Column filter search"
                   value={localFilter}
                   onChange={(e) => setLocalFilter(e.currentTarget.value)}
                 />
-                <div className="columnfilter-table-close">
+                <div className={styles.close}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -94,11 +95,11 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
                   </svg>
                 </div>
               </div>
-            </td>
+            </th>
           </tr>
           <tr>
             <td
-              className="columnfilter-box-header"
+              className={styles.boxHeader}
               style={{
                 backgroundColor: simpleTableContext.headerBackgroundColor,
               }}
@@ -117,7 +118,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
           </tr>
         </thead>
 
-        <tbody className="small-scrollbar">
+        <tbody className={styles.scroll}>
           {availableList &&
             availableList
               .filter((v) => v.toLowerCase().includes(localFilter.toLowerCase()))
@@ -150,7 +151,9 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
         <tfoot>
           <tr>
             <td colSpan={2}>
-              {currentFilter.length} item{currentFilter.length !== 1 ? "s" : ""} selected
+              <small>
+                {currentFilter.length} item{currentFilter.length !== 1 ? "s" : ""} selected
+              </small>
             </td>
           </tr>
         </tfoot>

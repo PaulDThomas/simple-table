@@ -1,6 +1,5 @@
 import { Key, useCallback, useEffect, useMemo, useState } from "react";
-import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
-import "./SimpleTable.css";
+import styles from "./SimpleTable.module.css";
 import { SimpleTableBody } from "./SimpleTableBody";
 import {
   ISimpleTableColumnFilter,
@@ -9,9 +8,10 @@ import {
 } from "./SimpleTableContext";
 import { SimpleTableFilter } from "./SimpleTableFilter";
 import { SimpleTableHeader } from "./SimpleTableHeader";
+import { SimpleTablePager } from "./SimpleTablePager";
 import { SimpleTableSearch } from "./SimpleTableSearch";
 import { SimpleTableSelectHeader } from "./SimpleTableSelectHeader";
-import { SimpleTablePager } from "./SimpleTablePager";
+import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
 
 interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
   id?: string;
@@ -328,28 +328,30 @@ export const SimpleTable = ({
         } as ISimpleTableContext
       }
     >
-      <div className="simpletable-main">
+      <div className={styles.main}>
         {(showHeader || showSearch || showFilter) && (
           <div
-            className="simpletable-title-holder"
+            className={styles.titleHolder}
             style={{ backgroundColor: mainBackgroundColor }}
           >
-            {showHeader && (
-              <h5 className="simpletable-title">
-                {headerLabel}
-                {selectable && (currentSelection?.length ?? 0) > 0 && (
-                  <small>
-                    {} {currentSelection?.length} selected
-                  </small>
-                )}
-              </h5>
-            )}
+            <h5 className={styles.title}>
+              {showHeader && (
+                <>
+                  {headerLabel}
+                  {selectable && (currentSelection?.length ?? 0) > 0 && (
+                    <small>
+                      {} {currentSelection?.length} selected
+                    </small>
+                  )}
+                </>
+              )}
+            </h5>
             {showSearch && fields.filter((f) => f.searchFn).length > 0 && <SimpleTableSearch />}
             {showFilter && fields.filter((f) => f.filterOutFn).length > 0 && <SimpleTableFilter />}
           </div>
         )}
         <div
-          className="simpletable-scroll small-scrollbar"
+          className={styles.scroll}
           style={{
             backgroundColor: mainBackgroundColor,
             height: `calc(100% ${showHeader || showSearch || showFilter ? "- 46px" : ""} ${
@@ -357,13 +359,13 @@ export const SimpleTable = ({
             }`,
           }}
         >
-          <div className="simpletable-holder">
+          <div className={styles.holder}>
             <table
               {...rest}
               id={id}
-              className={`simpletable ${tableClassName}`}
+              className={[styles.table, tableClassName].join(" ")}
             >
-              <thead className="simpletable-tableheader">
+              <thead>
                 <tr>
                   {selectable && <SimpleTableSelectHeader />}
                   <SimpleTableHeader />
@@ -373,12 +375,14 @@ export const SimpleTable = ({
             </table>
           </div>
         </div>
-        <div
-          className="simpletable-footer-holder"
-          style={{ backgroundColor: mainBackgroundColor }}
-        >
-          {showPager && <SimpleTablePager />}
-        </div>
+        {showPager && (
+          <div
+            className={styles.footerHolder}
+            style={{ backgroundColor: mainBackgroundColor }}
+          >
+            <SimpleTablePager />
+          </div>
+        )}
       </div>
     </SimpleTableContext.Provider>
   );

@@ -1,12 +1,13 @@
 import { useContext } from "react";
 import { SimpleTableContext } from "./SimpleTableContext";
+import styles from "./SimpleTableFilter.module.css";
 
 export const SimpleTableFilter = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   return (
     <div
-      className="simpletable-filter-holder"
+      className={styles.holder}
       onClick={() =>
         simpleTableContext.setFilterData &&
         simpleTableContext.setFilterData(!simpleTableContext.filterData)
@@ -25,7 +26,7 @@ export const SimpleTableFilter = (): JSX.Element => {
       />
       <span
         id={`${simpleTableContext.id}-filter-label`}
-        className="simpletable-filter-label"
+        className={styles.label}
       >
         {simpleTableContext.filterLabel ?? "Filter"}
       </span>

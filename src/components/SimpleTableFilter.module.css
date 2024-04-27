@@ -1,0 +1,14 @@
+.holder {
+  order: 3;
+  margin-left: 1rem;
+  display: flex;
+  cursor: default;
+}
+.holder:last-child {
+  margin-right: 1rem;
+}
+
+.label {
+  display: table-cell;
+  margin-left: 0.5rem;
+}

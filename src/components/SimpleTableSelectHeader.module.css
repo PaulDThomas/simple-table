@@ -1,0 +1,15 @@
+.cell {
+  border-left: 0;
+  border-right: 1px dotted transparent;
+  left: 0;
+  opacity: 1;
+  position: sticky;
+  top: 0;
+  width: 20px;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.cell:hover {
+  border-right: 1px solid rgba(0, 0, 0, 0.75);
+}

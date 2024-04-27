@@ -1,0 +1,37 @@
+.filterHolder {
+  position: absolute;
+  height: 200px;
+  width: 200px;
+  z-index: 10;
+  border: 1px solid black;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  top: 24px;
+  resize: both;
+  overflow: auto;
+  box-shadow: 4px 4px 4px rgb(64, 64, 64, 0.75);
+  min-width: 60px;
+}
+
+.text {
+  overflow-x: hidden;
+  overflow-y: visible;
+  text-overflow: ellipsis;
+  display: flex;
+  justify-content: center;
+}
+
+.clickable {
+  cursor: pointer;
+  flex-grow: 1;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  overflow-y: visible;
+}
+
+.iconHolder {
+  justify-self: end;
+  min-width: max-content;
+  display: flex;
+  align-items: center;
+}

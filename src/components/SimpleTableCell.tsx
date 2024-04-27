@@ -1,6 +1,7 @@
 import { Key, useContext, useMemo } from "react";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTableContext } from "./SimpleTableContext";
+import styles from "./SimpleTableCell.module.css";
 
 interface SimpleTableCellProps {
   rowId: Key;
@@ -33,7 +34,7 @@ export const SimpleTableCell = ({
         field?.name ?? columnNumber
       }`}
       key={cellField}
-      className={"simpletable-cell"}
+      className={styles.cell}
     >
       <div>
         {!field || !rowData

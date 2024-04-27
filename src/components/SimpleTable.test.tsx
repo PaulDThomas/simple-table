@@ -549,7 +549,7 @@ describe("Test callbacks", () => {
       ),
     );
     const container = screen.getByTestId("container");
-    expect(container.querySelectorAll("tr.simpletable-bodyrow").length).toEqual(
+    expect(container.querySelectorAll("#test-table > tbody > tr").length).toEqual(
       mockAccesses.length * 500,
     );
   });
@@ -618,12 +618,12 @@ describe("Test callbacks", () => {
     await act(async () => await user.click(last));
     // Expect last cell to be shown
     expect(
-      container.querySelector(".simpletable-bodyrow:last-child > td:first-child")?.textContent,
+      container.querySelector("#test-table > tbody > tr:last-child > td:first-child")?.textContent,
     ).toEqual("299");
     // Apply filter
     await act(async () => await user.click(screen.getByLabelText("FILTER HERE")));
     expect(
-      container.querySelector(".simpletable-bodyrow:first-child > td:first-child")?.textContent,
+      container.querySelector("#test-table > tbody > tr:first-child > td:first-child")?.textContent,
     ).toEqual("1");
-  }, 50000);
+  });
 });
