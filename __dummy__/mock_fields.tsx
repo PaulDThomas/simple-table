@@ -1,4 +1,4 @@
-import { ISimpleTableField, simpleTableSortFn } from "../main";
+import { ISimpleTableField, simpleTableSortFn } from "../src/main";
 
 export const mock_fields: ISimpleTableField[] = [
   { name: "id", hidden: true },

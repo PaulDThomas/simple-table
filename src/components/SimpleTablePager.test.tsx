@@ -2,7 +2,7 @@ import userEvent from "@testing-library/user-event";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTablePager } from "./SimpleTablePager";
-import { mockData } from "../__dummy__/mock_data";
+import { mockData } from "../../__dummy__/mock_data";
 
 describe("Simple table pager", () => {
   test("Basic render", async () => {

@@ -57,7 +57,7 @@ const config: Config = {
 
   // Map css type modules to blank module
   moduleNameMapper: {
-    "\\.(css|less|scss)$": "<rootDir>/src/__dummy__/styleMock.ts",
+    "\\.(css|less|scss)$": "<rootDir>/__dummy__/styleMock.ts",
   },
 
   // Plugin for watch patterns

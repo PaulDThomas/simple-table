@@ -1,6 +1,6 @@
 import { Key, useState } from "react";
-import { mockData } from "../../src/__dummy__/mock_data";
-import { mock_fields } from "../../src/__dummy__/mock_fields";
+import { mockData } from "../../__dummy__/mock_data";
+import { mock_fields } from "../../__dummy__/mock_fields";
 import { SimpleTable, ISimpleTableRow } from "../../src/components";
 
 // Main application
