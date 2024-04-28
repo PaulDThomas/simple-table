@@ -10,7 +10,7 @@ const App = (): JSX.Element => {
   const [height, setHeight] = useState<string>("600px");
   const [width, setWidth] = useState<string>("600px");
   const [title, setTitle] = useState<string>("");
-  const [receivedWidths, setReceivedWidths] = useState<(string | undefined)[]>([]);
+  const [receivedWidths, setReceivedWidths] = useState<{ name: string; width: string }[]>([]);
   const [showHeader, setShowTitle] = useState<boolean>(true);
   const [showFilter, setShowFilter] = useState<boolean>(true);
   const [showPager, setShowPager] = useState<boolean>(true);
@@ -90,7 +90,7 @@ const App = (): JSX.Element => {
                       Remove selected
                     </button>
                   </td>
-                  <td>Widths: {receivedWidths.join(".")}</td>
+                  <td>Widths: {receivedWidths.map((w) => `${w.name}:${w.width}`).join("|")}</td>
                 </tr>
               </tbody>
             </table>

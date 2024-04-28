@@ -28,8 +28,8 @@ export interface ISimpleTableContext {
   toggleAllCurrentSelection?: () => void;
   toggleSelection?: (ret: Key) => void;
 
-  columnWidths: (string | undefined)[];
-  setColumnWidth?: (col: number, width: string) => void;
+  columnWidths: { name: string; width: string }[];
+  setColumnWidth?: (columnName: string, width: string) => void;
   pageRows: number;
   setPageRows?: (ret: number) => void;
   firstRow: number;

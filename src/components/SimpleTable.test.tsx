@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTable } from "./SimpleTable";
 import { act } from "react-dom/test-utils";
+import { useState } from "react";
 
 enum eAccessLevel {
   lead,
@@ -502,28 +503,72 @@ describe("Test callbacks", () => {
 
   test("onWidthChange callback", async () => {
     const mockOnWidthChange = jest.fn();
-    await act(async () =>
-      render(
-        <SimpleTable
-          id="test-table"
-          headerLabel="TEST TABLE"
-          searchLabel="SEARCH HERE"
-          filterLabel="FILTER HERE"
-          showFilter={true}
-          showSearch={true}
-          fields={mockFields}
-          keyField={"userId"}
-          data={mockAccesses}
-          onWidthChange={mockOnWidthChange}
-        />,
-      ),
+    const user = userEvent.setup();
+    const ReloadingTable = () => {
+      const [show, setShow] = useState<boolean>(true);
+      return (
+        <div>
+          <button
+            onClick={() => setShow(!show)}
+            data-testid="show-button"
+          />
+          {show && (
+            <SimpleTable
+              id="test-table"
+              headerLabel="TEST TABLE"
+              searchLabel="SEARCH HERE"
+              filterLabel="FILTER HERE"
+              showFilter={true}
+              showSearch={true}
+              fields={mockFields}
+              keyField={"userId"}
+              data={mockAccesses}
+              onWidthChange={mockOnWidthChange}
+            />
+          )}
+        </div>
+      );
+    };
+    // Add old setting
+    window.localStorage.setItem(
+      "asup.simple-table.test-table.settings",
+      JSON.stringify({ headerWidths: ["0px"] }),
     );
+    await act(async () => render(<ReloadingTable />));
     const handles = screen.getAllByRole("separator");
     const firstHandle = handles[0];
     fireEvent.mouseDown(firstHandle);
+    fireEvent.mouseMove(firstHandle, { clientX: 400 });
+    fireEvent.mouseUp(firstHandle);
+    expect(mockOnWidthChange).toHaveBeenLastCalledWith([
+      { name: mockFields.filter((f) => !f.hidden)[0].name, width: "400px" },
+    ]);
+    fireEvent.mouseDown(firstHandle);
     fireEvent.mouseMove(firstHandle, { clientX: 200 });
     fireEvent.mouseUp(firstHandle);
-    expect(mockOnWidthChange).toHaveBeenCalledWith(["200px", undefined, undefined, undefined]);
+    expect(mockOnWidthChange).toHaveBeenLastCalledWith([
+      { name: mockFields.filter((f) => !f.hidden)[0].name, width: "200px" },
+    ]);
+    // Hide table
+    const showButton = screen.getByTestId("show-button");
+    await act(async () => await user.click(showButton));
+    expect(screen.queryByText("TEST TABLE")).not.toBeInTheDocument();
+    // Show table again
+    await act(async () => await user.click(showButton));
+    expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+    const handles2 = screen.getAllByRole("separator");
+    const secondHandle = handles2[1];
+    fireEvent.mouseDown(secondHandle);
+    fireEvent.mouseMove(secondHandle, { clientX: 300 });
+    fireEvent.mouseUp(secondHandle);
+    const settings = window.localStorage.getItem("asup.simple-table.test-table.settings") as string;
+    const headerWidths = JSON.parse(settings).headerWidths as { name: string; width: string }[];
+    expect(
+      headerWidths.find((f) => f.name === mockFields.filter((f) => !f.hidden)[0].name)?.width,
+    ).toEqual("200px");
+    expect(
+      headerWidths.find((f) => f.name === mockFields.filter((f) => !f.hidden)[1].name)?.width,
+    ).toEqual("300px");
   });
 
   test("All rows shown when no pager", async () => {

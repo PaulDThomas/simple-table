@@ -29,7 +29,7 @@ interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
   initialFilterSelected?: boolean;
   filterLabel?: string;
   searchLabel?: string;
-  onWidthChange?: (ret: (string | undefined)[]) => void;
+  onWidthChange?: (ret: { name: string; width: string }[]) => void;
   onPagerChange?: (ret: { firstRow: number; pageRows: number }) => void;
 
   tableClassName?: string;
@@ -45,7 +45,7 @@ interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
 
 interface SimpleTableLocalSettings {
   pageRows?: number | "Infinity";
-  headerWidths?: (string | undefined)[];
+  headerWidths?: (string | undefined)[] | { name: string; width: string }[];
 }
 
 export const SimpleTable = ({
@@ -83,8 +83,16 @@ export const SimpleTable = ({
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
   const [sortBy, setSortBy] = useState<ISimpleTableSort | null>(null);
   const [searchText, setSearchText] = useState<string>("");
-  const [columnWidths, setColumnWidths] = useState<(string | undefined)[]>([]);
-  useEffect(() => setColumnWidths(fields.map((f) => f.width)), [fields]);
+  const [columnWidths, setColumnWidths] = useState<{ name: string; width: string }[]>([]);
+  useEffect(
+    () =>
+      setColumnWidths(
+        fields
+          .filter((f) => f.width !== undefined)
+          .map((f) => ({ name: f.name, width: f.width as string })),
+      ),
+    [fields],
+  );
 
   const [firstRow, setFirstRow] = useState(0);
   const [pageRows, setPageRows] = useState(25);
@@ -235,7 +243,7 @@ export const SimpleTable = ({
 
   // Save local settings
   const updateLocalSettings = useCallback(
-    (setting: string, value: number | (string | undefined)[]) => {
+    (setting: string, value: number | { name: string; width: string }[]) => {
       const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
       const localSettings = JSON.parse(localSettingsText ?? "{}") as SimpleTableLocalSettings;
       if (setting === "pageRows" && value && !Array.isArray(value)) {
@@ -259,11 +267,24 @@ export const SimpleTable = ({
       localSettings.pageRows &&
         showPager &&
         setPageRows(localSettings.pageRows === "Infinity" ? Infinity : localSettings.pageRows);
-      if (localSettings.headerWidths) {
-        setColumnWidths(localSettings.headerWidths);
+      if (
+        localSettings.headerWidths &&
+        Array.isArray(localSettings.headerWidths) &&
+        localSettings.headerWidths.length > 0 &&
+        typeof localSettings.headerWidths[0] === "string"
+      ) {
+        const newColumnWidths = fields
+          .filter((f) => !f.hidden)
+          .map((f, ix) => ({
+            name: f.name,
+            width: (localSettings.headerWidths as string[])[ix],
+          }));
+        updateLocalSettings("headerWidths", newColumnWidths);
+      } else if (localSettings.headerWidths && Array.isArray(localSettings.headerWidths)) {
+        setColumnWidths(localSettings.headerWidths as { name: string; width: string }[]);
       }
     }
-  }, [fields, id, showPager]);
+  }, [fields, id, showPager, updateLocalSettings]);
 
   return (
     <SimpleTableContext.Provider
@@ -291,10 +312,15 @@ export const SimpleTable = ({
           toggleSelection,
 
           columnWidths,
-          setColumnWidth: (col: number, width?: string) => {
+          setColumnWidth: (name: string, width: string) => {
             const newColumnWidths = [...columnWidths];
-            if (col >= 0 && col < newColumnWidths.length) {
-              newColumnWidths[col] = width;
+            if (fields.map((f) => f.name).includes(name)) {
+              const ix = newColumnWidths.findIndex((c) => c.name === name);
+              if (ix === -1) {
+                newColumnWidths.push({ name: name, width });
+              } else {
+                newColumnWidths[ix] = { name: name, width: width };
+              }
             }
             setColumnWidths(newColumnWidths);
             updateLocalSettings("headerWidths", newColumnWidths);
