@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { SimpleTableContext } from "./SimpleTableContext";
 import styles from "./SimpleTablePager.module.css";
+import selectStyles from "./Select.module.css";
 
 export const SimpleTablePager = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
@@ -12,6 +13,7 @@ export const SimpleTablePager = (): JSX.Element => {
         <select
           id={`${simpleTableContext.id}-pager-visible-rows`}
           aria-label="Visible rows"
+          className={selectStyles.baseSelect}
           value={`${
             simpleTableContext.pageRows === Infinity ? "All" : simpleTableContext.pageRows
           }`}
@@ -64,8 +66,9 @@ export const SimpleTablePager = (): JSX.Element => {
         </svg>
         row&nbsp;
         <select
-          aria-label="First row"
           id={`${simpleTableContext.id}-pager-first-row`}
+          aria-label="First row"
+          className={selectStyles.baseSelect}
           value={simpleTableContext.firstRow}
           onChange={(e) => {
             simpleTableContext.setFirstRow &&
