@@ -1,7 +1,7 @@
-import React, { useCallback, useContext, useRef } from "react";
+import { useCallback, useContext, useRef } from "react";
 import { SimpleTableContext } from "./SimpleTableContext";
-import { SimpleTableHeaderContents } from "./SimpleTableHeaderContents";
 import styles from "./SimpleTableHeader.module.css";
+import { SimpleTableHeaderContents } from "./SimpleTableHeaderContents";
 
 export const SimpleTableHeader = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);

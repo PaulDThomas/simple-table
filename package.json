@@ -1,6 +1,6 @@
 {
   "name": "@asup/simple-table",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "REACT table, because I wanted one that took an array of objects as an input.",
   "author": "Paul Thomas <@PaulDThomas>",
   "private": false,
@@ -19,7 +19,7 @@
   "bugs": {
     "url": "https://github.com/PaulDThomas/simple-table/issues"
   },
-  "homepage": ".",
+  "homepage": "https://github.com/PaulDThomas/simple-table",
   "main": "dist/cjs/main.js",
   "module": "dist/esm/main.js",
   "types": "dist/simple-table.d.ts",
@@ -33,12 +33,6 @@
     "test-watch": "jest --watch --collectCoverage=true --maxWorkers=4",
     "test-coverage": "jest --collectCoverage=true --maxWorkers=4",
     "build": "parcel build src/main.ts"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
@@ -92,7 +86,8 @@
     "ts-jest": "^29.0.3",
     "ts-jest-mock-import-meta": "^1.2.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "typescript-plugin-css-modules": "^5.1.0"
   },
   "@parcel/transformer-js": {
     "inlineEnvironment": [

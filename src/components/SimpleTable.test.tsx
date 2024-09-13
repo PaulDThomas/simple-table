@@ -1,9 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { act, useState } from "react";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTable } from "./SimpleTable";
-import { act } from "react-dom/test-utils";
-import { useState } from "react";
 
 enum eAccessLevel {
   lead,

@@ -26,7 +26,7 @@ export const SimpleTableBody = (): JSX.Element => {
           ) : (
             <tr key={ri}>
               <td
-                colSpan={simpleTableContext.fields.filter((f) => !f.hidden ?? true).length}
+                colSpan={simpleTableContext.fields.filter((f) => !f.hidden).length}
                 className={styles.noKeyField}
               >
                 keyField has not been found

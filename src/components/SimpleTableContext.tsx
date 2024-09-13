@@ -1,4 +1,4 @@
-import React, { Key } from "react";
+import { createContext, Key } from "react";
 import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
 
 export interface ISimpleTableColumnFilter {
@@ -50,7 +50,7 @@ export interface ISimpleTableContext {
   headerBackgroundColor?: string;
 }
 
-export const SimpleTableContext = React.createContext<ISimpleTableContext>({
+export const SimpleTableContext = createContext<ISimpleTableContext>({
   id: "simple-table",
   fields: [],
   keyField: "",
