@@ -531,7 +531,7 @@ describe("Test callbacks", () => {
     // Add old setting
     window.localStorage.setItem(
       "asup.simple-table.test-table.settings",
-      JSON.stringify({ headerWidths: ["0px"] }),
+      JSON.stringify({ headerWidths: [null, "0px"] }),
     );
     await act(async () => render(<ReloadingTable />));
     const handles = screen.getAllByRole("separator");

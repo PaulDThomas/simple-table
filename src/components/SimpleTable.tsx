@@ -267,17 +267,18 @@ export const SimpleTable = ({
       localSettings.pageRows &&
         showPager &&
         setPageRows(localSettings.pageRows === "Infinity" ? Infinity : localSettings.pageRows);
+      // Reset previous version settings
       if (
         localSettings.headerWidths &&
         Array.isArray(localSettings.headerWidths) &&
         localSettings.headerWidths.length > 0 &&
-        typeof localSettings.headerWidths[0] === "string"
+        localSettings.headerWidths.every((c) => typeof c === "string" || c === null)
       ) {
         const newColumnWidths = fields
           .filter((f) => !f.hidden)
           .map((f, ix) => ({
             name: f.name,
-            width: (localSettings.headerWidths as string[])[ix],
+            width: `${(localSettings.headerWidths as (string | null)[])[ix] ?? "undefined"}`,
           }));
         updateLocalSettings("headerWidths", newColumnWidths);
       } else if (localSettings.headerWidths && Array.isArray(localSettings.headerWidths)) {
