@@ -1,7 +1,7 @@
 import { useContext } from "react";
+import { ISimpleTableField } from "./interface";
 import { SimpleTableColumnFilter } from "./SimpleTableColumnFilter";
 import { SimpleTableContext } from "./SimpleTableContext";
-import { ISimpleTableField } from "./interface";
 import styles from "./SimpleTableHeaderContents.module.css";
 
 interface ISimspleTableHeaderContentsProps {
@@ -18,15 +18,19 @@ export const SimpleTableHeaderContents = ({
   return (
     <>
       {field.canColumnFilter && (
-        <div
-          className={styles.filterHolder}
-          style={{
-            backgroundColor: simpleTableContext.headerBackgroundColor,
-            visibility:
-              simpleTableContext.currentColumnFilter === columnNumber ? "visible" : "hidden",
-          }}
-        >
-          <SimpleTableColumnFilter columnName={field.name} />
+        <div className={styles.cellBottomLeft}>
+          <div className={styles.insideCellBottomLeft}>
+            <div
+              className={styles.filterHolder}
+              style={{
+                backgroundColor: simpleTableContext.headerBackgroundColor,
+                visibility:
+                  simpleTableContext.currentColumnFilter === columnNumber ? "visible" : "hidden",
+              }}
+            >
+              <SimpleTableColumnFilter columnName={field.name} />
+            </div>
+          </div>
         </div>
       )}
       <div className={styles.text}>
