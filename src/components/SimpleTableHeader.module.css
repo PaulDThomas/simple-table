@@ -17,8 +17,8 @@
   display: inline-block;
   position: absolute;
   cursor: col-resize;
-  width: 8px;
-  right: -6px;
+  width: 4px;
+  right: 0px;
   top: 0;
   z-index: 10;
   height: 100%;
@@ -27,4 +27,5 @@
 
 .resizeHandle:hover {
   border-color: rgba(0, 0, 0, 0.75);
+  background: rgba(20, 20, 20, 0.5);
 }
