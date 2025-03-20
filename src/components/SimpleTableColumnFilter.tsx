@@ -6,6 +6,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
   const simpleTableContext = useContext(SimpleTableContext);
   const allCheck = useRef<HTMLInputElement | null>(null);
   const [localFilter, setLocalFilter] = useState<string>("");
+  const searchCheck = useRef<HTMLInputElement | null>(null);
 
   const availableList = useMemo(() => {
     return simpleTableContext.currentColumnItems
@@ -49,6 +50,22 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
     }
   }, [availableList, currentFilter.length, updateCurrentFilter]);
 
+  // Toggle all viewed rows
+  const toggleCurrentColumnSearchFilter = useCallback(() => {
+    if (availableList) {
+      const searchedItems =
+        availableList.filter((v) => v.toLowerCase().includes(localFilter.toLowerCase())) ?? [];
+      // First item selected, remove all items from the current filter
+      if (currentFilter.includes(searchedItems[0]))
+        updateCurrentFilter(currentFilter.filter((v) => !searchedItems.includes(v)));
+      else
+        updateCurrentFilter([
+          ...searchedItems,
+          ...currentFilter.filter((v) => !searchedItems.includes(v)),
+        ]);
+    }
+  }, [availableList, currentFilter, localFilter, updateCurrentFilter]);
+
   useEffect(() => {
     if (allCheck.current) {
       if (currentFilter?.length === availableList?.length) {
@@ -62,7 +79,26 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
         allCheck.current.indeterminate = true;
       }
     }
-  }, [availableList?.length, currentFilter?.length]);
+    if (searchCheck.current) {
+      const searchResults = availableList?.filter((v) =>
+        v.toLowerCase().includes(localFilter.toLowerCase()),
+      );
+      if (
+        localFilter.trim().length === 0 ||
+        searchResults?.length === 0 ||
+        !searchResults?.some((v) => currentFilter.includes(v))
+      ) {
+        searchCheck.current.checked = false;
+        searchCheck.current.indeterminate = false;
+      } else if (searchResults?.every((v) => currentFilter.includes(v))) {
+        searchCheck.current.checked = true;
+        searchCheck.current.indeterminate = false;
+      } else {
+        searchCheck.current.checked = false;
+        searchCheck.current.indeterminate = true;
+      }
+    }
+  }, [availableList, availableList?.length, currentFilter, currentFilter?.length, localFilter]);
 
   return (
     <>
@@ -97,6 +133,27 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
               </div>
             </th>
           </tr>
+          {localFilter.trim().length > 0 && (
+            <tr>
+              <td
+                className={styles.boxHeader}
+                style={{
+                  backgroundColor: simpleTableContext.headerBackgroundColor,
+                }}
+              >
+                <input
+                  id={`${simpleTableContext.id}-columnsearchfilter-${columnName}-check-all`}
+                  aria-label="Column search filter toggle"
+                  className={simpleTableContext.filterCheckClassName}
+                  ref={searchCheck}
+                  type="checkbox"
+                  role="checkbox"
+                  onChange={() => toggleCurrentColumnSearchFilter()}
+                />
+              </td>
+              <td>Toggle selection</td>
+            </tr>
+          )}
           <tr>
             <td
               className={styles.boxHeader}
