@@ -1,4 +1,6 @@
 .table {
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: calc(100% - 4px);
   border-collapse: collapse;
@@ -6,7 +8,7 @@
 }
 .table > thead {
   width: calc(100% - 8px);
-  height: 50px;
+  min-height: 50px;
 }
 .table > thead,
 .table > tbody > tr {
@@ -16,7 +18,7 @@
 }
 .table > tbody {
   display: block;
-  height: calc(100% - 48px);
+  flex: 1 1 auto;
   overflow-y: auto;
   overflow-x: hidden;
   border-top: 1px dotted black;
