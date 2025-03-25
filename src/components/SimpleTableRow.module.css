@@ -7,9 +7,10 @@ tr.selected > td {
   left: 0;
   opacity: 1;
   z-index: 1;
-  border-left: 0;
+  border-left: 1px dotted transparent;
   border-right: 1px dotted transparent;
 }
 .firstcol:hover {
+  border-left: 1px solid rgba(0, 0, 0, 0.75);
   border-right: 1px solid rgba(0, 0, 0, 0.75);
 }

@@ -1,5 +1,5 @@
 .cell {
-  border-left: 0;
+  border-left: 1px dotted transparent;
   border-right: 1px dotted transparent;
   left: 0;
   opacity: 1;
@@ -11,5 +11,6 @@
 }
 
 .cell:hover {
+  border-left: 1px solid rgba(0, 0, 0, 0.75);
   border-right: 1px solid rgba(0, 0, 0, 0.75);
 }
