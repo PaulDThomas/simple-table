@@ -1,4 +1,4 @@
-import { ISimpleTableField, simpleTableSortFn } from "../src/main";
+import { ISimpleTableField, simpleTableNullDate, simpleTableSortFn } from "../src/main";
 
 export const mock_fields: ISimpleTableField[] = [
   { name: "id", hidden: true },
@@ -23,6 +23,7 @@ export const mock_fields: ISimpleTableField[] = [
         .toLowerCase()
         .includes(searchText.toLowerCase().trim()),
     sortFn: simpleTableSortFn,
+    renderFn: simpleTableNullDate,
     width: "120px",
     canColumnFilter: true,
   },
