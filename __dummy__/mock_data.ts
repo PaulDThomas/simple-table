@@ -10,7 +10,7 @@ export const mockData = [
   {
     id: 2,
     first_name: "Barrie",
-    last_name: "Vockings",
+    last_name: 99,
     car_make: "Ford",
     car_model: "Expedition EL",
   },

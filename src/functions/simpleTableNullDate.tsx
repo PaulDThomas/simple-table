@@ -36,12 +36,12 @@ export const simpleTableNullDate = ({
           (rowData[cellField] as Date).getTimezoneOffset() * 60000,
       )
         .toISOString()
-        .replace(/[T]/, " ")
+        .replace(/T/, " ")
         .slice(0, 16)}`
-    ) : typeof rowData[cellField] === "object" ? (
+    ) : typeof rowData[cellField] === "object" && rowData[cellField] ? (
       <pre>{JSON.stringify(rowData[cellField], null, 2)}</pre>
     ) : (
-      <>{`${rowData[cellField]}`}</>
+      <>{`${rowData[cellField] ?? ""}`}</>
     )}
   </div>
 );

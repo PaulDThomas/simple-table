@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { SimpleTableContext } from "./SimpleTableContext";
 import styles from "./SimpleTableFilter.module.css";
+import cbStyles from "./SimpleTableCheckBox.module.css";
 
 export const SimpleTableFilter = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
@@ -13,17 +14,19 @@ export const SimpleTableFilter = (): JSX.Element => {
         simpleTableContext.setFilterData(!simpleTableContext.filterData)
       }
     >
-      <input
-        id={`${simpleTableContext.id}-filter`}
-        type="checkbox"
-        role="checkbox"
-        className={simpleTableContext.filterCheckClassName}
-        checked={
-          simpleTableContext.filterData !== undefined ? simpleTableContext.filterData : false
-        }
-        onChange={() => true}
-        aria-labelledby={`${simpleTableContext.id}-filter-label`}
-      />
+      <div className={cbStyles.checkboxContainer}>
+        <input
+          id={`${simpleTableContext.id}-filter`}
+          type="checkbox"
+          role="checkbox"
+          className={simpleTableContext.filterCheckClassName}
+          checked={
+            simpleTableContext.filterData !== undefined ? simpleTableContext.filterData : false
+          }
+          onChange={() => true}
+          aria-labelledby={`${simpleTableContext.id}-filter-label`}
+        />
+      </div>
       <span
         id={`${simpleTableContext.id}-filter-label`}
         className={styles.label}

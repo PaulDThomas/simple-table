@@ -169,7 +169,6 @@ describe("Update toggle", () => {
         </SimpleTableContext.Provider>,
       );
     });
-    screen.debug();
     const all = screen.getByLabelText("Column filter toggle");
     await user.click(all);
     expect(mockSet).toHaveBeenLastCalledWith([

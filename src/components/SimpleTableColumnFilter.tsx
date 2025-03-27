@@ -1,6 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { SimpleTableContext, ISimpleTableColumnFilter } from "./SimpleTableContext";
 import styles from "./SimpleTableColumnFilter.module.css";
+import cbStyles from "./SimpleTableCheckBox.module.css";
 
 export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) => {
   const simpleTableContext = useContext(SimpleTableContext);
@@ -137,7 +138,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
             <tr>
               <td className={styles.boxHeader}>
                 <div
-                  className={styles.checkboxContainer}
+                  className={cbStyles.checkboxContainer}
                   onClick={() => {
                     toggleCurrentColumnSearchFilter();
                   }}
@@ -156,9 +157,9 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
             </tr>
           )}
           <tr>
-            <td className={styles.boxHeader}>
+            <th className={styles.boxHeader}>
               <div
-                className={styles.checkboxContainer}
+                className={cbStyles.checkboxContainer}
                 onClick={() => toggleCurrentColumnFilter()}
               >
                 <input
@@ -170,8 +171,8 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
                   role="checkbox"
                 />
               </div>
-            </td>
-            <td>Select all</td>
+            </th>
+            <th>Select all</th>
           </tr>
         </thead>
 
@@ -182,7 +183,19 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
               .map((v, i) => (
                 <tr key={i}>
                   <td>
-                    <div className={styles.checkboxContainer}>
+                    <div
+                      className={cbStyles.checkboxContainer}
+                      onClick={() => {
+                        const newFilter = [...currentFilter];
+                        const ix = newFilter.findIndex((cf) => cf === v);
+                        if (ix > -1) {
+                          newFilter.splice(ix, 1);
+                        } else {
+                          newFilter.push(v);
+                        }
+                        updateCurrentFilter(newFilter);
+                      }}
+                    >
                       <input
                         id={`${simpleTableContext.id}-columnfilter-${columnName}-check-${i}`}
                         type="checkbox"
