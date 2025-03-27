@@ -4,6 +4,7 @@
   z-index: 1;
   border-left: 1px dotted transparent;
   border-right: 1px dotted transparent;
+  background-color: var(--st-header-background-color);
 }
 
 .cell:hover {

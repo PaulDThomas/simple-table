@@ -1,5 +1,5 @@
 tr.selected > td {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--st-selected-background-color);
 }
 
 .firstcol {
@@ -9,6 +9,7 @@ tr.selected > td {
   z-index: 1;
   border-left: 1px dotted transparent;
   border-right: 1px dotted transparent;
+  background-color: var(--st-main-background-color);
 }
 .firstcol:hover {
   border-left: 1px solid rgba(0, 0, 0, 0.75);

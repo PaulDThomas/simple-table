@@ -57,7 +57,6 @@ export const SimpleTableHeader = (): JSX.Element => {
               data-column-name={field.name}
               className={styles.cell}
               style={{
-                backgroundColor: simpleTableContext.headerBackgroundColor,
                 width:
                   simpleTableContext.columnWidths.find((w) => w.name === field.name)?.width ??
                   "100px",

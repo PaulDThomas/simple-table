@@ -22,12 +22,7 @@ export const SimpleTableSelectHeader = (): JSX.Element => {
   }, [simpleTableContext.currentSelection?.length, simpleTableContext.totalRows]);
 
   return (
-    <th
-      className={styles.cell}
-      style={{
-        backgroundColor: simpleTableContext.headerBackgroundColor,
-      }}
-    >
+    <th className={styles.cell}>
       <div>
         <input
           id={`${simpleTableContext.id}-check-all`}

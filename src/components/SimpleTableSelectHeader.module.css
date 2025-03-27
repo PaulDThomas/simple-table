@@ -8,6 +8,7 @@
   width: 20px;
   white-space: nowrap;
   z-index: 2;
+  background-color: var(--st-header-background-color);
 }
 
 .cell:hover {

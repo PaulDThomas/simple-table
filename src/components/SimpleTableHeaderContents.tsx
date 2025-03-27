@@ -23,7 +23,6 @@ export const SimpleTableHeaderContents = ({
             <div
               className={styles.filterHolder}
               style={{
-                backgroundColor: simpleTableContext.headerBackgroundColor,
                 visibility:
                   simpleTableContext.currentColumnFilter === columnNumber ? "visible" : "hidden",
               }}

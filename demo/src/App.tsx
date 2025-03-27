@@ -115,6 +115,7 @@ const App = (): JSX.Element => {
               currentSelection={selected}
               setCurrentSelection={setSelected}
               onWidthChange={(ret) => setReceivedWidths(ret)}
+              selectedBackgroundColor={"rgb(0,0,0,0.1)"}
             />
           </div>
         </div>

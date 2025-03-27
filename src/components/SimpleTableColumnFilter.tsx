@@ -135,12 +135,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
           </tr>
           {localFilter.trim().length > 0 && (
             <tr>
-              <td
-                className={styles.boxHeader}
-                style={{
-                  backgroundColor: simpleTableContext.headerBackgroundColor,
-                }}
-              >
+              <td className={styles.boxHeader}>
                 <input
                   id={`${simpleTableContext.id}-columnsearchfilter-${columnName}-check-all`}
                   aria-label="Column search filter toggle"
@@ -155,12 +150,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
             </tr>
           )}
           <tr>
-            <td
-              className={styles.boxHeader}
-              style={{
-                backgroundColor: simpleTableContext.headerBackgroundColor,
-              }}
-            >
+            <td className={styles.boxHeader}>
               <input
                 id={`${simpleTableContext.id}-columnfilter-${columnName}-check-all`}
                 aria-label="Column filter toggle"
@@ -182,24 +172,26 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
               .map((v, i) => (
                 <tr key={i}>
                   <td>
-                    <input
-                      id={`${simpleTableContext.id}-columnfilter-${columnName}-check-${i}`}
-                      type="checkbox"
-                      role="checkbox"
-                      aria-label={v}
-                      className={simpleTableContext.filterCheckClassName}
-                      checked={currentFilter.includes(v)}
-                      onChange={() => {
-                        const newFilter = [...currentFilter];
-                        const ix = newFilter.findIndex((cf) => cf === v);
-                        if (ix > -1) {
-                          newFilter.splice(ix, 1);
-                        } else {
-                          newFilter.push(v);
-                        }
-                        updateCurrentFilter(newFilter);
-                      }}
-                    />
+                    <div className={styles.checkboxContainer}>
+                      <input
+                        id={`${simpleTableContext.id}-columnfilter-${columnName}-check-${i}`}
+                        type="checkbox"
+                        role="checkbox"
+                        aria-label={v}
+                        className={simpleTableContext.filterCheckClassName}
+                        checked={currentFilter.includes(v)}
+                        onChange={() => {
+                          const newFilter = [...currentFilter];
+                          const ix = newFilter.findIndex((cf) => cf === v);
+                          if (ix > -1) {
+                            newFilter.splice(ix, 1);
+                          } else {
+                            newFilter.push(v);
+                          }
+                          updateCurrentFilter(newFilter);
+                        }}
+                      />
+                    </div>
                   </td>
                   <td>{v}</td>
                 </tr>

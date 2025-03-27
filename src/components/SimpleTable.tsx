@@ -41,6 +41,7 @@ interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
 
   mainBackgroundColor?: string;
   headerBackgroundColor?: string;
+  selectedBackgroundColor?: string;
 }
 
 interface SimpleTableLocalSettings {
@@ -74,6 +75,7 @@ export const SimpleTable = ({
   searchInputClassName = "form-control form-control-sm",
   mainBackgroundColor = "white",
   headerBackgroundColor = "white",
+  selectedBackgroundColor = "rgba(0, 0, 0, 0.2)",
   ...rest
 }: SimpleTableProps): JSX.Element => {
   const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
@@ -355,12 +357,18 @@ export const SimpleTable = ({
         } as ISimpleTableContext
       }
     >
-      <div className={styles.main}>
+      <div
+        className={styles.main}
+        style={
+          {
+            "--st-main-background-color": mainBackgroundColor,
+            "--st-header-background-color": headerBackgroundColor,
+            "--st-selected-background-color": selectedBackgroundColor,
+          } as React.CSSProperties
+        }
+      >
         {(showHeader || showSearch || showFilter) && (
-          <div
-            className={styles.titleHolder}
-            style={{ backgroundColor: mainBackgroundColor }}
-          >
+          <div className={styles.titleHolder}>
             <h5 className={styles.title}>
               {showHeader && (
                 <>
@@ -380,7 +388,6 @@ export const SimpleTable = ({
         <div
           className={styles.scroll}
           style={{
-            backgroundColor: mainBackgroundColor,
             height: `calc(100% ${showHeader || showSearch || showFilter ? "- 46px" : ""} ${
               showPager ? " - 1.75rem" : ""
             }`,
@@ -403,10 +410,7 @@ export const SimpleTable = ({
           </div>
         </div>
         {showPager && (
-          <div
-            className={styles.footerHolder}
-            style={{ backgroundColor: mainBackgroundColor }}
-          >
+          <div className={styles.footerHolder}>
             <SimpleTablePager />
           </div>
         )}

@@ -17,6 +17,7 @@ h5.title {
 .scroll {
   width: 100%;
   overflow: auto;
+  background-color: var(--st-main-background-color);
 }
 .scroll::-webkit-scrollbar {
   width: 8px;
@@ -24,9 +25,15 @@ h5.title {
 }
 .scroll::-webkit-scrollbar-track {
   border-radius: 100px;
+  background-color: var(--st-main-background-color);
 }
+
+.scroll::-webkit-scrollbar-corner {
+  background-color: var(--st-main-background-color);
+}
+
 .scroll::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.3);
   border: none;
   border-radius: 100px;
 }
@@ -42,6 +49,7 @@ h5.title {
 
 .titleHolder {
   display: flex;
+  background-color: var(--st-main-background-color);
   flex-direction: row;
   gap: 0.5rem;
   align-items: center;
@@ -67,6 +75,7 @@ h5.title {
   height: 1.75rem;
   justify-content: flex-end;
   white-space: nowrap;
+  background-color: var(--st-main-background-color);
 }
 .footerHolder svg {
   cursor: pointer;

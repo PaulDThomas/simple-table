@@ -46,8 +46,6 @@ export interface ISimpleTableContext {
   filterCheckClassName?: string;
   searchLabelClassName?: string;
   searchInputClassName?: string;
-
-  headerBackgroundColor?: string;
 }
 
 export const SimpleTableContext = createContext<ISimpleTableContext>({
@@ -56,7 +54,6 @@ export const SimpleTableContext = createContext<ISimpleTableContext>({
   keyField: "",
   viewData: [],
   totalRows: 0,
-  headerBackgroundColor: "white",
   firstRow: 0,
   pageRows: 50,
   columnWidths: [],

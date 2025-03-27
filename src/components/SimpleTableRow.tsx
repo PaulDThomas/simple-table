@@ -21,12 +21,7 @@ export const SimpleTableRow = ({ rowId, rowNumber }: SimpleTableRowProps): JSX.E
       }
     >
       {simpleTableContext.selectable && (
-        <td
-          className={styles.firstcol}
-          style={{
-            backgroundColor: simpleTableContext.headerBackgroundColor,
-          }}
-        >
+        <td className={styles.firstcol}>
           <div>
             <input
               id={`${simpleTableContext.id}-check-row-${rowId}`}

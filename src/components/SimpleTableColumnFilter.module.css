@@ -73,6 +73,7 @@
 
 .boxHeader {
   opacity: 1;
+  background-color: var(--st-main-background-color);
 }
 
 .scroll::-webkit-scrollbar {
