@@ -136,30 +136,40 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
           {localFilter.trim().length > 0 && (
             <tr>
               <td className={styles.boxHeader}>
-                <input
-                  id={`${simpleTableContext.id}-columnsearchfilter-${columnName}-check-all`}
-                  aria-label="Column search filter toggle"
-                  className={simpleTableContext.filterCheckClassName}
-                  ref={searchCheck}
-                  type="checkbox"
-                  role="checkbox"
-                  onChange={() => toggleCurrentColumnSearchFilter()}
-                />
+                <div
+                  className={styles.checkboxContainer}
+                  onClick={() => {
+                    toggleCurrentColumnSearchFilter();
+                  }}
+                >
+                  <input
+                    id={`${simpleTableContext.id}-columnsearchfilter-${columnName}-check-all`}
+                    aria-label="Column search filter toggle"
+                    className={simpleTableContext.filterCheckClassName}
+                    ref={searchCheck}
+                    type="checkbox"
+                    role="checkbox"
+                  />
+                </div>
               </td>
               <td>Toggle selection</td>
             </tr>
           )}
           <tr>
             <td className={styles.boxHeader}>
-              <input
-                id={`${simpleTableContext.id}-columnfilter-${columnName}-check-all`}
-                aria-label="Column filter toggle"
-                className={simpleTableContext.filterCheckClassName}
-                ref={allCheck}
-                type="checkbox"
-                role="checkbox"
-                onChange={() => toggleCurrentColumnFilter()}
-              />
+              <div
+                className={styles.checkboxContainer}
+                onClick={() => toggleCurrentColumnFilter()}
+              >
+                <input
+                  id={`${simpleTableContext.id}-columnfilter-${columnName}-check-all`}
+                  aria-label="Column filter toggle"
+                  className={simpleTableContext.filterCheckClassName}
+                  ref={allCheck}
+                  type="checkbox"
+                  role="checkbox"
+                />
+              </div>
             </td>
             <td>Select all</td>
           </tr>
