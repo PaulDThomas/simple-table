@@ -189,7 +189,7 @@ export const SimpleTable = ({
 
   // Get current column items
   const currentColumnItems = useMemo(() => {
-    const ret = fields
+    let ret = fields
       .filter((f) => f.canColumnFilter)
       .map((f) => ({
         columnName: f.name,
@@ -203,7 +203,6 @@ export const SimpleTable = ({
           ),
         ),
       }));
-    setCurrentColumnFilters(ret);
     return ret;
   }, [fields, tableData]);
 

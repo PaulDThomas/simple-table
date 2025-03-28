@@ -5,7 +5,9 @@ import { SimpleTable, ISimpleTableRow } from "../../src/components";
 
 // Main application
 const App = (): JSX.Element => {
-  const [data, setData] = useState<ISimpleTableRow[]>(mockData);
+  const [data, setData] = useState<ISimpleTableRow[]>(
+    mockData.map((r) => ({ ...r, selected: "No" })),
+  );
   const [selected, setSelected] = useState<Key[]>([]);
   const [height, setHeight] = useState<string>("600px");
   const [width, setWidth] = useState<string>("600px");
@@ -102,7 +104,7 @@ const App = (): JSX.Element => {
           >
             <SimpleTable
               id="ais"
-              fields={mockFields}
+              fields={[{ name: "selected", label: "Sel" }, ...mockFields]}
               keyField={"id"}
               data={data}
               headerLabel={title}
@@ -113,7 +115,14 @@ const App = (): JSX.Element => {
               filterLabel="Cars only"
               selectable
               currentSelection={selected}
-              setCurrentSelection={setSelected}
+              setCurrentSelection={(ret) => {
+                setSelected(ret), console.log("Selected", ret);
+                const newData = data.map((r) => ({
+                  ...r,
+                  selected: ret.includes(r.id as Key) ? "Yes" : "No",
+                }));
+                setData(newData);
+              }}
               onWidthChange={(ret) => setReceivedWidths(ret)}
               selectedBackgroundColor={"rgb(0,0,0,0.1)"}
             />
