@@ -3,7 +3,7 @@ import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTableContext } from "./SimpleTableContext";
 import styles from "./SimpleTableCell.module.css";
 import "./SimpleTableCell.css";
-import { simpleTableNullDate } from "functions/simpleTableNullDate";
+import { simpleTableNullDate } from "../functions/simpleTableNullDate";
 
 interface SimpleTableCellProps {
   rowId: Key;
