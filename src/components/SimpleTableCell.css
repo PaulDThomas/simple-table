@@ -1,0 +1,25 @@
+th div.overflow-hidden,
+td div.overflow-hidden {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: calc(100% - 8px);
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+th div.overflow-hidden:hover,
+td div.overflow-hidden:hover {
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
+  width: auto;
+}
+
+th div.overflow-hidden:hover span,
+td div.overflow-hidden:hover span {
+  position: relative;
+  background-color: var(--st-main-background-color);
+  z-index: 10;
+  padding-right: 8px;
+}

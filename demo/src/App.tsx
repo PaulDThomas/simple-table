@@ -1,6 +1,6 @@
 import { Key, useState } from "react";
 import { mockData } from "../../__dummy__/mock_data";
-import { mock_fields } from "../../__dummy__/mock_fields";
+import { mockFields } from "../../__dummy__/mock_fields";
 import { SimpleTable, ISimpleTableRow } from "../../src/components";
 
 // Main application
@@ -102,7 +102,7 @@ const App = (): JSX.Element => {
           >
             <SimpleTable
               id="ais"
-              fields={mock_fields}
+              fields={mockFields}
               keyField={"id"}
               data={data}
               headerLabel={title}

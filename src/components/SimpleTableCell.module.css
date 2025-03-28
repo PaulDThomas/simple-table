@@ -11,9 +11,33 @@
   border-left: 1px solid rgba(0, 0, 0, 0.75);
 }
 
-.cell div,
-.cell span {
+.cell div.overflowHidden {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: calc(100% - 8px);
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.cell div.textRight {
+  text-align: right;
+}
+
+.cell div.textLeft {
+  text-align: left;
+}
+
+.cell div.overflowHidden:hover {
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
+  width: auto;
+}
+
+.cell div.overflowHidden:hover span {
+  position: relative;
+  background-color: var(--st-main-background-color);
+  z-index: 10;
+  padding-right: 8px;
 }

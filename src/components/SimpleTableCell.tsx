@@ -2,6 +2,8 @@ import { Key, useContext, useMemo } from "react";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTableContext } from "./SimpleTableContext";
 import styles from "./SimpleTableCell.module.css";
+import "./SimpleTableCell.css";
+import { simpleTableNullDate } from "functions/simpleTableNullDate";
 
 interface SimpleTableCellProps {
   rowId: Key;
@@ -36,15 +38,19 @@ export const SimpleTableCell = ({
       key={cellField}
       className={styles.cell}
     >
-      <div>
-        {!field || !rowData
-          ? `${!rowData ? "Row data" : ""}${!rowData && !field ? ", " : ""}${
-              !field ? "Field" : ""
-            } not found`
-          : field.renderFn
-            ? field.renderFn({ rowData, columnNumber, field, cellField: field.name, rowNumber })
-            : String(rowData[field.name])}
-      </div>
+      {!field || !rowData
+        ? `${!rowData ? "Row data" : ""}${!rowData && !field ? ", " : ""}${
+            !field ? "Field" : ""
+          } not found`
+        : field.renderFn
+          ? field.renderFn({ rowData, columnNumber, field, cellField: field.name, rowNumber })
+          : simpleTableNullDate({
+              rowData,
+              columnNumber,
+              field,
+              cellField: field.name,
+              rowNumber,
+            })}
     </td>
   );
 };

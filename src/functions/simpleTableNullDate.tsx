@@ -1,4 +1,5 @@
 import { ISimpleTableCellRenderProps } from "../components";
+import styles from "../components/SimpleTableCell.module.css";
 
 export const convertDateToLocaleString = (s: string | Date): string => {
   const d = s instanceof Date ? s : new Date(s);
@@ -22,13 +23,7 @@ export const simpleTableNullDate = ({
   cellField,
 }: ISimpleTableCellRenderProps): JSX.Element => (
   <div
-    className="simple-table-null-date-cell"
-    style={{
-      width: "calc(100% - 8px)",
-      paddingLeft: "4px",
-      paddingRight: "4px",
-      textAlign: typeof rowData[cellField] === "number" ? "right" : "left",
-    }}
+    className={`simple-table-null-date-cell overflow-hidden ${typeof rowData[cellField] === "number" ? styles.textRight : styles.textLeft}`}
   >
     {rowData[cellField] instanceof Date ? (
       `${new Date(
@@ -41,7 +36,7 @@ export const simpleTableNullDate = ({
     ) : typeof rowData[cellField] === "object" && rowData[cellField] ? (
       <pre>{JSON.stringify(rowData[cellField], null, 2)}</pre>
     ) : (
-      <>{`${rowData[cellField] ?? ""}`}</>
+      <span>{`${rowData[cellField] ?? ""}`}</span>
     )}
   </div>
 );
