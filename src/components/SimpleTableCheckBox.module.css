@@ -24,18 +24,18 @@
   border: 2px solid black !important;
   border-radius: 50% !important;
   box-sizing: border-box !important;
-  background-color: var(--st-header-background-color) !important;
+  background-color: var(--st-select-inactive) !important;
   transition:
     background-color 0.2s ease,
     border-color 0.2s ease !important;
 }
 
 .checkboxContainer:has(input[type="checkbox"]:checked)::before {
-  background-color: black !important;
-  border-color: white !important;
+  border-color: black !important;
+  background-color: var(--st-select-active) !important;
 }
 
 .checkboxContainer:has(input[type="checkbox"]:indeterminate)::before {
-  background-color: grey !important;
-  border-color: grey !important;
+  border-color: black !important;
+  background-color: var(--st-select-indeterminate) !important;
 }
