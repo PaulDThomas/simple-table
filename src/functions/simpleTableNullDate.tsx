@@ -18,6 +18,41 @@ export const convertLocaleDateToUTCString = (s: string): string => {
     : "Invalid date";
 };
 
+export const columnFilterValue = (dataItem: unknown, showBlank = true): string => {
+  if (
+    !showBlank &&
+    (dataItem === null ||
+      dataItem === undefined ||
+      (typeof dataItem === "string" && dataItem.trim() === ""))
+  ) {
+    return "";
+  }
+  switch (typeof dataItem) {
+    case "number":
+    case "boolean":
+    case "bigint":
+      return `${dataItem}`;
+    case "string":
+      return dataItem.trim() === "" ? "<blank>" : dataItem;
+    case "object":
+      if (dataItem === null) {
+        return "<blank>";
+      }
+      if (Array.isArray(dataItem)) {
+        return "📃📃";
+      }
+      if (dataItem instanceof Date) {
+        return convertDateToLocaleString(dataItem);
+      }
+      return "📦📦";
+    case "function":
+      return "🛠️🛠️";
+    // Only undefined and Symbol are left
+    default:
+      return dataItem === undefined ? "<blank>" : "⁉️⁉️";
+  }
+};
+
 export const simpleTableNullDate = ({
   rowData,
   cellField,
@@ -25,18 +60,6 @@ export const simpleTableNullDate = ({
   <div
     className={`simple-table-null-date-cell overflow-hidden ${typeof rowData[cellField] === "number" ? styles.textRight : styles.textLeft}`}
   >
-    {rowData[cellField] instanceof Date ? (
-      `${new Date(
-        (rowData[cellField] as Date).getTime() -
-          (rowData[cellField] as Date).getTimezoneOffset() * 60000,
-      )
-        .toISOString()
-        .replace(/T/, " ")
-        .slice(0, 16)}`
-    ) : typeof rowData[cellField] === "object" && rowData[cellField] ? (
-      <pre>{JSON.stringify(rowData[cellField], null, 2)}</pre>
-    ) : (
-      <span>{`${rowData[cellField] ?? ""}`}</span>
-    )}
+    <span>{columnFilterValue(rowData[cellField], false)}</span>
   </div>
 );

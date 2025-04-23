@@ -13,6 +13,7 @@ import { SimpleTablePager } from "./SimpleTablePager";
 import { SimpleTableSearch } from "./SimpleTableSearch";
 import { SimpleTableSelectHeader } from "./SimpleTableSelectHeader";
 import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
+import { columnFilterValue } from "../functions/simpleTableNullDate";
 
 interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
   id?: string;
@@ -158,15 +159,7 @@ export const SimpleTable = ({
       .filter(searchFn)
       .filter((row) => {
         return currentColumnFilters
-          .map((cf) => {
-            if (row[cf.columnName] !== undefined) {
-              return cf.values.includes(
-                typeof row[cf.columnName] === "number"
-                  ? (row[cf.columnName] as number).toString()
-                  : `${row[cf.columnName] ?? "<blank>"}`,
-              );
-            } else return true;
-          })
+          .map((cf) => cf.values.includes(columnFilterValue(row[cf.columnName])))
           .reduce((prev, cur) => prev && cur, true);
       })
       .sort(sortFn);
@@ -197,15 +190,7 @@ export const SimpleTable = ({
       .filter((f) => f.canColumnFilter)
       .map((f) => ({
         columnName: f.name,
-        values: Array.from(
-          new Set(
-            tableData.map((t) =>
-              typeof t[f.name] === "number"
-                ? (t[f.name] as number).toString()
-                : `${t[f.name] ?? "<blank>"}`,
-            ),
-          ),
-        ),
+        values: Array.from(new Set(tableData.map((t) => columnFilterValue(t[f.name])))),
       }));
     return ret;
   }, [fields, tableData]);

@@ -43,7 +43,7 @@ const App = (): JSX.Element => {
                     />
                   </td>
                   <td>
-                    Title:{" "}
+                    Title:
                     <input
                       id="show-title"
                       type="checkbox"
@@ -100,7 +100,7 @@ const App = (): JSX.Element => {
 
           <div
             className="table-holder"
-            style={{ backgroundColor: "cyan", height, width, maxWidth: "800px", padding: "1rem" }}
+            style={{ backgroundColor: "cyan", height, width, padding: "1rem" }}
           >
             <SimpleTable
               id="ais"

@@ -12,7 +12,7 @@ export const mockData = [
     first_name: "Barrie",
     last_name: 99,
     car_make: "Ford",
-    car_model: "Expedition EL",
+    car_model: null,
   },
   {
     id: 3,
@@ -26,14 +26,14 @@ export const mockData = [
     first_name: "Roberto",
     last_name: "Treher",
     car_make: "GMC",
-    car_model: "Rally Wagon 3500",
+    car_model: undefined,
   },
   {
     id: 5,
     first_name: "Alaine",
     last_name: "Patridge",
     car_make: "Honda",
-    car_model: "Element",
+    car_model: "",
   },
   {
     id: 6,

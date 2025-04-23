@@ -1,4 +1,5 @@
 import {
+  columnFilterValue,
   convertDateToLocaleString,
   convertLocaleDateToUTCString,
   simpleTableNullDate,
@@ -12,4 +13,5 @@ export {
   simpleTableNullDate,
   convertDateToLocaleString,
   convertLocaleDateToUTCString,
+  columnFilterValue,
 };
