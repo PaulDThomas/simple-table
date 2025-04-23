@@ -46,7 +46,6 @@ interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
   selectedBackgroundColor?: string;
   selectInactiveColor?: string;
   selectActiveColor?: string;
-  selectIndeterminateColor?: string;
 }
 
 interface SimpleTableLocalSettings {
@@ -83,7 +82,6 @@ export const SimpleTable = ({
   selectedBackgroundColor = "rgba(0, 0, 0, 0.8)",
   selectInactiveColor = "rgb(0, 0, 0, 0.2)",
   selectActiveColor = "rgb(255, 153, 0)",
-  selectIndeterminateColor = "rgb(255, 100, 0, 0.5)",
   ...rest
 }: SimpleTableProps): JSX.Element => {
   const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
@@ -365,7 +363,6 @@ export const SimpleTable = ({
             "--st-header-background-color": headerBackgroundColor,
             "--st-selected-background-color": selectedBackgroundColor,
             "--st-select-active": selectActiveColor,
-            "--st-select-indeterminate": selectIndeterminateColor,
             "--st-select-inactive": selectInactiveColor,
           } as React.CSSProperties
         }

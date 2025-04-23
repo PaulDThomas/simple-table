@@ -37,5 +37,9 @@
 
 .checkboxContainer:has(input[type="checkbox"]:indeterminate)::before {
   border-color: black !important;
-  background-color: var(--st-select-indeterminate) !important;
+  background: linear-gradient(
+    135deg,
+    var(--st-select-inactive) 50%,
+    var(--st-select-active) 50%
+  ) !important;
 }
