@@ -33,9 +33,22 @@ describe("Test print date function", () => {
         })}
       </div>,
     );
-    expect(screen.queryByTestId("cell")).toHaveTextContent(
-      convertDateToLocaleString("2022-01-01 00:00Z"),
+    expect(screen.queryByTestId("cell")).toHaveTextContent("2022-01-01 00:00");
+  });
+
+  test("Correctly processes string date", async () => {
+    render(
+      <div data-testid="cell">
+        {simpleTableNullDate({
+          rowData: { date: "2022-01-01T00:00:00Z" },
+          cellField: "date",
+          field: { name: "date" },
+          columnNumber: 1,
+          rowNumber: 0,
+        })}
+      </div>,
     );
+    expect(screen.queryByTestId("cell")).toHaveTextContent("2022-01-01 00:00");
   });
   test("Correctly process string", async () => {
     render(

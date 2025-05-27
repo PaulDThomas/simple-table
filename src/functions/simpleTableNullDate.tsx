@@ -33,7 +33,11 @@ export const columnFilterValue = (dataItem: unknown, showBlank = true): string =
     case "bigint":
       return `${dataItem}`;
     case "string":
-      return dataItem.trim() === "" ? "<blank>" : dataItem;
+      return dataItem.trim() === ""
+        ? "<blank>"
+        : dataItem.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d*)?(?:[-+]\d{2}:?\d{2}|Z)?$/)
+          ? convertDateToLocaleString(new Date(dataItem))
+          : dataItem;
     case "object":
       if (dataItem === null) {
         return "<blank>";
