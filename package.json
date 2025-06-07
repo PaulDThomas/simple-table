@@ -29,9 +29,8 @@
   "scripts": {
     "prepare": "husky",
     "start": "start.bat",
-    "test": "jest --maxWorkers=1",
+    "test": "jest --collectCoverage=true",
     "test-watch": "jest --watch --collectCoverage=true --maxWorkers=4",
-    "test-coverage": "jest --collectCoverage=true --maxWorkers=4",
     "eslint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" \"demo/**/*.{js,jsx,ts,tsx}\"",
     "build": "parcel build src/main.ts"
   },
@@ -90,6 +89,7 @@
     "parcel": "^2.7.0",
     "postcss": "^8.4.47",
     "prettier": "^3.0.3",
+    "prettier-plugin-organize-imports": "^4.1.0",
     "process": "^0.11.10",
     "ts-jest": "^29.0.3",
     "ts-jest-mock-import-meta": "^1.2.0",
