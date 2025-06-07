@@ -1,3 +1,4 @@
+import "../global.d.ts";
 import {
   columnFilterValue,
   convertDateToLocaleString,
@@ -5,13 +6,13 @@ import {
   simpleTableNullDate,
 } from "./functions/simpleTableNullDate";
 import { simpleTableSortFn } from "./functions/simpleTableSortFn";
-import "../global.d.ts";
+import "./main.css";
 
 export * from "./components";
 export {
-  simpleTableSortFn,
-  simpleTableNullDate,
+  columnFilterValue,
   convertDateToLocaleString,
   convertLocaleDateToUTCString,
-  columnFilterValue,
+  simpleTableNullDate,
+  simpleTableSortFn,
 };

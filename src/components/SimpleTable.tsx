@@ -1,5 +1,6 @@
 import { isEqual } from "lodash";
 import { Key, useCallback, useEffect, useMemo, useState } from "react";
+import { columnFilterValue } from "../functions/simpleTableNullDate";
 import styles from "./SimpleTable.module.css";
 import { SimpleTableBody } from "./SimpleTableBody";
 import {
@@ -13,7 +14,6 @@ import { SimpleTablePager } from "./SimpleTablePager";
 import { SimpleTableSearch } from "./SimpleTableSearch";
 import { SimpleTableSelectHeader } from "./SimpleTableSelectHeader";
 import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
-import { columnFilterValue } from "../functions/simpleTableNullDate";
 
 interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
   id?: string;
@@ -285,6 +285,40 @@ export const SimpleTable = ({
     }
   }, [fields, id, showPager, updateLocalSettings]);
 
+  useEffect(() => {
+    if (mainBackgroundColor)
+      document.documentElement.style.setProperty("--st-main-background-color", mainBackgroundColor);
+    if (headerBackgroundColor)
+      document.documentElement.style.setProperty(
+        "--st-header-background-color",
+        headerBackgroundColor,
+      );
+    if (selectedBackgroundColor)
+      document.documentElement.style.setProperty(
+        "--st-selected-background-color",
+        selectedBackgroundColor,
+      );
+    if (selectActiveColor)
+      document.documentElement.style.setProperty("--st-select-active", selectActiveColor);
+    if (selectInactiveColor)
+      document.documentElement.style.setProperty("--st-select-inactive", selectInactiveColor);
+
+    return () => {
+      // Reset to defaults when component unmounts
+      document.documentElement.style.removeProperty("--st-main-background-color");
+      document.documentElement.style.removeProperty("--st-header-background-color");
+      document.documentElement.style.removeProperty("--st-selected-background-color");
+      document.documentElement.style.removeProperty("--st-select-active");
+      document.documentElement.style.removeProperty("--st-select-inactive");
+    };
+  }, [
+    mainBackgroundColor,
+    headerBackgroundColor,
+    selectedBackgroundColor,
+    selectActiveColor,
+    selectInactiveColor,
+  ]);
+
   return (
     <SimpleTableContext.Provider
       value={
@@ -353,18 +387,7 @@ export const SimpleTable = ({
         } as ISimpleTableContext
       }
     >
-      <div
-        className={styles.main}
-        style={
-          {
-            "--st-main-background-color": mainBackgroundColor,
-            "--st-header-background-color": headerBackgroundColor,
-            "--st-selected-background-color": selectedBackgroundColor,
-            "--st-select-active": selectActiveColor,
-            "--st-select-inactive": selectInactiveColor,
-          } as React.CSSProperties
-        }
-      >
+      <div className={styles.main}>
         {(showHeader || showSearch || showFilter) && (
           <div className={styles.titleHolder}>
             <h5 className={styles.title}>

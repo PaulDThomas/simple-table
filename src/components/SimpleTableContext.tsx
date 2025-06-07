@@ -46,6 +46,8 @@ export interface ISimpleTableContext {
   filterCheckClassName?: string;
   searchLabelClassName?: string;
   searchInputClassName?: string;
+
+  headerBackgroundColor?: string;
 }
 
 export const SimpleTableContext = createContext<ISimpleTableContext>({
