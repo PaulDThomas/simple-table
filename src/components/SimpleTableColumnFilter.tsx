@@ -130,6 +130,13 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
                   onChange={(e) => {
                     setCurrentColumnFilter(e.currentTarget.value);
                   }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      setCurrentColumnFilter(e.currentTarget.value);
+                      simpleTableContext.setCurrentColumnFilter?.(null);
+                      setLocalFilter("");
+                    }
+                  }}
                 />
                 <div className={styles.close}>
                   <CloseSvg
@@ -144,7 +151,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
           </tr>
           {localFilter.trim().length > 0 && (
             <tr>
-              <td className={styles.boxHeader}>
+              <th className={styles.boxHeader}>
                 <div
                   className={cbStyles.checkboxContainer}
                   onClick={() => {
@@ -160,8 +167,8 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
                     role="checkbox"
                   />
                 </div>
-              </td>
-              <td>Toggle selection</td>
+              </th>
+              <th>Toggle selection</th>
             </tr>
           )}
           <tr>
