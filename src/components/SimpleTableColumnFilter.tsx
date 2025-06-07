@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { SimpleTableContext, ISimpleTableColumnFilter } from "./SimpleTableContext";
-import styles from "./SimpleTableColumnFilter.module.css";
 import cbStyles from "./SimpleTableCheckBox.module.css";
+import styles from "./SimpleTableColumnFilter.module.css";
+import { ISimpleTableColumnFilter, SimpleTableContext } from "./SimpleTableContext";
 import { CloseSvg } from "./Svgs";
 
 export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) => {
@@ -68,6 +68,19 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
     }
   }, [availableList, currentFilter, localFilter, updateCurrentFilter]);
 
+  // Set current filter to items matching the search
+  const setCurrentColumnFilter = useCallback(
+    (searchText: string) => {
+      setLocalFilter(searchText);
+      if (availableList) {
+        const searchedItems =
+          availableList.filter((v) => v.toLowerCase().includes(searchText.toLowerCase())) ?? [];
+        updateCurrentFilter(searchedItems);
+      }
+    },
+    [availableList, updateCurrentFilter],
+  );
+
   useEffect(() => {
     if (allCheck.current) {
       if (currentFilter?.length === availableList?.length) {
@@ -114,14 +127,16 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
                   id={`${simpleTableContext.id}-columnfilter-${columnName}-filter`}
                   aria-label="Column filter search"
                   value={localFilter}
-                  onChange={(e) => setLocalFilter(e.currentTarget.value)}
+                  onChange={(e) => {
+                    setCurrentColumnFilter(e.currentTarget.value);
+                  }}
                 />
                 <div className={styles.close}>
                   <CloseSvg
-                    onClick={() =>
-                      simpleTableContext.setCurrentColumnFilter &&
-                      simpleTableContext.setCurrentColumnFilter(null)
-                    }
+                    onClick={() => {
+                      simpleTableContext.setCurrentColumnFilter?.(null);
+                      setLocalFilter("");
+                    }}
                   />
                 </div>
               </div>
