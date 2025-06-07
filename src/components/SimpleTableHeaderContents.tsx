@@ -1,8 +1,9 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { ISimpleTableField } from "./interface";
 import { SimpleTableColumnFilter } from "./SimpleTableColumnFilter";
 import { SimpleTableContext } from "./SimpleTableContext";
 import styles from "./SimpleTableHeaderContents.module.css";
+import { SimpleTablePopover } from "./SimpleTablePopover";
 import { FilterActiveSvg, FilterInactiveSvg, SortAscSvg, SortDescSvg } from "./Svgs";
 
 interface ISimspleTableHeaderContentsProps {
@@ -15,23 +16,20 @@ export const SimpleTableHeaderContents = ({
   columnNumber,
 }: ISimspleTableHeaderContentsProps): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
+  const filterIconRef = useRef<HTMLSpanElement>(null);
+
+  const isFilterActive = simpleTableContext.currentColumnFilter === columnNumber;
 
   return (
     <>
       {field.canColumnFilter && (
-        <div className={styles.cellBottomLeft}>
-          <div className={styles.insideCellBottomLeft}>
-            <div
-              className={styles.filterHolder}
-              style={{
-                visibility:
-                  simpleTableContext.currentColumnFilter === columnNumber ? "visible" : "hidden",
-              }}
-            >
-              <SimpleTableColumnFilter columnName={field.name} />
-            </div>
-          </div>
-        </div>
+        <SimpleTablePopover
+          isVisible={isFilterActive}
+          anchorElement={filterIconRef.current}
+          onClose={() => simpleTableContext.setCurrentColumnFilter?.(null)}
+        >
+          <SimpleTableColumnFilter columnName={field.name} />
+        </SimpleTablePopover>
       )}
       <div className={styles.text}>
         <span
@@ -57,7 +55,7 @@ export const SimpleTableHeaderContents = ({
             )
           ) : undefined}
           {field.canColumnFilter && (
-            <span>
+            <span ref={filterIconRef}>
               {simpleTableContext.currentColumnItems.find((cf) => cf.columnName === field.name)
                 ?.values.length ===
               simpleTableContext.currentColumnFilters.find((cf) => cf.columnName === field.name)

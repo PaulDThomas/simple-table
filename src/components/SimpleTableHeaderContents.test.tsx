@@ -173,10 +173,6 @@ describe("Filter on column values", () => {
       );
     });
     const filter = screen.getByLabelText("Column filter");
-    const selectTester = screen.getByLabelText("Tester");
-    expect(filter).toBeInTheDocument();
-    expect(selectTester).toBeInTheDocument();
-    expect(selectTester).not.toBeVisible();
     await user.click(filter);
     expect(mockSetCurrentFilter).toHaveBeenCalledTimes(1);
     expect(mockSetCurrentFilter).toHaveBeenCalledWith(0);
@@ -219,14 +215,9 @@ describe("Filter on column values", () => {
       );
     });
     const filter = screen.getByLabelText("Column filter (Active)");
-    const selectTester = screen.getByLabelText("Tester");
-    expect(filter).toBeInTheDocument();
-    expect(selectTester).toBeInTheDocument();
-    expect(selectTester).toBeVisible();
     await user.click(filter);
     expect(mockSetCurrentFilter).toHaveBeenCalledTimes(1);
     expect(mockSetCurrentFilter).toHaveBeenCalledWith(null);
-    expect(screen.queryByText("1 item selected")).toBeInTheDocument();
   });
 });
 

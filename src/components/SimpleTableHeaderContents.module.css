@@ -1,16 +1,5 @@
-.cellBottomLeft {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 1px;
-}
-
-.insideCellBottomLeft {
-  position: relative;
-}
-
 .filterHolder {
-  position: absolute;
+  position: fixed;
   height: 200px;
   width: 200px;
   z-index: 1000;
@@ -22,6 +11,7 @@
   overflow: auto;
   box-shadow: 4px 4px 4px rgb(64, 64, 64, 0.75);
   min-width: 60px;
+  padding: 4px;
   background-color: var(--st-header-background-color);
 }
 
