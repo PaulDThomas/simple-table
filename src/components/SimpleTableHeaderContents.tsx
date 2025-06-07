@@ -37,9 +37,7 @@ export const SimpleTableHeaderContents = ({
         <span
           className={field.sortFn ? styles.clickable : undefined}
           onClick={() => {
-            field.sortFn &&
-              simpleTableContext.updateSortBy &&
-              simpleTableContext.updateSortBy(field);
+            if (field.sortFn) simpleTableContext.updateSortBy?.(field);
           }}
         >
           <span className={simpleTableContext.sortBy?.name === field.name ? "sorted" : "unsorted"}>
@@ -69,12 +67,9 @@ export const SimpleTableHeaderContents = ({
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    simpleTableContext.setCurrentColumnFilter &&
-                      simpleTableContext.setCurrentColumnFilter(
-                        simpleTableContext.currentColumnFilter !== columnNumber
-                          ? columnNumber
-                          : null,
-                      );
+                    simpleTableContext.setCurrentColumnFilter?.(
+                      simpleTableContext.currentColumnFilter !== columnNumber ? columnNumber : null,
+                    );
                   }}
                 />
               ) : (
@@ -83,12 +78,9 @@ export const SimpleTableHeaderContents = ({
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    simpleTableContext.setCurrentColumnFilter &&
-                      simpleTableContext.setCurrentColumnFilter(
-                        simpleTableContext.currentColumnFilter !== columnNumber
-                          ? columnNumber
-                          : null,
-                      );
+                    simpleTableContext.setCurrentColumnFilter?.(
+                      simpleTableContext.currentColumnFilter !== columnNumber ? columnNumber : null,
+                    );
                   }}
                 />
               )}

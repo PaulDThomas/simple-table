@@ -30,10 +30,7 @@ export const SimpleTableSelectHeader = (): JSX.Element => {
           role="checkbox"
           className={simpleTableContext.filterCheckClassName}
           ref={allCheck}
-          onChange={() => {
-            simpleTableContext.toggleAllCurrentSelection &&
-              simpleTableContext.toggleAllCurrentSelection();
-          }}
+          onChange={simpleTableContext.toggleAllCurrentSelection}
         />
       </div>
     </th>

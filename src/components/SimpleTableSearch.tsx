@@ -23,8 +23,7 @@ export const SimpleTableSearch = (): JSX.Element => {
           value={simpleTableContext.searchText ?? ""}
           disabled={!simpleTableContext.setSearchText}
           onChange={(e) => {
-            simpleTableContext.setSearchText &&
-              simpleTableContext.setSearchText(e.currentTarget.value);
+            simpleTableContext.setSearchText?.(e.currentTarget.value);
           }}
         />
       </div>

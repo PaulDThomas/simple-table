@@ -222,8 +222,7 @@ export const SimpleTable = ({
     }
     // Or remove if any of the current selection are all selection
     else {
-      setCurrentSelection &&
-        setCurrentSelection(currentSelection?.filter((s) => !viewedKeys.includes(s)) ?? []);
+      setCurrentSelection?.(currentSelection?.filter((s) => !viewedKeys.includes(s)) ?? []);
     }
   }, [currentSelection, keyField, setCurrentSelection, viewData]);
   // Toggle individual row
@@ -236,7 +235,7 @@ export const SimpleTable = ({
       const ix = newSelection.findIndex((s) => s === rowId);
       if (ix > -1) newSelection.splice(ix, 1);
       else newSelection.push(rowId);
-      setCurrentSelection && setCurrentSelection(newSelection);
+      setCurrentSelection?.(newSelection);
     },
     [currentSelection, keyField, setCurrentSelection, tableData],
   );
@@ -264,8 +263,7 @@ export const SimpleTable = ({
     const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
     if (localSettingsText) {
       const localSettings = JSON.parse(localSettingsText) as SimpleTableLocalSettings;
-      localSettings.pageRows &&
-        showPager &&
+      if (localSettings.pageRows && showPager)
         setPageRows(localSettings.pageRows === "Infinity" ? Infinity : localSettings.pageRows);
       // Reset previous version settings
       if (
@@ -325,18 +323,18 @@ export const SimpleTable = ({
             }
             setColumnWidths(newColumnWidths);
             updateLocalSettings("headerWidths", newColumnWidths);
-            onWidthChange && onWidthChange(newColumnWidths);
+            onWidthChange?.(newColumnWidths);
           },
           pageRows,
           setPageRows: (ret) => {
             setPageRows(ret);
             updateLocalSettings("pageRows", ret);
-            onPagerChange && onPagerChange({ firstRow, pageRows: ret });
+            onPagerChange?.({ firstRow, pageRows: ret });
           },
           firstRow,
           setFirstRow: (ret) => {
             setFirstRow(ret);
-            onPagerChange && onPagerChange({ firstRow: ret, pageRows });
+            onPagerChange?.({ firstRow: ret, pageRows });
           },
 
           currentColumnItems,

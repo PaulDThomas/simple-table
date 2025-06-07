@@ -116,7 +116,7 @@ const App = (): JSX.Element => {
               selectable
               currentSelection={selected}
               setCurrentSelection={(ret) => {
-                setSelected(ret), console.log("Selected", ret);
+                setSelected(ret);
                 const newData = data.map((r) => ({
                   ...r,
                   selected: ret.includes(r.id as Key) ? "Yes" : "No",

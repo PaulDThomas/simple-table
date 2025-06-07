@@ -21,11 +21,9 @@ export const SimpleTableHeader = (): JSX.Element => {
     if (targetCell.current) {
       const name = targetCell.current.dataset.columnName;
       const width = targetCell.current.style.width;
-      simpleTableContext &&
-        simpleTableContext.setColumnWidth &&
-        name &&
-        width &&
+      if (simpleTableContext.setColumnWidth && name && width) {
         simpleTableContext.setColumnWidth(name, targetCell.current.style.width);
+      }
       targetCell.current = null;
       window.removeEventListener("mousemove", mouseMove);
       window.removeEventListener("mouseup", mouseUp);
