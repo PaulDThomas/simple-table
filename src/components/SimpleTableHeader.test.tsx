@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react";
-import { SimpleTableContext } from "./SimpleTableContext";
+import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableHeader } from "./SimpleTableHeader";
 import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
 
@@ -51,19 +51,16 @@ describe("Simple table header renders", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "testtable",
           fields: mockFields,
           keyField: "userId",
           viewData: mockData,
           totalRows: mockData.length,
-          firstRow: 0,
-          pageRows: 50,
           sortBy: mockSortDown,
-          columnWidths: [],
           currentColumnItems: [
             { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
           ],
-          currentColumnFilter: null,
           currentColumnFilters: [
             { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
           ],
@@ -89,14 +86,13 @@ describe("Resize table cell", () => {
       render(
         <SimpleTableContext.Provider
           value={{
+            ...defaultContext,
             id: "testtable",
             fields: mockFields,
             keyField: "userId",
             viewData: mockData,
             totalRows: mockData.length,
             sortBy: mockSortUp,
-            firstRow: 0,
-            pageRows: 50,
             updateSortBy: mockSorting,
             columnWidths: [],
             currentColumnItems: [

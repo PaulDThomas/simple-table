@@ -1,7 +1,7 @@
 import { Key, useState } from "react";
 import { mockData } from "../../__dummy__/mock_data";
 import { mockFields } from "../../__dummy__/mock_fields";
-import { SimpleTable, ISimpleTableRow } from "../../src/components";
+import { ISimpleTableRow, SimpleTable } from "../../src/components";
 
 // Main application
 const App = (): JSX.Element => {
@@ -10,7 +10,7 @@ const App = (): JSX.Element => {
   );
   const [selected, setSelected] = useState<Key[]>([]);
   const [height, setHeight] = useState<string>("600px");
-  const [width, setWidth] = useState<string>("600px");
+  const [width, setWidth] = useState<string>("1200px");
   const [title, setTitle] = useState<string>("");
   const [receivedWidths, setReceivedWidths] = useState<{ name: string; width: string }[]>([]);
   const [showHeader, setShowTitle] = useState<boolean>(true);

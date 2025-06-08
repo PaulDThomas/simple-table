@@ -12,34 +12,34 @@ export interface ISimpleTableContext {
   keyField: string;
   viewData: ISimpleTableRow[];
   totalRows: number;
-  setTableData?: (ret: ISimpleTableRow[]) => void;
+  setTableData: (ret: ISimpleTableRow[]) => void;
   selectable?: boolean;
   showSearch?: boolean;
   showFilter?: boolean;
   filterLabel?: string;
   filterData?: boolean;
-  setFilterData?: (ret: boolean) => void;
+  setFilterData: (ret: boolean) => void;
   searchLabel?: string;
   searchText?: string;
-  setSearchText?: (ret: string) => void;
+  setSearchText: (ret: string) => void;
   sortBy?: ISimpleTableSort;
-  updateSortBy?: (ret: ISimpleTableField) => void;
+  updateSortBy: (ret: ISimpleTableField) => void;
   currentSelection?: Key[];
-  toggleAllCurrentSelection?: () => void;
-  toggleSelection?: (ret: Key) => void;
+  toggleAllCurrentSelection: () => void;
+  toggleSelection: (ret: Key) => void;
 
   columnWidths: { name: string; width: string }[];
-  setColumnWidth?: (columnName: string, width: string) => void;
+  setColumnWidth: (columnName: string, width: string) => void;
   pageRows: number;
-  setPageRows?: (ret: number) => void;
+  setPageRows: (ret: number) => void;
   firstRow: number;
-  setFirstRow?: (ret: number) => void;
+  setFirstRow: (ret: number) => void;
 
   currentColumnItems: ISimpleTableColumnFilter[];
   currentColumnFilter: number | null;
-  setCurrentColumnFilter?: (ret: number | null) => void;
+  setCurrentColumnFilter: (ret: number | null) => void;
   currentColumnFilters: ISimpleTableColumnFilter[];
-  setCurrentColumnFilters?: (ret: ISimpleTableColumnFilter[]) => void;
+  setCurrentColumnFilters: (ret: ISimpleTableColumnFilter[]) => void;
 
   inputGroupClassName?: string;
   filterLabelClassName?: string;
@@ -50,16 +50,32 @@ export interface ISimpleTableContext {
   headerBackgroundColor?: string;
 }
 
-export const SimpleTableContext = createContext<ISimpleTableContext>({
+// istanbul ignore next
+const defaultFn = () => {};
+
+export const defaultContext: ISimpleTableContext = {
   id: "simple-table",
   fields: [],
   keyField: "",
   viewData: [],
   totalRows: 0,
-  firstRow: 0,
+  setTableData: defaultFn,
+  setFilterData: defaultFn,
+  setSearchText: defaultFn,
+  updateSortBy: defaultFn,
+  toggleAllCurrentSelection: defaultFn,
+  toggleSelection: defaultFn,
+  setColumnWidth: defaultFn,
   pageRows: 50,
+  setPageRows: defaultFn,
+  firstRow: 0,
+  setFirstRow: defaultFn,
   columnWidths: [],
   currentColumnItems: [],
   currentColumnFilter: null,
   currentColumnFilters: [],
-});
+  setCurrentColumnFilter: defaultFn,
+  setCurrentColumnFilters: defaultFn,
+} as ISimpleTableContext;
+
+export const SimpleTableContext = createContext<ISimpleTableContext>(defaultContext);

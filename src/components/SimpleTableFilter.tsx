@@ -1,7 +1,7 @@
 import { useContext } from "react";
+import cbStyles from "./SimpleTableCheckBox.module.css";
 import { SimpleTableContext } from "./SimpleTableContext";
 import styles from "./SimpleTableFilter.module.css";
-import cbStyles from "./SimpleTableCheckBox.module.css";
 
 export const SimpleTableFilter = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);

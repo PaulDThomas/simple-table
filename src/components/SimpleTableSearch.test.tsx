@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
-import { SimpleTableContext } from "./SimpleTableContext";
+import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableSearch } from "./SimpleTableSearch";
 
 const mockFields: ISimpleTableField[] = [
@@ -23,18 +23,13 @@ describe("Simple table search rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "testtable",
           fields: mockFields,
           keyField: "userId",
           viewData: mockData,
           totalRows: mockData.length,
-          firstRow: 0,
-          pageRows: 50,
           searchText: "Hello",
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <SimpleTableSearch />
@@ -50,19 +45,14 @@ describe("Simple table search rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "testtable",
           fields: mockFields,
           keyField: "userId",
           viewData: mockData,
           totalRows: mockData.length,
-          firstRow: 0,
-          pageRows: 50,
           searchLabel: "BIG SEARCH",
           setSearchText: mockSetSearch,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <SimpleTableSearch />

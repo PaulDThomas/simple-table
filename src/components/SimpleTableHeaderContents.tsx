@@ -20,13 +20,21 @@ export const SimpleTableHeaderContents = ({
 
   const isFilterActive = simpleTableContext.currentColumnFilter === columnNumber;
 
+  const toggleFilter: React.MouseEventHandler<SVGSVGElement> = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    simpleTableContext.setCurrentColumnFilter?.(
+      simpleTableContext.currentColumnFilter !== columnNumber ? columnNumber : null,
+    );
+  };
+
   return (
     <>
       {field.canColumnFilter && (
         <SimpleTablePopover
           isVisible={isFilterActive}
           anchorElement={filterIconRef.current}
-          onClose={() => simpleTableContext.setCurrentColumnFilter?.(null)}
+          onClose={() => simpleTableContext.setCurrentColumnFilter(null)}
         >
           <SimpleTableColumnFilter columnName={field.name} />
         </SimpleTablePopover>
@@ -35,7 +43,7 @@ export const SimpleTableHeaderContents = ({
         <span
           className={field.sortFn ? styles.clickable : undefined}
           onClick={() => {
-            if (field.sortFn) simpleTableContext.updateSortBy?.(field);
+            if (field.sortFn) simpleTableContext.updateSortBy(field);
           }}
         >
           <span className={simpleTableContext.sortBy?.name === field.name ? "sorted" : "unsorted"}>
@@ -62,24 +70,12 @@ export const SimpleTableHeaderContents = ({
                 ?.values.length ? (
                 <FilterInactiveSvg
                   aria-label="Column filter"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    simpleTableContext.setCurrentColumnFilter?.(
-                      simpleTableContext.currentColumnFilter !== columnNumber ? columnNumber : null,
-                    );
-                  }}
+                  onClick={toggleFilter}
                 />
               ) : (
                 <FilterActiveSvg
                   aria-label="Column filter (Active)"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    simpleTableContext.setCurrentColumnFilter?.(
-                      simpleTableContext.currentColumnFilter !== columnNumber ? columnNumber : null,
-                    );
-                  }}
+                  onClick={toggleFilter}
                 />
               )}
             </span>

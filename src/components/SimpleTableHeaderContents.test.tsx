@@ -1,9 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { act } from "react";
-import { SimpleTableContext } from "./SimpleTableContext";
-import { SimpleTableHeaderContents } from "./SimpleTableHeaderContents";
 import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
+import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
+import { SimpleTableHeaderContents } from "./SimpleTableHeaderContents";
+import * as stp from "./SimpleTablePopover";
 
 const mockSort = jest.fn();
 
@@ -36,13 +37,12 @@ describe("Simple table header contents renders", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "testtable",
           fields: mockFields,
           keyField: "userId",
           viewData: mockData,
           totalRows: mockData.length,
-          firstRow: 0,
-          pageRows: 50,
           sortBy: mockSortDown,
           columnWidths: [],
           currentColumnItems: [
@@ -67,19 +67,16 @@ describe("Simple table header contents renders", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "testtable",
           fields: mockFields,
           keyField: "userId",
           viewData: mockData,
           totalRows: mockData.length,
-          firstRow: 0,
-          pageRows: 50,
           sortBy: mockSortUp,
-          columnWidths: [],
           currentColumnItems: [
             { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
           ],
-          currentColumnFilter: null,
           currentColumnFilters: [
             { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
           ],
@@ -94,26 +91,157 @@ describe("Simple table header contents renders", () => {
     expect(screen.getByText("Name")).toBeInTheDocument();
   });
 
+  test("Close filter from popover", async () => {
+    const user = userEvent.setup();
+    const mockSetColumnFilter = jest.fn();
+    jest.spyOn(stp, "SimpleTablePopover").mockImplementation(({ onClose }) => {
+      return (
+        <div className="simple-table-popover filterHolder">
+          <button
+            data-testid="close-btn"
+            aria-label="Close filter"
+            onClick={onClose}
+          />
+        </div>
+      );
+    });
+
+    await act(async () =>
+      render(
+        <SimpleTableContext.Provider
+          value={{
+            ...defaultContext,
+            id: "testtable",
+            fields: mockFields,
+            keyField: "userId",
+            viewData: mockData,
+            totalRows: mockData.length,
+            sortBy: mockSortUp,
+            updateSortBy: mockSorting,
+            currentColumnItems: [
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
+            ],
+            currentColumnFilter: 0,
+            currentColumnFilters: [
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
+            ],
+            setCurrentColumnFilter: mockSetColumnFilter,
+          }}
+        >
+          <SimpleTableHeaderContents
+            field={mockFields[1]}
+            columnNumber={0}
+          />
+        </SimpleTableContext.Provider>,
+      ),
+    );
+    // Close called from inside the popover
+    const closeBtn = screen.getByTestId("close-btn");
+    expect(closeBtn).toBeInTheDocument();
+    await user.click(closeBtn!);
+    expect(mockSetColumnFilter).toHaveBeenCalledTimes(1);
+    expect(mockSetColumnFilter).toHaveBeenCalledWith(null);
+  });
+
+  test("Click open filter button", async () => {
+    const user = userEvent.setup();
+    const mockSetColumnFilter = jest.fn();
+
+    await act(async () =>
+      render(
+        <SimpleTableContext.Provider
+          value={{
+            ...defaultContext,
+            id: "testtable",
+            fields: mockFields,
+            keyField: "userId",
+            viewData: mockData,
+            totalRows: mockData.length,
+            sortBy: mockSortUp,
+            updateSortBy: mockSorting,
+            currentColumnItems: [
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
+            ],
+            currentColumnFilter: null,
+            currentColumnFilters: [
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
+            ],
+            setCurrentColumnFilter: mockSetColumnFilter,
+          }}
+        >
+          <SimpleTableHeaderContents
+            field={mockFields[1]}
+            columnNumber={0}
+          />
+        </SimpleTableContext.Provider>,
+      ),
+    );
+    // Open the popover
+    const filter = screen.getByLabelText("Column filter");
+    expect(filter).toBeInTheDocument();
+    await user.click(filter);
+    expect(mockSetColumnFilter).toHaveBeenCalledTimes(1);
+    expect(mockSetColumnFilter).toHaveBeenCalledWith(0);
+  });
+
+  test("Click close filter button", async () => {
+    const user = userEvent.setup();
+    const mockSetColumnFilter = jest.fn();
+
+    await act(async () =>
+      render(
+        <SimpleTableContext.Provider
+          value={{
+            ...defaultContext,
+            id: "testtable",
+            fields: mockFields,
+            keyField: "userId",
+            viewData: mockData,
+            totalRows: mockData.length,
+            sortBy: mockSortUp,
+            updateSortBy: mockSorting,
+            currentColumnItems: [
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
+            ],
+            currentColumnFilter: 0,
+            currentColumnFilters: [
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
+            ],
+            setCurrentColumnFilter: mockSetColumnFilter,
+          }}
+        >
+          <SimpleTableHeaderContents
+            field={mockFields[1]}
+            columnNumber={0}
+          />
+        </SimpleTableContext.Provider>,
+      ),
+    );
+    // Open the popover
+    const filter = screen.getByLabelText("Column filter");
+    expect(filter).toBeInTheDocument();
+    await user.click(filter);
+    expect(mockSetColumnFilter).toHaveBeenCalledTimes(1);
+    expect(mockSetColumnFilter).toHaveBeenCalledWith(null);
+  });
+
   test("Check sorting clicks", async () => {
     const user = userEvent.setup();
     await act(async () =>
       render(
         <SimpleTableContext.Provider
           value={{
+            ...defaultContext,
             id: "testtable",
             fields: mockFields,
             keyField: "userId",
             viewData: mockData,
             totalRows: mockData.length,
             sortBy: mockSortDown,
-            firstRow: 0,
-            pageRows: 50,
             updateSortBy: mockSorting,
-            columnWidths: [],
             currentColumnItems: [
               { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
-            currentColumnFilter: null,
             currentColumnFilters: [
               { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
@@ -142,20 +270,17 @@ describe("Filter on column values", () => {
       render(
         <SimpleTableContext.Provider
           value={{
+            ...defaultContext,
             id: "testtable",
             fields: mockFields,
             keyField: "userId",
             viewData: mockData,
             totalRows: mockData.length,
             sortBy: mockSortDown,
-            firstRow: 0,
-            pageRows: 50,
             updateSortBy: mockSorting,
-            columnWidths: [],
             currentColumnItems: [
               { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
-            currentColumnFilter: null,
             setCurrentColumnFilter: mockSetCurrentFilter,
             currentColumnFilters: [
               { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
@@ -186,14 +311,13 @@ describe("Filter on column values", () => {
       render(
         <SimpleTableContext.Provider
           value={{
+            ...defaultContext,
             id: "testtable",
             fields: mockFields,
             keyField: "userId",
             viewData: mockData,
             totalRows: mockData.length,
             sortBy: mockSortUp,
-            firstRow: 0,
-            pageRows: 50,
             updateSortBy: mockSorting,
             columnWidths: [],
             currentColumnItems: [
@@ -228,20 +352,17 @@ describe("Custom render", () => {
       render(
         <SimpleTableContext.Provider
           value={{
+            ...defaultContext,
             id: "testtable",
             fields: [mockF],
             keyField: "userId",
             viewData: mockData,
             totalRows: mockData.length,
             sortBy: mockSortUp,
-            firstRow: 0,
-            pageRows: 50,
             updateSortBy: mockSorting,
-            columnWidths: [],
             currentColumnItems: [
               { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
-            currentColumnFilter: null,
             currentColumnFilters: [
               { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],

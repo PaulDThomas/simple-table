@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
-import { SimpleTableContext } from "./SimpleTableContext";
+import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableFilter } from "./SimpleTableFilter";
 
 const mockFilter = jest.fn();
@@ -29,19 +29,14 @@ describe("Access rights filter rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "testtable",
           fields: mockFields,
           keyField: "userId",
           viewData: mockData,
           totalRows: mockData.length,
-          firstRow: 0,
-          pageRows: 50,
           filterLabel: "BIG FILTER",
           setFilterData: mockFilter,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <SimpleTableFilter />,

@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTableBody } from "./SimpleTableBody";
-import { SimpleTableContext } from "./SimpleTableContext";
+import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
 
 const mockFields: ISimpleTableField[] = [
   { name: "tlfId", hidden: true },
@@ -29,17 +29,12 @@ describe("Simple table body rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "testtable",
           fields: mockFields,
           keyField: "userId",
           viewData: mockData,
           totalRows: mockData.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -54,17 +49,12 @@ describe("Simple table body rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "testtable",
           fields: mockFields,
           keyField: "tlfId",
           viewData: mockData,
           totalRows: mockData.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>

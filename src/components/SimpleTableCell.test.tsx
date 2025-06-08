@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTableCell } from "./SimpleTableCell";
-import { SimpleTableContext } from "./SimpleTableContext";
+import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
 
 const mockFields: ISimpleTableField[] = [
   { name: "userId", label: "User ID" },
@@ -56,17 +56,12 @@ describe("Bad cell rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -90,17 +85,12 @@ describe("Bad cell rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -124,17 +114,12 @@ describe("Bad cell rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -160,17 +145,12 @@ describe("Cell render, show things", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -194,17 +174,12 @@ describe("Cell render, show things", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -228,17 +203,12 @@ describe("Cell render, show things", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -262,16 +232,12 @@ describe("Cell render, show things", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
@@ -296,17 +262,12 @@ describe("Cell render, show things", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>

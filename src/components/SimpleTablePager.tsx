@@ -1,7 +1,7 @@
 import { useContext } from "react";
+import selectStyles from "./Select.module.css";
 import { SimpleTableContext } from "./SimpleTableContext";
 import styles from "./SimpleTablePager.module.css";
-import selectStyles from "./Select.module.css";
 import { PagerEndSvg, PagerNextSvg, PagerPrevSvg, PagerStartSvg } from "./Svgs";
 
 export const SimpleTablePager = (): JSX.Element => {
@@ -57,7 +57,7 @@ export const SimpleTablePager = (): JSX.Element => {
           className={selectStyles.baseSelect}
           value={simpleTableContext.firstRow}
           onChange={(e) => {
-            simpleTableContext.setFirstRow?.(parseInt(e.currentTarget.value));
+            simpleTableContext.setFirstRow(parseInt(e.currentTarget.value));
           }}
         >
           {simpleTableContext.pageRows === Infinity ? (
@@ -92,7 +92,7 @@ export const SimpleTablePager = (): JSX.Element => {
         <PagerEndSvg
           aria-label="Go to last page"
           onClick={() => {
-            simpleTableContext.setFirstRow?.(
+            simpleTableContext.setFirstRow(
               Math.floor((simpleTableContext.viewData.length - 1) / simpleTableContext.pageRows) *
                 simpleTableContext.pageRows,
             );
