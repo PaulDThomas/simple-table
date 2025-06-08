@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { act } from "react";
 import { SimpleTableColumnFilter } from "./SimpleTableColumnFilter";
-import { ISimpleTableColumnFilter, SimpleTableContext } from "./SimpleTableContext";
+import { defaultContext, ISimpleTableColumnFilter, SimpleTableContext } from "./SimpleTableContext";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
 
 const mockFields: ISimpleTableField[] = [
@@ -17,251 +17,191 @@ const mockData: ISimpleTableRow[] = [
   { userId: "four", displayName: "Another user" },
 ];
 
-describe("Simple table column filter rendering", () => {
-  test("Basic render", async () => {
-    const user = userEvent.setup();
-    const mockSet = jest.fn();
-    const mockSetCurrentFilter = jest.fn();
-    await act(async () => {
-      render(
-        <SimpleTableContext.Provider
-          value={{
-            id: "testtable",
-            fields: mockFields,
-            keyField: "userId",
-            viewData: mockData,
-            totalRows: mockData.length,
-            firstRow: 0,
-            pageRows: 50,
-            selectable: true,
-            columnWidths: [],
-            currentColumnItems: [
-              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
-            ],
-            currentColumnFilter: 0,
-            setCurrentColumnFilter: mockSetCurrentFilter,
-            currentColumnFilters: [
-              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
-            ],
-            setCurrentColumnFilters: mockSet,
-          }}
-        >
-          <SimpleTableColumnFilter columnName={"displayName"} />
-        </SimpleTableContext.Provider>,
-      );
-    });
-    expect(screen.queryByText("3 items selected")).toBeInTheDocument();
-    expect(screen.queryByLabelText("Column filter search")).toBeInTheDocument();
-    expect(screen.queryByLabelText("Column filter toggle")).toBeInTheDocument();
-    expect(screen.queryByLabelText("Tester")).toBeInTheDocument();
-    await user.click(screen.queryByLabelText("Column filter toggle") as HTMLInputElement);
-    expect(mockSet).toHaveBeenCalledTimes(1);
-    expect(mockSet).toHaveBeenCalledWith([{ columnName: "displayName", values: [] }]);
-    await user.click(screen.queryByLabelText("Close filter") as Element);
-    expect(mockSetCurrentFilter).toHaveBeenCalledTimes(1);
-    expect(mockSetCurrentFilter).toHaveBeenCalledWith(null);
-  });
-
-  test("Add to filter", async () => {
-    const user = userEvent.setup();
-    await act(async () => {
-      render(
-        <SimpleTableContext.Provider
-          value={{
-            id: "testtable",
-            fields: mockFields,
-            keyField: "userId",
-            viewData: mockData,
-            totalRows: mockData.length,
-            firstRow: 0,
-            pageRows: 50,
-            selectable: true,
-            columnWidths: [],
-            currentColumnItems: [
-              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
-            ],
-            currentColumnFilter: null,
-            currentColumnFilters: [
-              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
-            ],
-          }}
-        >
-          <SimpleTableColumnFilter columnName={"displayName"} />
-        </SimpleTableContext.Provider>,
-      );
-    });
-    const search = screen.queryByLabelText("Column filter search") as HTMLInputElement;
-    expect(screen.queryByLabelText("Lead")).toBeInTheDocument();
-    await act(async () => await user.type(search, "Te"));
-    expect(screen.queryByLabelText("Lead")).not.toBeInTheDocument();
-  });
-});
-
-describe("Update filter", () => {
-  test("Uncheck boxes", async () => {
-    const user = userEvent.setup();
-    let cf = [{ columnName: "displayName", values: ["Lead"] }];
-    const mockSet = jest.fn((newCf) => {
-      cf = newCf;
-    });
-    await act(async () => {
-      render(
-        <SimpleTableContext.Provider
-          value={{
-            id: "testtable",
-            fields: mockFields,
-            keyField: "userId",
-            viewData: mockData,
-            totalRows: mockData.length,
-            firstRow: 0,
-            pageRows: 50,
-            selectable: true,
-            columnWidths: [],
-            currentColumnItems: [
-              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
-            ],
-            currentColumnFilter: null,
-            currentColumnFilters: cf,
-            setCurrentColumnFilters: mockSet,
-          }}
-        >
-          <SimpleTableColumnFilter columnName={"displayName"} />
-        </SimpleTableContext.Provider>,
-      );
-    });
-    const lead = screen.getByLabelText("Lead");
-    const tester = screen.getByLabelText("Tester");
-    await user.click(lead);
-    expect(mockSet).toHaveBeenLastCalledWith([{ columnName: "displayName", values: [] }]);
-    await user.click(tester);
-    expect(mockSet).toHaveBeenLastCalledWith([
-      { columnName: "displayName", values: ["Lead", "Tester"] },
-    ]);
-  });
-});
-
-describe("Update toggle", () => {
-  test("Check all", async () => {
-    const user = userEvent.setup();
-    const mockSet = jest.fn();
-    await act(async () => {
-      render(
-        <SimpleTableContext.Provider
-          value={{
-            id: "testtable",
-            fields: mockFields,
-            keyField: "userId",
-            viewData: mockData,
-            totalRows: mockData.length,
-            firstRow: 0,
-            pageRows: 50,
-            selectable: true,
-            columnWidths: [],
-            currentColumnItems: [
-              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
-            ],
-            currentColumnFilter: null,
-            currentColumnFilters: [],
-            setCurrentColumnFilters: mockSet,
-          }}
-        >
-          <SimpleTableColumnFilter columnName={"displayName"} />
-        </SimpleTableContext.Provider>,
-      );
-    });
-    const all = screen.getByLabelText("Column filter toggle");
-    await user.click(all);
-    expect(mockSet).toHaveBeenLastCalledWith([
-      { columnName: "displayName", values: ["Lead", "Other user", "Tester"] },
-    ]);
-  });
-});
-
-describe("Update search toggle", () => {
-  const user = userEvent.setup();
+describe("SimpleTableColumnFilter", () => {
   const MockComponent = ({
-    currentColumnFilters,
-    setCurrentColumnFilters,
+    currentColumnFilter = null,
+    currentColumnFilters = [],
+    setCurrentColumnFilter = jest.fn(),
+    setCurrentColumnFilters = jest.fn(),
   }: {
-    currentColumnFilters: ISimpleTableColumnFilter[];
-    setCurrentColumnFilters: (ret: ISimpleTableColumnFilter[]) => void;
+    currentColumnFilter?: number | null;
+    currentColumnFilters?: ISimpleTableColumnFilter[];
+    setCurrentColumnFilter?: (ret: number | null) => void;
+    setCurrentColumnFilters?: (ret: ISimpleTableColumnFilter[]) => void;
   }) => (
     <SimpleTableContext.Provider
       value={{
+        ...defaultContext,
         id: "testtable",
         fields: mockFields,
         keyField: "userId",
         viewData: mockData,
         totalRows: mockData.length,
-        firstRow: 0,
-        pageRows: 50,
-        selectable: true,
-        columnWidths: [],
         currentColumnItems: [
           {
             columnName: "displayName",
             values: ["Lead", "Tester 1", "Tester 2", "Tester 3", "Tester 4", "Other user"],
           },
         ],
-        currentColumnFilter: null,
+        currentColumnFilter,
         currentColumnFilters,
+        setCurrentColumnFilter,
         setCurrentColumnFilters,
       }}
     >
       <SimpleTableColumnFilter columnName={"displayName"} />
     </SimpleTableContext.Provider>
   );
-  test("Search and toggle", async () => {
+
+  test("Safely render without column info", async () => {
+    await act(async () => render(<SimpleTableColumnFilter columnName={"displayName"} />));
+    expect(screen.queryByText("0 items selected")).toBeInTheDocument();
+  });
+
+  test("Basic render", async () => {
     const mockSet = jest.fn();
+    const mockSetCurrentFilter = jest.fn();
     await act(async () =>
       render(
         <MockComponent
-          currentColumnFilters={[]}
+          currentColumnFilter={0}
+          setCurrentColumnFilter={mockSetCurrentFilter}
+          currentColumnFilters={[{ columnName: "displayName", values: ["Lead", "Other user"] }]}
           setCurrentColumnFilters={mockSet}
         />,
       ),
     );
+    expect(screen.queryByText("2 items selected")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Column filter search")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Column filter toggle")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Other user")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Other user")).toBeChecked();
+  });
 
+  test("Type into filter", async () => {
+    const user = userEvent.setup();
+    const mockSet = jest.fn();
+    const mockSetCurrentFilter = jest.fn();
+    await act(async () => {
+      render(
+        <MockComponent
+          currentColumnFilters={[]}
+          setCurrentColumnFilter={mockSetCurrentFilter}
+          setCurrentColumnFilters={mockSet}
+        />,
+      );
+    });
     const search = screen.queryByLabelText("Column filter search") as HTMLInputElement;
-    expect(screen.queryByLabelText("Column search filter toggle")).not.toBeInTheDocument();
-    await user.type(search, "te");
-    const searchToggle = screen.queryByLabelText("Column search filter toggle") as HTMLInputElement;
-    expect(searchToggle).toBeInTheDocument();
-    // No items selected initially
-    const all = screen.queryByLabelText("Column filter toggle") as HTMLInputElement;
-    expect(all).toBeInTheDocument();
-    expect(all).not.toBeChecked();
-    // This should add all testers
-    await user.click(searchToggle);
-    expect(mockSet).toHaveBeenLastCalledWith([
+    expect(screen.queryByLabelText("Lead")).toBeInTheDocument();
+    await act(async () => await user.type(search, "Te"));
+    expect(screen.queryByLabelText("Lead")).not.toBeInTheDocument();
+    await act(async () => await user.type(search, "{enter}"));
+    expect(mockSetCurrentFilter).toHaveBeenCalledWith(null);
+    expect(mockSet).toHaveBeenCalledWith([
       { columnName: "displayName", values: ["Tester 1", "Tester 2", "Tester 3", "Tester 4"] },
     ]);
   });
 
-  test("Uncheck all", async () => {
+  test("Check and uncheck all items", async () => {
+    const user = userEvent.setup();
     const mockSet = jest.fn();
-    await act(async () =>
+    const mockSetCurrentFilter = jest.fn();
+    await act(async () => {
       render(
         <MockComponent
-          currentColumnFilters={[{ columnName: "displayName", values: ["Tester 1", "Tester 2"] }]}
+          currentColumnFilters={[{ columnName: "displayName", values: ["Other user"] }]}
+          setCurrentColumnFilter={mockSetCurrentFilter}
           setCurrentColumnFilters={mockSet}
         />,
-      ),
-    );
+      );
+    });
+    const toggle = screen.queryByLabelText("Column filter toggle") as HTMLInputElement;
+    expect(toggle).toBeInTheDocument();
+    expect(toggle).not.toBeChecked();
+    expect(screen.queryByText("1 item selected")).toBeInTheDocument();
+    await user.click(toggle);
+    expect(screen.queryByText("6 items selected")).toBeInTheDocument();
+    expect(toggle).toBeChecked();
+    await user.click(toggle);
+    expect(toggle).not.toBeChecked();
+    expect(screen.queryByText("0 items selected")).toBeInTheDocument();
+    // Close screen
+    const closeButton = screen.queryByLabelText("Close filter");
+    expect(closeButton).toBeInTheDocument();
+    await user.click(closeButton!);
+    expect(mockSet).toHaveBeenCalledWith([{ columnName: "displayName", values: [] }]);
+    expect(mockSetCurrentFilter).toHaveBeenCalledWith(null);
+  });
 
-    const search = screen.queryByLabelText("Column filter search") as HTMLInputElement;
-    expect(screen.queryByLabelText("Column search filter toggle")).not.toBeInTheDocument();
-    await user.type(search, "te");
+  test("Toggle search filter", async () => {
+    const user = userEvent.setup();
+    const mockSet = jest.fn();
+    const mockSetCurrentFilter = jest.fn();
+    await act(async () => {
+      render(
+        <MockComponent
+          currentColumnFilters={[]}
+          setCurrentColumnFilter={mockSetCurrentFilter}
+          setCurrentColumnFilters={mockSet}
+        />,
+      );
+    });
+    const allToggle = screen.queryByLabelText("Column filter toggle") as HTMLInputElement;
+    expect(allToggle).toBeInTheDocument();
+    expect(allToggle).not.toBeChecked();
     const searchToggle = screen.queryByLabelText("Column search filter toggle") as HTMLInputElement;
     expect(searchToggle).toBeInTheDocument();
+    expect(searchToggle).not.toBeChecked();
 
+    const search = screen.queryByLabelText("Column filter search") as HTMLInputElement;
+    expect(search).toBeInTheDocument();
+    await user.type(search, "Te");
+
+    // Expect testers to be checked
+    expect(searchToggle).toBeChecked();
+    expect(allToggle.indeterminate).toBe(true);
+    expect(screen.queryByText("4 items selected")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Tester 1")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Tester 1")).toBeChecked();
+
+    // Uncheck match
+    const matchToggle = screen.queryByLabelText("Match search filter") as HTMLInputElement;
+    expect(matchToggle).toBeInTheDocument();
+    expect(matchToggle).toBeChecked();
+    await user.click(matchToggle);
+    expect(screen.queryByText("4 items selected")).toBeInTheDocument();
+
+    // Remove current search item
+    expect(screen.queryByLabelText("Tester 4")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Tester 4")).toBeChecked();
+    await user.click(screen.queryByLabelText("Tester 4")!.parentElement!);
+    expect(screen.queryByLabelText("Tester 4")).not.toBeChecked();
+    expect(screen.queryByText("3 items selected")).toBeInTheDocument();
     expect(searchToggle.indeterminate).toBe(true);
+
+    // Toggle back up to 4 items
     await user.click(searchToggle);
-    expect(mockSet).toHaveBeenLastCalledWith([
-      {
-        columnName: "displayName",
-        values: [],
-      },
-    ]);
+    expect(screen.queryByLabelText("Tester 4")).toBeChecked();
+    expect(screen.queryByText("4 items selected")).toBeInTheDocument();
+
+    // Add different search text
+    await user.clear(search);
+    await user.type(search, "oth");
+    expect(screen.queryByText("4 items selected")).toBeInTheDocument();
+    const otherUserToggle = screen.queryByLabelText("Other user");
+    expect(otherUserToggle).toBeInTheDocument();
+    expect(otherUserToggle).not.toBeChecked();
+    await user.click(otherUserToggle!.parentElement!);
+    expect(otherUserToggle).toBeChecked();
+
+    // Remove previous item
+    expect(screen.queryByLabelText("Tester 2")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Tester 2")).toBeChecked();
+    await user.click(screen.queryByLabelText("Tester 2")!);
+    expect(screen.queryByLabelText("Tester 2")).not.toBeInTheDocument();
+
+    // Remove other user
+    await user.click(searchToggle);
+    expect(screen.queryByLabelText("Other user")).not.toBeChecked();
   });
 });

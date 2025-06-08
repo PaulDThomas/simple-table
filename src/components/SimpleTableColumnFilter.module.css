@@ -44,6 +44,17 @@
   padding: 0 !important;
 }
 
+.table > thead > tr > th,
+.table > tbody > tr > td {
+  height: 16px;
+  line-height: 16px;
+  font-size: 14px;
+  font-weight: 400;
+  color: black;
+  background-color: var(--st-main-background-color);
+  text-align: left;
+}
+
 .search {
   display: flex;
   flex-direction: row;
