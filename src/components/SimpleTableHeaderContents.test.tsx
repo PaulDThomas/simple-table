@@ -6,8 +6,11 @@ import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableHeaderContents } from "./SimpleTableHeaderContents";
 import * as stp from "./SimpleTablePopover";
 
-const mockSort = jest.fn();
+jest.mock("./SimpleTablePopover");
 
+const mockSort = jest.fn();
+const mockSortUp: ISimpleTableSort = { name: "displayName", asc: true };
+const mockSortDown: ISimpleTableSort = { name: "displayName", asc: false };
 const mockFields: ISimpleTableField[] = [
   { name: "tlfId", hidden: true },
   {
@@ -26,11 +29,6 @@ const mockData: ISimpleTableRow[] = [
   { TlfId: 2, displayName: "Tester", description: "A tester" },
   { TlfId: 3, displayName: "Other user", description: "Important VIP" },
 ];
-
-const mockSortUp: ISimpleTableSort = { name: "displayName", asc: true };
-const mockSortDown: ISimpleTableSort = { name: "displayName", asc: false };
-
-const mockSorting = jest.fn();
 
 describe("Simple table header contents renders", () => {
   test("Hidden field", async () => {
@@ -117,7 +115,7 @@ describe("Simple table header contents renders", () => {
             viewData: mockData,
             totalRows: mockData.length,
             sortBy: mockSortUp,
-            updateSortBy: mockSorting,
+            updateSortBy: mockSort,
             currentColumnItems: [
               { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
@@ -158,7 +156,7 @@ describe("Simple table header contents renders", () => {
             viewData: mockData,
             totalRows: mockData.length,
             sortBy: mockSortUp,
-            updateSortBy: mockSorting,
+            updateSortBy: mockSort,
             currentColumnItems: [
               { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
@@ -199,7 +197,7 @@ describe("Simple table header contents renders", () => {
             viewData: mockData,
             totalRows: mockData.length,
             sortBy: mockSortUp,
-            updateSortBy: mockSorting,
+            updateSortBy: mockSort,
             currentColumnItems: [
               { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
@@ -238,7 +236,7 @@ describe("Simple table header contents renders", () => {
             viewData: mockData,
             totalRows: mockData.length,
             sortBy: mockSortDown,
-            updateSortBy: mockSorting,
+            updateSortBy: mockSort,
             currentColumnItems: [
               { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
@@ -257,7 +255,7 @@ describe("Simple table header contents renders", () => {
     const desc = screen.queryByText("Description") as HTMLDivElement;
     expect(desc).toBeInTheDocument();
     await user.click(desc);
-    expect(mockSorting).not.toHaveBeenCalledWith(mockFields[2]);
+    expect(mockSort).not.toHaveBeenCalledWith(mockFields[2]);
   });
 });
 
@@ -277,7 +275,7 @@ describe("Filter on column values", () => {
             viewData: mockData,
             totalRows: mockData.length,
             sortBy: mockSortDown,
-            updateSortBy: mockSorting,
+            updateSortBy: mockSort,
             currentColumnItems: [
               { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],
@@ -318,7 +316,7 @@ describe("Filter on column values", () => {
             viewData: mockData,
             totalRows: mockData.length,
             sortBy: mockSortUp,
-            updateSortBy: mockSorting,
+            updateSortBy: mockSort,
             columnWidths: [],
             currentColumnItems: [
               { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
@@ -359,7 +357,7 @@ describe("Custom render", () => {
             viewData: mockData,
             totalRows: mockData.length,
             sortBy: mockSortUp,
-            updateSortBy: mockSorting,
+            updateSortBy: mockSort,
             currentColumnItems: [
               { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
             ],

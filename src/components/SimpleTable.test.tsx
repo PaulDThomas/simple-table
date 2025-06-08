@@ -5,6 +5,8 @@ import { localStorageMock } from "../../__dummy__/localStorageMock";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTable } from "./SimpleTable";
 
+jest.mock("./SimpleTablePopover");
+
 enum eAccessLevel {
   lead,
   editor,
@@ -681,6 +683,7 @@ describe("Test callbacks", () => {
         },
       },
     ];
+    Object.defineProperty(console, "warn", { value: jest.fn() });
     await act(async () =>
       render(
         <SimpleTable

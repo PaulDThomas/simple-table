@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./SimpleTableHeaderContents.module.css";
 
-interface SimpleTablePopoverProps {
+export interface SimpleTablePopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   isVisible: boolean;
   anchorElement: HTMLElement | null;
@@ -14,16 +14,21 @@ export const SimpleTablePopover = ({
   isVisible,
   anchorElement,
   onClose,
+  ...rest
 }: SimpleTablePopoverProps): JSX.Element | null => {
-  const [position, setPosition] = useState<{ top: number | undefined; left: number | undefined }>({
+  const [position, setPosition] = useState<{
+    top: number | undefined;
+    left: number | undefined;
+    right: number | undefined;
+  }>({
     top: undefined,
     left: undefined,
+    right: undefined,
   });
+  const [alignment, setAlignment] = useState<"left" | "right">("left");
   const popoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isVisible || !anchorElement) return;
-
     const updatePosition = () => {
       if (!anchorElement || !popoverRef.current) return;
 
@@ -37,7 +42,7 @@ export const SimpleTablePopover = ({
         anchorRect.bottom < 8 ||
         anchorRect.right < 8 ||
         anchorRect.top > windowHeight ||
-        anchorRect.left > windowWidth
+        anchorRect.right > windowWidth
       ) {
         onClose();
         return;
@@ -46,15 +51,29 @@ export const SimpleTablePopover = ({
       // Default position below the anchor
       const top = anchorRect.bottom;
       const left = anchorRect.left;
+      const right = anchorRect.right;
 
       // Check horizontal boundaries
-      if (left + popoverRect.width > windowWidth) {
-        const newWidth = windowWidth - left - 24;
-        if (newWidth < 50) {
+      if (alignment === "right") {
+        // Close if there is no room
+        if (right - popoverRect.width <= 0 && left + popoverRect.width >= windowWidth) {
           onClose();
           return;
         }
-        popoverRef.current.style.width = `${newWidth}px`;
+        // If right alignment goes out of bounds, switch to left alignment
+        if (left + popoverRect.width < windowWidth - 8) {
+          setAlignment("left");
+        }
+      } else {
+        // Close if there is no room
+        if (left + popoverRect.width >= windowWidth - 8 && right - popoverRect.width <= 0) {
+          onClose();
+          return;
+        }
+        // If left alignment goes out of bounds, switch to right alignment
+        if (left + popoverRect.width >= windowWidth - 8 && right - popoverRect.width > 0) {
+          setAlignment("right");
+        }
       }
 
       // Check vertical boundaries
@@ -67,7 +86,12 @@ export const SimpleTablePopover = ({
         popoverRef.current.style.height = `${newHeight}px`;
       }
 
-      setPosition({ top, left });
+      const newPosition = {
+        top,
+        left: alignment === "left" ? left : undefined,
+        right: alignment === "right" ? windowWidth - right : undefined,
+      };
+      setPosition(newPosition);
     };
 
     // Initial position update
@@ -85,35 +109,7 @@ export const SimpleTablePopover = ({
       }
     };
 
-    // Create a unified ResizeObserver to handle all resize scenarios
-    const resizeObserver = new ResizeObserver((entries) => {
-      // Check if the popover itself is resizing
-      const popoverEntry = entries.find((entry) => entry.target === popoverRef.current);
-
-      if (popoverEntry && popoverRef.current) {
-        const popoverRect = popoverRef.current.getBoundingClientRect();
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-
-        // Check if popover extends beyond window boundaries
-        if (popoverRect.right > windowWidth) {
-          // Adjust width to fit window
-          const newWidth = windowWidth - popoverRect.left - 10;
-          if (newWidth < 50) onClose();
-          popoverRef.current.style.width = `${newWidth}px`;
-        }
-
-        if (popoverRect.bottom > windowHeight) {
-          // Adjust height to fit window
-          const newHeight = windowHeight - popoverRect.top - 10;
-          if (newHeight < 50) onClose();
-          popoverRef.current.style.height = `${newHeight}px`;
-        }
-      }
-
-      // Always update position on any resize event
-      updatePosition();
-    });
+    const resizeObserver = new ResizeObserver(updatePosition);
 
     // Observe the popover and anchor element for resizing
     if (popoverRef.current) {
@@ -139,19 +135,21 @@ export const SimpleTablePopover = ({
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isVisible, anchorElement, onClose]);
+  }, [alignment, anchorElement, isVisible, onClose]);
 
   if (!isVisible) return null;
 
   return createPortal(
     <div
+      {...rest}
       ref={popoverRef}
       className={styles.filterHolder}
       style={{
-        visibility:
-          position.top !== undefined && position.left !== undefined ? "visible" : "hidden",
+        visibility: position.top !== undefined ? "visible" : "hidden",
         top: `${position.top}px`,
-        left: `${position.left}px`,
+        left: position.left !== undefined ? `${position.left}px` : undefined,
+        right: position.right !== undefined ? `${position.right}px` : undefined,
+        resize: alignment === "right" ? "none" : undefined,
       }}
     >
       {children}

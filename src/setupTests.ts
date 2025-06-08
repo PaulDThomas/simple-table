@@ -1,12 +1,13 @@
 import "@testing-library/jest-dom";
+import { cleanup } from "@testing-library/react";
 
 beforeAll(() => {});
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
+beforeEach(() => {});
 
 afterEach(() => {
+  cleanup();
+  jest.clearAllMocks();
   jest.restoreAllMocks();
 });
 
