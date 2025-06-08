@@ -11,7 +11,7 @@ export const SimpleTableSelectHeader = (): JSX.Element => {
       if (simpleTableContext.currentSelection?.length === simpleTableContext.totalRows) {
         allCheck.current.checked = true;
         allCheck.current.indeterminate = false;
-      } else if ((simpleTableContext.currentSelection?.length ?? 0) === 0) {
+      } else if (simpleTableContext.currentSelection.length === 0) {
         allCheck.current.checked = false;
         allCheck.current.indeterminate = false;
       } else {
@@ -19,7 +19,7 @@ export const SimpleTableSelectHeader = (): JSX.Element => {
         allCheck.current.indeterminate = true;
       }
     }
-  }, [simpleTableContext.currentSelection?.length, simpleTableContext.totalRows]);
+  }, [simpleTableContext.currentSelection.length, simpleTableContext.totalRows]);
 
   return (
     <th className={styles.cell}>

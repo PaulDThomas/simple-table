@@ -15,7 +15,7 @@ export const SimpleTableRow = ({ rowId, rowNumber }: SimpleTableRowProps): JSX.E
     <tr
       id={`${simpleTableContext.id}-row-${rowId}`}
       className={
-        (simpleTableContext.currentSelection?.findIndex((s) => s === rowId) ?? -1) > -1
+        simpleTableContext.currentSelection.findIndex((s) => s === rowId) > -1
           ? styles.selected
           : undefined
       }
@@ -28,9 +28,7 @@ export const SimpleTableRow = ({ rowId, rowNumber }: SimpleTableRowProps): JSX.E
               role="checkbox"
               type="checkbox"
               className={simpleTableContext.filterCheckClassName}
-              checked={
-                (simpleTableContext.currentSelection?.findIndex((s) => s === rowId) ?? -1) > -1
-              }
+              checked={simpleTableContext.currentSelection.findIndex((s) => s === rowId) > -1}
               onChange={() =>
                 simpleTableContext.toggleSelection && simpleTableContext.toggleSelection(rowId)
               }

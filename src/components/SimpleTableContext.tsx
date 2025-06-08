@@ -24,7 +24,7 @@ export interface ISimpleTableContext {
   setSearchText: (ret: string) => void;
   sortBy?: ISimpleTableSort;
   updateSortBy: (ret: ISimpleTableField) => void;
-  currentSelection?: Key[];
+  currentSelection: Key[];
   toggleAllCurrentSelection: () => void;
   toggleSelection: (ret: Key) => void;
 
@@ -63,6 +63,7 @@ export const defaultContext: ISimpleTableContext = {
   setFilterData: defaultFn,
   setSearchText: defaultFn,
   updateSortBy: defaultFn,
+  currentSelection: [],
   toggleAllCurrentSelection: defaultFn,
   toggleSelection: defaultFn,
   setColumnWidth: defaultFn,

@@ -60,7 +60,7 @@ export const SimpleTable = ({
   keyField,
   data,
   selectable = false,
-  currentSelection,
+  currentSelection = [],
   setCurrentSelection,
   showHeader = true,
   showSearch = true,
@@ -214,28 +214,29 @@ export const SimpleTable = ({
       )
       .map((rowData) => rowData[keyField] as Key);
     // Add if any of the current selection are not selected
-    if (setCurrentSelection && viewedKeys.some((v) => !currentSelection?.includes(v))) {
-      setCurrentSelection([
-        ...(currentSelection ?? []),
+    if (viewedKeys.some((v) => !currentSelection?.includes(v))) {
+      setCurrentSelection?.([
+        ...currentSelection,
         ...viewedKeys.filter((v) => !currentSelection?.includes(v)),
       ]);
     }
     // Or remove if any of the current selection are all selection
     else {
-      setCurrentSelection?.(currentSelection?.filter((s) => !viewedKeys.includes(s)) ?? []);
+      setCurrentSelection?.(currentSelection.filter((s) => !viewedKeys.includes(s)));
     }
   }, [currentSelection, keyField, setCurrentSelection, viewData]);
   // Toggle individual row
   const toggleSelection = useCallback(
     (rowId: Key) => {
       // Check key exists
-      if (tableData.findIndex((row) => row[keyField] === rowId) === -1) return;
-      // Create new selection
-      const newSelection = [...(currentSelection ?? [])];
-      const ix = newSelection.findIndex((s) => s === rowId);
-      if (ix > -1) newSelection.splice(ix, 1);
-      else newSelection.push(rowId);
-      setCurrentSelection?.(newSelection);
+      if (tableData.findIndex((row) => row[keyField] === rowId) > -1) {
+        // Create new selection
+        const newSelection = [...currentSelection];
+        const ix = newSelection.findIndex((s) => s === rowId);
+        if (ix > -1) newSelection.splice(ix, 1);
+        else newSelection.push(rowId);
+        setCurrentSelection?.(newSelection);
+      }
     },
     [currentSelection, keyField, setCurrentSelection, tableData],
   );
@@ -394,10 +395,8 @@ export const SimpleTable = ({
               {showHeader && (
                 <>
                   {headerLabel}
-                  {selectable && (currentSelection?.length ?? 0) > 0 && (
-                    <small>
-                      {} {currentSelection?.length} selected
-                    </small>
+                  {selectable && currentSelection.length > 0 && (
+                    <small>{currentSelection.length} selected</small>
                   )}
                 </>
               )}

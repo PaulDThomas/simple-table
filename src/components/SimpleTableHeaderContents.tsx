@@ -20,7 +20,7 @@ export const SimpleTableHeaderContents = ({
 
   const isFilterActive = simpleTableContext.currentColumnFilter === columnNumber;
 
-  const toggleFilter: React.MouseEventHandler<SVGSVGElement> = (e) => {
+  const toggleFilter: React.MouseEventHandler<SVGSVGElement> = async (e) => {
     e.stopPropagation();
     e.preventDefault();
     simpleTableContext.setCurrentColumnFilter?.(

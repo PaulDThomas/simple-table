@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { act, useState } from "react";
+import { localStorageMock } from "../../__dummy__/localStorageMock";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTable } from "./SimpleTable";
 
@@ -70,6 +71,7 @@ describe("Simple table rendering", () => {
             headerLabel="TEST TABLE"
             searchLabel="SEARCH HERE"
             filterLabel="FILTER HERE"
+            showHeader={false}
             showFilter={false}
             showSearch={false}
             fields={mockFields}
@@ -80,7 +82,7 @@ describe("Simple table rendering", () => {
       ),
     );
     const container = screen.getByTestId("container");
-    expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+    expect(screen.queryByText("TEST TABLE")).not.toBeInTheDocument();
     expect(screen.queryByText("SEARCH HERE")).not.toBeInTheDocument();
     expect(screen.queryByText("FILTER HERE")).not.toBeInTheDocument();
     expect(screen.queryByText("PRID")).not.toBeInTheDocument();
@@ -445,7 +447,24 @@ describe("Toggle rows", () => {
 });
 
 describe("Local settings", () => {
-  test("Load settings", async () => {
+  beforeAll(() => {
+    // Mock localStorage
+    Object.defineProperty(window, "localStorage", { value: new localStorageMock() });
+  });
+
+  test("Load settings, all page rows", async () => {
+    // Add local setting for asup.simple-table.test-table.settings
+    window.localStorage.setItem(
+      "asup.simple-table.test-table.settings",
+      JSON.stringify({
+        headerWidths: [
+          { name: "hierarchyLabel", width: "200px" },
+          { name: "displayName", width: "300px" },
+        ],
+        pageRows: "Infinity",
+      }),
+    );
+
     await act(async () => {
       render(
         <SimpleTable
@@ -466,6 +485,59 @@ describe("Local settings", () => {
     });
 
     expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+    const pagerSelect = screen.getByLabelText("Visible rows");
+    expect(pagerSelect).toBeInTheDocument();
+    expect(pagerSelect).toHaveValue("All");
+
+    window.localStorage.removeItem("asup.simple-table.test-table.settings");
+  });
+
+  test("Load settings, some page rows, then set to All", async () => {
+    // Add local setting for asup.simple-table.test-table.settings
+    window.localStorage.setItem(
+      "asup.simple-table.test-table.settings",
+      JSON.stringify({
+        headerWidths: [
+          { name: "hierarchyLabel", width: "200px" },
+          { name: "displayName", width: "300px" },
+        ],
+        pageRows: "50",
+      }),
+    );
+
+    await act(async () => {
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          searchLabel="SEARCH HERE"
+          filterLabel="FILTER HERE"
+          showFilter={true}
+          showSearch={true}
+          fields={mockFields}
+          keyField={"userId"}
+          data={mockAccesses}
+          selectable
+          currentSelection={[1, 2]}
+          setCurrentSelection={mockSetSelection}
+        />,
+      );
+    });
+
+    expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+    const pagerSelect = screen.getByLabelText("Visible rows");
+    expect(pagerSelect).toBeInTheDocument();
+    expect(pagerSelect).toHaveValue("50");
+
+    // Now set to "All"
+    const user = userEvent.setup();
+    await act(async () => await user.selectOptions(pagerSelect, "All"));
+    expect(pagerSelect).toHaveValue("All");
+    const settings = window.localStorage.getItem("asup.simple-table.test-table.settings") as string;
+    const parsedSettings = JSON.parse(settings);
+    expect(parsedSettings.pageRows).toEqual("Infinity");
+
+    window.localStorage.removeItem("asup.simple-table.test-table.settings");
   });
 });
 
