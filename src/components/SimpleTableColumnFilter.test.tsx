@@ -133,6 +133,35 @@ describe("SimpleTableColumnFilter", () => {
     expect(mockSetCurrentFilter).toHaveBeenCalledWith(null);
   });
 
+  test("Remove existing filter by selecting all", async () => {
+    const user = userEvent.setup();
+    const mockSet = jest.fn();
+    const mockSetCurrentFilter = jest.fn();
+    await act(async () => {
+      render(
+        <MockComponent
+          currentColumnFilters={[{ columnName: "displayName", values: ["Tester 1"] }]}
+          setCurrentColumnFilter={mockSetCurrentFilter}
+          setCurrentColumnFilters={mockSet}
+        />,
+      );
+    });
+    const toggle = screen.queryByLabelText("Column filter toggle") as HTMLInputElement;
+    expect(toggle).toBeInTheDocument();
+    expect(toggle).not.toBeChecked();
+    expect(screen.queryByText("1 item selected")).toBeInTheDocument();
+    await user.click(toggle);
+    expect(screen.queryByText("6 items selected")).toBeInTheDocument();
+    expect(toggle).toBeChecked();
+
+    // Close screen
+    const closeButton = screen.queryByLabelText("Close filter");
+    expect(closeButton).toBeInTheDocument();
+    await user.click(closeButton!);
+    expect(mockSetCurrentFilter).toHaveBeenCalledWith(null);
+    expect(mockSet).toHaveBeenCalledWith([]);
+  });
+
   test("Toggle search filter", async () => {
     const user = userEvent.setup();
     const mockSet = jest.fn();
@@ -148,7 +177,7 @@ describe("SimpleTableColumnFilter", () => {
     });
     const allToggle = screen.queryByLabelText("Column filter toggle") as HTMLInputElement;
     expect(allToggle).toBeInTheDocument();
-    expect(allToggle).not.toBeChecked();
+    expect(allToggle).toBeChecked();
     const searchToggle = screen.queryByLabelText("Column search filter toggle") as HTMLInputElement;
     expect(searchToggle).toBeInTheDocument();
     expect(searchToggle).not.toBeChecked();

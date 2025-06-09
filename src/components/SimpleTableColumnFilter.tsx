@@ -1,3 +1,4 @@
+import { isEqual } from "lodash";
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import cbStyles from "./SimpleTableCheckBox.module.css";
 import styles from "./SimpleTableColumnFilter.module.css";
@@ -23,25 +24,8 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
 
   const [currentFilter, setCurrentFilter] = useState<string[]>(
     simpleTableContext.currentColumnFilters?.find((cf) => cf.columnName === columnName)?.values ??
-      [],
+      availableList,
   );
-
-  useEffect(() => {
-    const attemptFocus = () => {
-      if (inputRef.current && document.activeElement !== inputRef.current) {
-        inputRef.current.focus();
-      }
-    };
-
-    attemptFocus();
-    const timer1 = setTimeout(attemptFocus, 50);
-    const timer2 = setTimeout(attemptFocus, 150);
-
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-    };
-  }, []);
 
   const onClose = useCallback(
     (values?: string[]) => {
@@ -54,10 +38,17 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
         const ix = simpleTableContext.currentColumnFilters.findIndex(
           (cf) => cf.columnName === columnName,
         );
-        if (ix > -1) {
-          newColumnFilters.splice(ix, 1, newColumnFilter);
+        // If the current filter is the same as the available list, remove it
+        if (isEqual(availableList, currentFilter)) {
+          if (ix > -1) {
+            newColumnFilters.splice(ix, 1);
+          }
         } else {
-          newColumnFilters.push(newColumnFilter);
+          if (ix > -1) {
+            newColumnFilters.splice(ix, 1, newColumnFilter);
+          } else {
+            newColumnFilters.push(newColumnFilter);
+          }
         }
         simpleTableContext.setCurrentColumnFilters(newColumnFilters);
       }
@@ -65,7 +56,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
       setCurrentFilter([]);
       simpleTableContext.setCurrentColumnFilter(null);
     },
-    [columnName, currentFilter, simpleTableContext],
+    [availableList, columnName, currentFilter, simpleTableContext],
   );
 
   // Toggle all viewed rows
@@ -98,6 +89,79 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
       }
     }
   }, [availableList, currentFilter, localFilter]);
+
+  const selectBodyRow = useCallback(
+    (
+      e: React.MouseEvent<HTMLElement, MouseEvent> | React.ChangeEvent<HTMLInputElement>,
+      v: string,
+    ) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const newFilter = [...currentFilter];
+      const ix = newFilter.findIndex((cf) => cf === v);
+      if (ix > -1) {
+        newFilter.splice(ix, 1);
+      } else {
+        newFilter.push(v);
+      }
+      setCurrentFilter(newFilter);
+    },
+    [currentFilter],
+  );
+
+  const bodyRow = (v: string, i: number) => (
+    <tr key={i}>
+      <td>
+        <div
+          className={cbStyles.checkboxContainer}
+          onClick={(e) => selectBodyRow(e, v)}
+        >
+          <input
+            aria-label={v}
+            id={`${simpleTableContext.id}-columnfilter-${columnName}-check-${i}`}
+            type="checkbox"
+            role="checkbox"
+            className={simpleTableContext.filterCheckClassName}
+            checked={currentFilter.includes(v)}
+            onChange={(e) => selectBodyRow(e, v)}
+          />
+        </div>
+      </td>
+      <td>{v}</td>
+    </tr>
+  );
+
+  useEffect(() => {
+    const attemptFocus = () => {
+      if (inputRef.current && document.activeElement !== inputRef.current) {
+        inputRef.current.focus();
+      }
+    };
+
+    attemptFocus();
+    const timer1 = setTimeout(attemptFocus, 50);
+    const timer2 = setTimeout(attemptFocus, 150);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, []);
+
+  // If enter is pressed while the filter is open, apply the filter
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
 
   // Manage the state of the match search checkbox
   useEffect(() => {
@@ -141,47 +205,6 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
     }
   }, [availableList, availableList?.length, currentFilter, currentFilter?.length, localFilter]);
 
-  const selectBodyRow = useCallback(
-    (
-      e: React.MouseEvent<HTMLElement, MouseEvent> | React.ChangeEvent<HTMLInputElement>,
-      v: string,
-    ) => {
-      e.stopPropagation();
-      e.preventDefault();
-      const newFilter = [...currentFilter];
-      const ix = newFilter.findIndex((cf) => cf === v);
-      if (ix > -1) {
-        newFilter.splice(ix, 1);
-      } else {
-        newFilter.push(v);
-      }
-      setCurrentFilter(newFilter);
-    },
-    [currentFilter],
-  );
-
-  const bodyRow = (v: string, i: number) => (
-    <tr key={i}>
-      <td>
-        <div
-          className={cbStyles.checkboxContainer}
-          onClick={(e) => selectBodyRow(e, v)}
-        >
-          <input
-            aria-label={v}
-            id={`${simpleTableContext.id}-columnfilter-${columnName}-check-${i}`}
-            type="checkbox"
-            role="checkbox"
-            className={simpleTableContext.filterCheckClassName}
-            checked={currentFilter.includes(v)}
-            onChange={(e) => selectBodyRow(e, v)}
-          />
-        </div>
-      </td>
-      <td>{v}</td>
-    </tr>
-  );
-
   return (
     <>
       <table className={styles.table}>
@@ -203,16 +226,6 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
                           v.toLowerCase().includes(e.currentTarget.value.toLowerCase()),
                         ),
                       );
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      onClose(
-                        availableList.filter((v) =>
-                          v.toLowerCase().includes(e.currentTarget.value.toLowerCase()),
-                        ),
-                      );
-                      setLocalFilter("");
                     }
                   }}
                 />

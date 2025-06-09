@@ -19,6 +19,12 @@ export const SimpleTableHeaderContents = ({
   const filterIconRef = useRef<HTMLSpanElement>(null);
 
   const isFilterActive = simpleTableContext.currentColumnFilter === columnNumber;
+  const thisColumnFilter = simpleTableContext.currentColumnFilters.find(
+    (cf) => cf.columnName === field.name,
+  )?.values;
+  const thisColumnItems = simpleTableContext.currentColumnItems.find(
+    (cf) => cf.columnName === field.name,
+  )?.values;
 
   const toggleFilter: React.MouseEventHandler<SVGSVGElement> = async (e) => {
     e.stopPropagation();
@@ -64,17 +70,14 @@ export const SimpleTableHeaderContents = ({
           ) : undefined}
           {field.canColumnFilter && (
             <span ref={filterIconRef}>
-              {simpleTableContext.currentColumnItems.find((cf) => cf.columnName === field.name)
-                ?.values.length ===
-              simpleTableContext.currentColumnFilters.find((cf) => cf.columnName === field.name)
-                ?.values.length ? (
-                <FilterInactiveSvg
-                  aria-label="Column filter"
+              {thisColumnFilter && thisColumnFilter.length !== thisColumnItems?.length ? (
+                <FilterActiveSvg
+                  aria-label="Column filter (Active)"
                   onClick={toggleFilter}
                 />
               ) : (
-                <FilterActiveSvg
-                  aria-label="Column filter (Active)"
+                <FilterInactiveSvg
+                  aria-label="Column filter"
                   onClick={toggleFilter}
                 />
               )}

@@ -87,9 +87,17 @@ const App = (): JSX.Element => {
                     <button
                       onClick={() => {
                         setData(data.filter((r) => !selected.includes(r.id as Key)));
+                        setSelected([]);
                       }}
                     >
                       Remove selected
+                    </button>
+                    <button
+                      onClick={() => {
+                        setData(mockData.map((r) => ({ ...r, selected: "No" })));
+                      }}
+                    >
+                      Reset
                     </button>
                   </td>
                   <td>Widths: {receivedWidths.map((w) => `${w.name}:${w.width}`).join("|")}</td>

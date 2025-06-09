@@ -1,4 +1,3 @@
-import { isEqual } from "lodash";
 import { Key, useCallback, useEffect, useMemo, useState } from "react";
 import { columnFilterValue } from "../functions/simpleTableNullDate";
 import styles from "./SimpleTable.module.css";
@@ -85,6 +84,7 @@ export const SimpleTable = ({
   ...rest
 }: SimpleTableProps): JSX.Element => {
   const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
+  useEffect(() => setTableData(data), [data]);
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
   const [sortBy, setSortBy] = useState<ISimpleTableSort | null>(null);
   const [searchText, setSearchText] = useState<string>("");
@@ -192,18 +192,6 @@ export const SimpleTable = ({
       }));
     return ret;
   }, [fields, tableData]);
-
-  // Update when data is changed
-  useEffect(() => {
-    setTableData(data);
-    const newCurrentColumnFilters = currentColumnItems.map((ci) => ({
-      columnName: ci.columnName,
-      values:
-        currentColumnFilters.find((cf) => cf.columnName === ci.columnName)?.values ?? ci.values,
-    }));
-    if (!isEqual(currentColumnFilters, newCurrentColumnFilters))
-      setCurrentColumnFilters(newCurrentColumnFilters);
-  }, [currentColumnFilters, currentColumnItems, data]);
 
   // Toggle all viewed rows
   const toggleAllCurrentSelection = useCallback(() => {
