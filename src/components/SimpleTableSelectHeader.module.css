@@ -1,0 +1,17 @@
+.cell {
+  border-left: 1px dotted transparent;
+  border-right: 1px dotted transparent;
+  left: 0;
+  opacity: 1;
+  position: sticky;
+  top: 0;
+  width: 20px;
+  white-space: nowrap;
+  z-index: 2;
+  background-color: var(--st-header-background-color);
+}
+
+.cell:hover {
+  border-left: 1px solid rgba(0, 0, 0, 0.75);
+  border-right: 1px solid rgba(0, 0, 0, 0.75);
+}

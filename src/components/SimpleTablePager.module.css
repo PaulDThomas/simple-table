@@ -1,0 +1,14 @@
+.footer {
+  height: 1.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.footer > span {
+  display: flex;
+  align-items: center;
+}

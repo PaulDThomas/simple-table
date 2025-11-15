@@ -1,8 +1,11 @@
 import { Key, useContext, useMemo } from "react";
-import { iSimpleTableField, iSimpleTableRow } from "./interface";
+import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTableContext } from "./SimpleTableContext";
+import styles from "./SimpleTableCell.module.css";
+import "./SimpleTableCell.css";
+import { simpleTableNullDate } from "../functions/simpleTableNullDate";
 
-interface iSimpleTableCellProps {
+interface SimpleTableCellProps {
   rowId: Key;
   cellField: string;
   columnNumber: number;
@@ -14,15 +17,15 @@ export const SimpleTableCell = ({
   cellField,
   columnNumber,
   rowNumber,
-}: iSimpleTableCellProps): JSX.Element => {
+}: SimpleTableCellProps): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
 
-  const field: iSimpleTableField | undefined = useMemo(
+  const field: ISimpleTableField | undefined = useMemo(
     () => simpleTableContext.fields.find((f) => f.name === cellField),
     [cellField, simpleTableContext.fields],
   );
 
-  const rowData: iSimpleTableRow | undefined = useMemo(
+  const rowData: ISimpleTableRow | undefined = useMemo(
     () => simpleTableContext.viewData.find((d) => d[simpleTableContext.keyField] === rowId),
     [rowId, simpleTableContext.keyField, simpleTableContext.viewData],
   );
@@ -33,17 +36,21 @@ export const SimpleTableCell = ({
         field?.name ?? columnNumber
       }`}
       key={cellField}
-      className={"simpletable-cell"}
+      className={styles.cell}
     >
-      <div>
-        {!field || !rowData
-          ? `${!rowData ? "Row data" : ""}${!rowData && !field ? ", " : ""}${
-              !field ? "Field" : ""
-            } not found`
-          : field.renderFn
+      {!field || !rowData
+        ? `${!rowData ? "Row data" : ""}${!rowData && !field ? ", " : ""}${
+            !field ? "Field" : ""
+          } not found`
+        : field.renderFn
           ? field.renderFn({ rowData, columnNumber, field, cellField: field.name, rowNumber })
-          : String(rowData[field.name])}
-      </div>
+          : simpleTableNullDate({
+              rowData,
+              columnNumber,
+              field,
+              cellField: field.name,
+              rowNumber,
+            })}
     </td>
   );
 };

@@ -1,25 +1,27 @@
 import { Key, useState } from "react";
-import { mockData } from "../../src/__mocks__/mock_data";
-import { mock_fields } from "../../src/__mocks__/mock_fields";
-import { SimpleTable, iSimpleTableRow } from "../../src/components";
+import { mockData } from "../../__dummy__/mock_data";
+import { mockFields } from "../../__dummy__/mock_fields";
+import { ISimpleTableRow, SimpleTable } from "../../src/components";
 
 // Main application
 const App = (): JSX.Element => {
-  const [data, setData] = useState<iSimpleTableRow[]>(mockData);
+  const [data, setData] = useState<ISimpleTableRow[]>(
+    mockData.map((r) => ({ ...r, selected: "No" })),
+  );
   const [selected, setSelected] = useState<Key[]>([]);
   const [height, setHeight] = useState<string>("600px");
-  const [width, setWidth] = useState<string>("600px");
+  const [width, setWidth] = useState<string>("1200px");
   const [title, setTitle] = useState<string>("");
-  const [receivedWidths, setReceivedWidths] = useState<(string | undefined)[]>([]);
+  const [receivedWidths, setReceivedWidths] = useState<{ name: string; width: string }[]>([]);
   const [showHeader, setShowTitle] = useState<boolean>(true);
   const [showFilter, setShowFilter] = useState<boolean>(true);
   const [showPager, setShowPager] = useState<boolean>(true);
   const [showSearch, setShowSearch] = useState<boolean>(true);
 
   return (
-    <div className='app-holder'>
-      <div className='app-border'>
-        <div className='app-inner'>
+    <div className="app-holder">
+      <div className="app-border">
+        <div className="app-inner">
           <div>
             <table>
               <tbody>
@@ -27,7 +29,7 @@ const App = (): JSX.Element => {
                   <td draggable>Height</td>
                   <td>
                     <input
-                      id='height'
+                      id="height"
                       value={height}
                       onChange={(e) => setHeight(e.currentTarget.value)}
                     />
@@ -35,37 +37,37 @@ const App = (): JSX.Element => {
                   <td>Width</td>
                   <td>
                     <input
-                      id='width'
+                      id="width"
                       value={width}
                       onChange={(e) => setWidth(e.currentTarget.value)}
                     />
                   </td>
                   <td>
-                    Title:{" "}
+                    Title:
                     <input
-                      id='show-title'
-                      type='checkbox'
+                      id="show-title"
+                      type="checkbox"
                       checked={showHeader}
                       onChange={() => setShowTitle(!showHeader)}
                     />
                     &nbsp;&nbsp;&nbsp; Search:{" "}
                     <input
-                      id='show-search'
-                      type='checkbox'
+                      id="show-search"
+                      type="checkbox"
                       checked={showSearch}
                       onChange={() => setShowSearch(!showSearch)}
                     />
                     &nbsp;&nbsp;&nbsp; Filter:{" "}
                     <input
-                      id='show-filter'
-                      type='checkbox'
+                      id="show-filter"
+                      type="checkbox"
                       checked={showFilter}
                       onChange={() => setShowFilter(!showFilter)}
                     />
                     &nbsp;&nbsp;&nbsp; Pager:{" "}
                     <input
-                      id='show-pager'
-                      type='checkbox'
+                      id="show-pager"
+                      type="checkbox"
                       checked={showPager}
                       onChange={() => setShowPager(!showPager)}
                     />
@@ -75,7 +77,7 @@ const App = (): JSX.Element => {
                   <td>Title</td>
                   <td>
                     <input
-                      id='title'
+                      id="title"
                       value={title}
                       onChange={(e) => setTitle(e.currentTarget.value)}
                     />
@@ -85,24 +87,32 @@ const App = (): JSX.Element => {
                     <button
                       onClick={() => {
                         setData(data.filter((r) => !selected.includes(r.id as Key)));
+                        setSelected([]);
                       }}
                     >
                       Remove selected
                     </button>
+                    <button
+                      onClick={() => {
+                        setData(mockData.map((r) => ({ ...r, selected: "No" })));
+                      }}
+                    >
+                      Reset
+                    </button>
                   </td>
-                  <td>Widths: {receivedWidths.join(".")}</td>
+                  <td>Widths: {receivedWidths.map((w) => `${w.name}:${w.width}`).join("|")}</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
           <div
-            className='table-holder'
-            style={{ backgroundColor: "cyan", height, width, maxWidth: "800px", padding: "1rem" }}
+            className="table-holder"
+            style={{ backgroundColor: "cyan", height, width, padding: "1rem" }}
           >
             <SimpleTable
-              id='ais'
-              fields={mock_fields}
+              id="ais"
+              fields={[{ name: "selected", label: "Sel" }, ...mockFields]}
               keyField={"id"}
               data={data}
               headerLabel={title}
@@ -110,11 +120,19 @@ const App = (): JSX.Element => {
               showSearch={showSearch}
               showFilter={showFilter}
               showPager={showPager}
-              filterLabel='Cars only'
+              filterLabel="Cars only"
               selectable
               currentSelection={selected}
-              setCurrentSelection={setSelected}
+              setCurrentSelection={(ret) => {
+                setSelected(ret);
+                const newData = data.map((r) => ({
+                  ...r,
+                  selected: ret.includes(r.id as Key) ? "Yes" : "No",
+                }));
+                setData(newData);
+              }}
               onWidthChange={(ret) => setReceivedWidths(ret)}
+              selectedBackgroundColor={"rgb(0,0,0,0.1)"}
             />
           </div>
         </div>

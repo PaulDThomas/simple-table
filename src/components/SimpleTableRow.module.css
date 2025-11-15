@@ -1,0 +1,17 @@
+tr.selected > td {
+  background-color: var(--st-selected-background-color);
+}
+
+.firstcol {
+  position: sticky;
+  left: 0;
+  opacity: 1;
+  z-index: 1;
+  border-left: 1px dotted transparent;
+  border-right: 1px dotted transparent;
+  background-color: var(--st-main-background-color);
+}
+.firstcol:hover {
+  border-left: 1px solid rgba(0, 0, 0, 0.75);
+  border-right: 1px solid rgba(0, 0, 0, 0.75);
+}

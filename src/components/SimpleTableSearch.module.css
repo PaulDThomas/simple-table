@@ -1,0 +1,20 @@
+.holder {
+  order: 2;
+  display: inline-flex;
+}
+.holder > div > input {
+  border-radius: 4px;
+  border: 1px solid black;
+  margin: 0.5rem;
+  padding: 0.25rem;
+}
+.holder > label {
+  margin-top: 0;
+  margin-bottom: 0;
+  align-self: center;
+  margin-right: 0.5rem;
+}
+
+.holder:last-child {
+  margin-right: 1rem;
+}

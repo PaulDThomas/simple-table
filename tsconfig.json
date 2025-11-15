@@ -14,13 +14,21 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "noEmit": true,
     "declaration": true,
-    "declarationDir": "types",
     "jsx": "react-jsx",
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules",
+        "options": {
+          "customMatcher": "\\.module\\.css$",
+          "classnameTransform": "asIs"
+        }
+      }
+    ]
   },
-  "include": ["src", "demo"],
-  "exclude": ["**/dist/"]
+  "include": ["global.d.ts", "src", "demo", "__dummy__"],
+  "exclude": ["node_modules", "dist", "demo/dist"]
 }

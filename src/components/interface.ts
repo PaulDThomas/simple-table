@@ -1,32 +1,32 @@
-export interface iSimpleTableRow {
+export interface ISimpleTableRow {
   [key: string]: unknown;
 }
 
-export interface iSimpleTableSort {
+export interface ISimpleTableSort {
   name: string;
   asc: boolean;
 }
 
-export interface iSimpleTableHeaderRenderProps {
+export interface ISimpleTableHeaderRenderProps {
   columnNumber: number;
-  field: iSimpleTableField;
+  field: ISimpleTableField;
 }
 
-export interface iSimpleTableCellRenderProps extends iSimpleTableHeaderRenderProps {
+export interface ISimpleTableCellRenderProps extends ISimpleTableHeaderRenderProps {
   cellField: string;
-  rowData: iSimpleTableRow;
+  rowData: ISimpleTableRow;
   rowNumber: number;
 }
 
-export interface iSimpleTableField {
+export interface ISimpleTableField {
   name: string;
   label?: string;
   hidden?: boolean;
   width?: string;
-  sortFn?: (a: iSimpleTableRow, b: iSimpleTableRow, sortBy: iSimpleTableSort) => number;
-  searchFn?: (a: iSimpleTableRow, searchText: string) => boolean;
-  filterOutFn?: (a: iSimpleTableRow) => boolean;
-  headerRenderFn?: (a: iSimpleTableHeaderRenderProps) => JSX.Element;
-  renderFn?: (a: iSimpleTableCellRenderProps) => JSX.Element;
+  sortFn?: (a: ISimpleTableRow, b: ISimpleTableRow, sortBy: ISimpleTableSort) => number;
+  searchFn?: (a: ISimpleTableRow, searchText: string) => boolean;
+  filterOutFn?: (a: ISimpleTableRow) => boolean;
+  headerRenderFn?: (a: ISimpleTableHeaderRenderProps) => JSX.Element;
+  renderFn?: (a: ISimpleTableCellRenderProps) => JSX.Element;
   canColumnFilter?: boolean;
 }

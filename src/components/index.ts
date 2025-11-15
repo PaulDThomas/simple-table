@@ -1,10 +1,10 @@
 import {
-  iSimpleTableCellRenderProps,
-  iSimpleTableField,
-  iSimpleTableSort,
-  iSimpleTableRow,
+  ISimpleTableCellRenderProps,
+  ISimpleTableField,
+  ISimpleTableSort,
+  ISimpleTableRow,
 } from "./interface";
 import { SimpleTable } from "./SimpleTable";
 
 export { SimpleTable };
-export type { iSimpleTableCellRenderProps, iSimpleTableField, iSimpleTableSort, iSimpleTableRow };
+export type { ISimpleTableCellRenderProps, ISimpleTableField, ISimpleTableSort, ISimpleTableRow };

@@ -1,6 +1,6 @@
-import { iSimpleTableField, simpleTableSortFn } from "../main";
+import { ISimpleTableField, simpleTableNullDate, simpleTableSortFn } from "../src/main";
 
-export const mock_fields: iSimpleTableField[] = [
+export const mockFields: ISimpleTableField[] = [
   { name: "id", hidden: true },
   { name: "n", label: "N", renderFn: ({ rowNumber }) => <>{rowNumber}</> },
   {
@@ -23,6 +23,7 @@ export const mock_fields: iSimpleTableField[] = [
         .toLowerCase()
         .includes(searchText.toLowerCase().trim()),
     sortFn: simpleTableSortFn,
+    renderFn: simpleTableNullDate,
     width: "120px",
     canColumnFilter: true,
   },
@@ -52,7 +53,11 @@ export const mock_fields: iSimpleTableField[] = [
     ),
     sortFn: simpleTableSortFn,
     renderFn: ({ rowData }) => {
-      return rowData.car_make ? <div>{rowData.car_make as string}</div> : <div>No car</div>;
+      return rowData.car_make ? (
+        <div className="overflow-hidden">{rowData.car_make as string}</div>
+      ) : (
+        <div>No car</div>
+      );
     },
     filterOutFn: (rowData) => (rowData.car_make as string | null) === null,
     width: "140px",
@@ -66,9 +71,6 @@ export const mock_fields: iSimpleTableField[] = [
         .toLowerCase()
         .includes(searchText.toLowerCase().trim()),
     sortFn: simpleTableSortFn,
-    renderFn: ({ rowData }) => {
-      return rowData.car_model ? <div>{rowData.car_model as string}</div> : <div />;
-    },
     width: "160px",
     canColumnFilter: true,
   },

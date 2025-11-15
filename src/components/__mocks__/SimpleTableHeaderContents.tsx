@@ -1,14 +1,14 @@
-import { iSimpleTableField } from "../interface";
+import { ISimpleTableField } from "../interface";
 
-interface iSimspleTableHeaderContentsProps {
-  field: iSimpleTableField;
+interface ISimspleTableHeaderContentsProps {
+  field: ISimpleTableField;
   columnNumber: number;
 }
 
 export const SimpleTableHeaderContents = ({
   field,
   columnNumber,
-}: iSimspleTableHeaderContentsProps): JSX.Element => {
+}: ISimspleTableHeaderContentsProps): JSX.Element => {
   return (
     <>
       {columnNumber}:{field.name}

@@ -1,14 +1,14 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { iSimpleTableField, iSimpleTableRow } from "./interface";
-import { SimpleTableContext } from "./SimpleTableContext";
+import { ISimpleTableField, ISimpleTableRow } from "./interface";
+import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableSelectHeader } from "./SimpleTableSelectHeader";
 
-const mockFields: iSimpleTableField[] = [
+const mockFields: ISimpleTableField[] = [
   { name: "userId", hidden: true, label: "UserId" },
   { name: "displayName", label: "Display name" },
 ];
 
-const mockData: iSimpleTableRow[] = [
+const mockData: ISimpleTableRow[] = [
   { userId: 1, displayName: "User 1" },
   { userId: 2, displayName: "User 2" },
   { userId: 3, displayName: "User 3" },
@@ -22,18 +22,13 @@ describe("Simple table header checkbox rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "testtable",
           fields: mockFields,
           keyField: "userId",
           viewData: mockData,
           totalRows: mockData.length,
-          firstRow: 0,
-          pageRows: 50,
           selectable: true,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -53,19 +48,14 @@ describe("Simple table header checkbox rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "testtable",
           fields: mockFields,
           keyField: "userId",
           viewData: mockData,
           totalRows: mockData.length,
           selectable: true,
-          firstRow: 0,
-          pageRows: 50,
           currentSelection: [1, 2, 3, "four"],
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -85,20 +75,15 @@ describe("Simple table header checkbox rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "testtable",
           fields: mockFields,
           keyField: "userId",
           viewData: mockData.slice(0, 1),
           totalRows: 1,
-          firstRow: 0,
-          pageRows: 50,
           selectable: true,
           currentSelection: [1, 2],
           toggleAllCurrentSelection: mockToggle,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>

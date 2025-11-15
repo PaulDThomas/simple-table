@@ -1,45 +1,45 @@
-import React, { Key } from "react";
-import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from "./interface";
+import { createContext, Key } from "react";
+import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
 
-export interface iSimpleTableColumnFilter {
+export interface ISimpleTableColumnFilter {
   columnName: string;
   values: string[];
 }
 
-export interface iSimpleTableContext {
+export interface ISimpleTableContext {
   id: string;
-  fields: iSimpleTableField[];
+  fields: ISimpleTableField[];
   keyField: string;
-  viewData: iSimpleTableRow[];
+  viewData: ISimpleTableRow[];
   totalRows: number;
-  setTableData?: (ret: iSimpleTableRow[]) => void;
+  setTableData: (ret: ISimpleTableRow[]) => void;
   selectable?: boolean;
   showSearch?: boolean;
   showFilter?: boolean;
   filterLabel?: string;
   filterData?: boolean;
-  setFilterData?: (ret: boolean) => void;
+  setFilterData: (ret: boolean) => void;
   searchLabel?: string;
   searchText?: string;
-  setSearchText?: (ret: string) => void;
-  sortBy?: iSimpleTableSort;
-  updateSortBy?: (ret: iSimpleTableField) => void;
-  currentSelection?: Key[];
-  toggleAllCurrentSelection?: () => void;
-  toggleSelection?: (ret: Key) => void;
+  setSearchText: (ret: string) => void;
+  sortBy?: ISimpleTableSort;
+  updateSortBy: (ret: ISimpleTableField) => void;
+  currentSelection: Key[];
+  toggleAllCurrentSelection: () => void;
+  toggleSelection: (ret: Key) => void;
 
-  columnWidths: (string | undefined)[];
-  setColumnWidth?: (col: number, width: string) => void;
+  columnWidths: { name: string; width: string }[];
+  setColumnWidth: (columnName: string, width: string) => void;
   pageRows: number;
-  setPageRows?: (ret: number) => void;
+  setPageRows: (ret: number) => void;
   firstRow: number;
-  setFirstRow?: (ret: number) => void;
+  setFirstRow: (ret: number) => void;
 
-  currentColumnItems: iSimpleTableColumnFilter[];
+  currentColumnItems: ISimpleTableColumnFilter[];
   currentColumnFilter: number | null;
-  setCurrentColumnFilter?: (ret: number | null) => void;
-  currentColumnFilters: iSimpleTableColumnFilter[];
-  setCurrentColumnFilters?: (ret: iSimpleTableColumnFilter[]) => void;
+  setCurrentColumnFilter: (ret: number | null) => void;
+  currentColumnFilters: ISimpleTableColumnFilter[];
+  setCurrentColumnFilters: (ret: ISimpleTableColumnFilter[]) => void;
 
   inputGroupClassName?: string;
   filterLabelClassName?: string;
@@ -50,17 +50,33 @@ export interface iSimpleTableContext {
   headerBackgroundColor?: string;
 }
 
-export const SimpleTableContext = React.createContext<iSimpleTableContext>({
+// istanbul ignore next
+const defaultFn = () => {};
+
+export const defaultContext: ISimpleTableContext = {
   id: "simple-table",
   fields: [],
   keyField: "",
   viewData: [],
   totalRows: 0,
-  headerBackgroundColor: "white",
-  firstRow: 0,
+  setTableData: defaultFn,
+  setFilterData: defaultFn,
+  setSearchText: defaultFn,
+  updateSortBy: defaultFn,
+  currentSelection: [],
+  toggleAllCurrentSelection: defaultFn,
+  toggleSelection: defaultFn,
+  setColumnWidth: defaultFn,
   pageRows: 50,
+  setPageRows: defaultFn,
+  firstRow: 0,
+  setFirstRow: defaultFn,
   columnWidths: [],
   currentColumnItems: [],
   currentColumnFilter: null,
   currentColumnFilters: [],
-});
+  setCurrentColumnFilter: defaultFn,
+  setCurrentColumnFilters: defaultFn,
+} as ISimpleTableContext;
+
+export const SimpleTableContext = createContext<ISimpleTableContext>(defaultContext);

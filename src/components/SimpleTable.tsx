@@ -1,24 +1,25 @@
 import { Key, useCallback, useEffect, useMemo, useState } from "react";
-import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from "./interface";
-import "./SimpleTable.css";
+import { columnFilterValue } from "../functions/simpleTableNullDate";
+import styles from "./SimpleTable.module.css";
 import { SimpleTableBody } from "./SimpleTableBody";
 import {
-  iSimpleTableColumnFilter,
-  iSimpleTableContext,
+  ISimpleTableColumnFilter,
+  ISimpleTableContext,
   SimpleTableContext,
 } from "./SimpleTableContext";
 import { SimpleTableFilter } from "./SimpleTableFilter";
 import { SimpleTableHeader } from "./SimpleTableHeader";
+import { SimpleTablePager } from "./SimpleTablePager";
 import { SimpleTableSearch } from "./SimpleTableSearch";
 import { SimpleTableSelectHeader } from "./SimpleTableSelectHeader";
-import { SimpleTablePager } from "./SimpleTablePager";
+import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
 
-interface SimpleTableProps {
+interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
   id?: string;
   headerLabel?: string;
-  fields: iSimpleTableField[];
+  fields: ISimpleTableField[];
   keyField: string;
-  data: iSimpleTableRow[];
+  data: ISimpleTableRow[];
   selectable?: boolean;
   currentSelection?: Key[];
   setCurrentSelection?: (ret: Key[]) => void;
@@ -29,7 +30,7 @@ interface SimpleTableProps {
   initialFilterSelected?: boolean;
   filterLabel?: string;
   searchLabel?: string;
-  onWidthChange?: (ret: (string | undefined)[]) => void;
+  onWidthChange?: (ret: { name: string; width: string }[]) => void;
   onPagerChange?: (ret: { firstRow: number; pageRows: number }) => void;
 
   tableClassName?: string;
@@ -41,11 +42,14 @@ interface SimpleTableProps {
 
   mainBackgroundColor?: string;
   headerBackgroundColor?: string;
+  selectedBackgroundColor?: string;
+  selectInactiveColor?: string;
+  selectActiveColor?: string;
 }
 
 interface SimpleTableLocalSettings {
   pageRows?: number | "Infinity";
-  headerWidths?: (string | undefined)[];
+  headerWidths?: (string | undefined)[] | { name: string; width: string }[];
 }
 
 export const SimpleTable = ({
@@ -55,7 +59,7 @@ export const SimpleTable = ({
   keyField,
   data,
   selectable = false,
-  currentSelection,
+  currentSelection = [],
   setCurrentSelection,
   showHeader = true,
   showSearch = true,
@@ -74,16 +78,26 @@ export const SimpleTable = ({
   searchInputClassName = "form-control form-control-sm",
   mainBackgroundColor = "white",
   headerBackgroundColor = "white",
+  selectedBackgroundColor = "rgba(0, 0, 0, 0.8)",
+  selectInactiveColor = "rgb(0, 0, 0, 0.2)",
+  selectActiveColor = "rgb(255, 153, 0)",
+  ...rest
 }: SimpleTableProps): JSX.Element => {
-  const [tableData, setTableData] = useState<iSimpleTableRow[]>(data);
-  useEffect(() => {
-    setTableData(data);
-  }, [data]);
+  const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
+  useEffect(() => setTableData(data), [data]);
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
-  const [sortBy, setSortBy] = useState<iSimpleTableSort | null>(null);
+  const [sortBy, setSortBy] = useState<ISimpleTableSort | null>(null);
   const [searchText, setSearchText] = useState<string>("");
-  const [columnWidths, setColumnWidths] = useState<(string | undefined)[]>([]);
-  useEffect(() => setColumnWidths(fields.map((f) => f.width)), [fields]);
+  const [columnWidths, setColumnWidths] = useState<{ name: string; width: string }[]>([]);
+  useEffect(
+    () =>
+      setColumnWidths(
+        fields
+          .filter((f) => f.width !== undefined)
+          .map((f) => ({ name: f.name, width: f.width as string })),
+      ),
+    [fields],
+  );
 
   const [firstRow, setFirstRow] = useState(0);
   const [pageRows, setPageRows] = useState(25);
@@ -95,14 +109,14 @@ export const SimpleTable = ({
   }, [showPager]);
 
   const [currentColumnFilter, setCurrentColumnFilter] = useState<number | null>(null);
-  const [currentColumnFilters, setCurrentColumnFilters] = useState<iSimpleTableColumnFilter[]>([]);
+  const [currentColumnFilters, setCurrentColumnFilters] = useState<ISimpleTableColumnFilter[]>([]);
 
   const filterFn = useCallback(
-    (row: iSimpleTableRow) => {
+    (row: ISimpleTableRow) => {
       if (showFilter && filterData) {
         const filterFns = fields
           .filter((f) => f.filterOutFn)
-          .map((f) => f.filterOutFn as (a: iSimpleTableRow) => boolean);
+          .map((f) => f.filterOutFn as (a: ISimpleTableRow) => boolean);
         return !filterFns.some((fn) => fn(row));
       } else return true;
     },
@@ -110,11 +124,11 @@ export const SimpleTable = ({
   );
 
   const searchFn = useCallback(
-    (row: iSimpleTableRow) => {
+    (row: ISimpleTableRow) => {
       if (showSearch && searchText.trim().length > 0) {
         const searchFns = fields
           .filter((f) => f.searchFn)
-          .map((f) => f.searchFn as (a: iSimpleTableRow, searchText: string) => boolean);
+          .map((f) => f.searchFn as (a: ISimpleTableRow, searchText: string) => boolean);
         return searchFns.some((fn) => fn(row, searchText));
       } else return true;
     },
@@ -122,7 +136,7 @@ export const SimpleTable = ({
   );
 
   const sortFn = useCallback(
-    (rowa: iSimpleTableRow, rowb: iSimpleTableRow) => {
+    (rowa: ISimpleTableRow, rowb: ISimpleTableRow) => {
       try {
         const sortFn = fields.find((f) => f.name === sortBy?.name)?.sortFn;
         if (sortFn && sortBy)
@@ -143,19 +157,11 @@ export const SimpleTable = ({
       .filter(searchFn)
       .filter((row) => {
         return currentColumnFilters
-          .map((cf) => {
-            if (row[cf.columnName] !== undefined) {
-              return cf.values.includes(
-                typeof row[cf.columnName] === "number"
-                  ? (row[cf.columnName] as number).toString()
-                  : `${row[cf.columnName] ?? "<blank>"}`,
-              );
-            } else return true;
-          })
+          .map((cf) => cf.values.includes(columnFilterValue(row[cf.columnName])))
           .reduce((prev, cur) => prev && cur, true);
       })
       .sort(sortFn);
-    if (_viewData.length < firstRow) {
+    if (_viewData.length <= firstRow) {
       setFirstRow(0);
     }
     return _viewData;
@@ -163,7 +169,7 @@ export const SimpleTable = ({
 
   // Update sort order
   const updateSortBy = useCallback(
-    (field: iSimpleTableField) => {
+    (field: ISimpleTableField) => {
       if (field.name === sortBy?.name && sortBy?.asc === false) {
         setSortBy(null);
       } else {
@@ -182,17 +188,8 @@ export const SimpleTable = ({
       .filter((f) => f.canColumnFilter)
       .map((f) => ({
         columnName: f.name,
-        values: Array.from(
-          new Set(
-            tableData.map((t) =>
-              typeof t[f.name] === "number"
-                ? (t[f.name] as number).toString()
-                : `${t[f.name] ?? "<blank>"}`,
-            ),
-          ),
-        ),
+        values: Array.from(new Set(tableData.map((t) => columnFilterValue(t[f.name])))),
       }));
-    setCurrentColumnFilters(ret);
     return ret;
   }, [fields, tableData]);
 
@@ -205,36 +202,36 @@ export const SimpleTable = ({
       )
       .map((rowData) => rowData[keyField] as Key);
     // Add if any of the current selection are not selected
-    if (setCurrentSelection && viewedKeys.some((v) => !currentSelection?.includes(v))) {
-      setCurrentSelection([
-        ...(currentSelection ?? []),
+    if (viewedKeys.some((v) => !currentSelection?.includes(v))) {
+      setCurrentSelection?.([
+        ...currentSelection,
         ...viewedKeys.filter((v) => !currentSelection?.includes(v)),
       ]);
     }
     // Or remove if any of the current selection are all selection
     else {
-      setCurrentSelection &&
-        setCurrentSelection(currentSelection?.filter((s) => !viewedKeys.includes(s)) ?? []);
+      setCurrentSelection?.(currentSelection.filter((s) => !viewedKeys.includes(s)));
     }
   }, [currentSelection, keyField, setCurrentSelection, viewData]);
   // Toggle individual row
   const toggleSelection = useCallback(
     (rowId: Key) => {
       // Check key exists
-      if (tableData.findIndex((row) => row[keyField] === rowId) === -1) return;
-      // Create new selection
-      const newSelection = [...(currentSelection ?? [])];
-      const ix = newSelection.findIndex((s) => s === rowId);
-      if (ix > -1) newSelection.splice(ix, 1);
-      else newSelection.push(rowId);
-      setCurrentSelection && setCurrentSelection(newSelection);
+      if (tableData.findIndex((row) => row[keyField] === rowId) > -1) {
+        // Create new selection
+        const newSelection = [...currentSelection];
+        const ix = newSelection.findIndex((s) => s === rowId);
+        if (ix > -1) newSelection.splice(ix, 1);
+        else newSelection.push(rowId);
+        setCurrentSelection?.(newSelection);
+      }
     },
     [currentSelection, keyField, setCurrentSelection, tableData],
   );
 
   // Save local settings
   const updateLocalSettings = useCallback(
-    (setting: string, value: number | (string | undefined)[]) => {
+    (setting: string, value: number | { name: string; width: string }[]) => {
       const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
       const localSettings = JSON.parse(localSettingsText ?? "{}") as SimpleTableLocalSettings;
       if (setting === "pageRows" && value && !Array.isArray(value)) {
@@ -255,14 +252,61 @@ export const SimpleTable = ({
     const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
     if (localSettingsText) {
       const localSettings = JSON.parse(localSettingsText) as SimpleTableLocalSettings;
-      localSettings.pageRows &&
-        showPager &&
+      if (localSettings.pageRows && showPager)
         setPageRows(localSettings.pageRows === "Infinity" ? Infinity : localSettings.pageRows);
-      if (localSettings.headerWidths) {
-        setColumnWidths(localSettings.headerWidths);
+      // Reset previous version settings
+      if (
+        localSettings.headerWidths &&
+        Array.isArray(localSettings.headerWidths) &&
+        localSettings.headerWidths.length > 0 &&
+        localSettings.headerWidths.every((c) => typeof c === "string" || c === null)
+      ) {
+        const newColumnWidths = fields
+          .filter((f) => !f.hidden)
+          .map((f, ix) => ({
+            name: f.name,
+            width: `${(localSettings.headerWidths as (string | null)[])[ix] ?? "undefined"}`,
+          }));
+        updateLocalSettings("headerWidths", newColumnWidths);
+      } else if (localSettings.headerWidths && Array.isArray(localSettings.headerWidths)) {
+        setColumnWidths(localSettings.headerWidths as { name: string; width: string }[]);
       }
     }
-  }, [fields, id, showPager]);
+  }, [fields, id, showPager, updateLocalSettings]);
+
+  useEffect(() => {
+    if (mainBackgroundColor)
+      document.documentElement.style.setProperty("--st-main-background-color", mainBackgroundColor);
+    if (headerBackgroundColor)
+      document.documentElement.style.setProperty(
+        "--st-header-background-color",
+        headerBackgroundColor,
+      );
+    if (selectedBackgroundColor)
+      document.documentElement.style.setProperty(
+        "--st-selected-background-color",
+        selectedBackgroundColor,
+      );
+    if (selectActiveColor)
+      document.documentElement.style.setProperty("--st-select-active", selectActiveColor);
+    if (selectInactiveColor)
+      document.documentElement.style.setProperty("--st-select-inactive", selectInactiveColor);
+
+    return () => {
+      // Reset to defaults when component unmounts
+      document.documentElement.style.removeProperty("--st-main-background-color");
+      document.documentElement.style.removeProperty("--st-header-background-color");
+      document.documentElement.style.removeProperty("--st-selected-background-color");
+      document.documentElement.style.removeProperty("--st-select-active");
+      document.documentElement.style.removeProperty("--st-select-inactive");
+    };
+  }, [
+    mainBackgroundColor,
+    headerBackgroundColor,
+    selectedBackgroundColor,
+    selectActiveColor,
+    selectInactiveColor,
+  ]);
 
   return (
     <SimpleTableContext.Provider
@@ -290,25 +334,30 @@ export const SimpleTable = ({
           toggleSelection,
 
           columnWidths,
-          setColumnWidth: (col: number, width?: string) => {
+          setColumnWidth: (name: string, width: string) => {
             const newColumnWidths = [...columnWidths];
-            if (col >= 0 && col < newColumnWidths.length) {
-              newColumnWidths[col] = width;
+            if (fields.map((f) => f.name).includes(name)) {
+              const ix = newColumnWidths.findIndex((c) => c.name === name);
+              if (ix === -1) {
+                newColumnWidths.push({ name: name, width });
+              } else {
+                newColumnWidths[ix] = { name: name, width: width };
+              }
             }
             setColumnWidths(newColumnWidths);
             updateLocalSettings("headerWidths", newColumnWidths);
-            onWidthChange && onWidthChange(newColumnWidths);
+            onWidthChange?.(newColumnWidths);
           },
           pageRows,
           setPageRows: (ret) => {
             setPageRows(ret);
             updateLocalSettings("pageRows", ret);
-            onPagerChange && onPagerChange({ firstRow, pageRows: ret });
+            onPagerChange?.({ firstRow, pageRows: ret });
           },
           firstRow,
           setFirstRow: (ret) => {
             setFirstRow(ret);
-            onPagerChange && onPagerChange({ firstRow: ret, pageRows });
+            onPagerChange?.({ firstRow: ret, pageRows });
           },
 
           currentColumnItems,
@@ -324,57 +373,55 @@ export const SimpleTable = ({
           searchInputClassName,
 
           headerBackgroundColor,
-        } as iSimpleTableContext
+        } as ISimpleTableContext
       }
     >
-      {(showHeader || showSearch || showFilter) && (
-        <div
-          className='simpletable-title-holder'
-          style={{ backgroundColor: mainBackgroundColor }}
-        >
-          {showHeader && (
-            <h5 className='simpletable-title'>
-              {headerLabel}
-              {selectable && (currentSelection?.length ?? 0) > 0 && (
-                <small style={{ fontSize: "small" }}>
-                  {} {currentSelection?.length} selected
-                </small>
+      <div className={styles.main}>
+        {(showHeader || showSearch || showFilter) && (
+          <div className={styles.titleHolder}>
+            <h5 className={styles.title}>
+              {showHeader && (
+                <>
+                  {headerLabel}
+                  {selectable && currentSelection.length > 0 && (
+                    <small>{currentSelection.length} selected</small>
+                  )}
+                </>
               )}
             </h5>
-          )}
-          {showSearch && fields.filter((f) => f.searchFn).length > 0 && <SimpleTableSearch />}
-          {showFilter && fields.filter((f) => f.filterOutFn).length > 0 && <SimpleTableFilter />}
+            {showSearch && fields.filter((f) => f.searchFn).length > 0 && <SimpleTableSearch />}
+            {showFilter && fields.filter((f) => f.filterOutFn).length > 0 && <SimpleTableFilter />}
+          </div>
+        )}
+        <div
+          className={styles.scroll}
+          style={{
+            height: `calc(100% ${showHeader || showSearch || showFilter ? "- 46px" : ""} ${
+              showPager ? " - 1.75rem" : ""
+            }`,
+          }}
+        >
+          <div className={styles.holder}>
+            <table
+              {...rest}
+              id={id}
+              className={[styles.table, tableClassName].join(" ")}
+            >
+              <thead>
+                <tr>
+                  {selectable && <SimpleTableSelectHeader />}
+                  <SimpleTableHeader />
+                </tr>
+              </thead>
+              <SimpleTableBody />
+            </table>
+          </div>
         </div>
-      )}
-      <div
-        className='simpletable-main small-scrollbar'
-        style={{
-          backgroundColor: mainBackgroundColor,
-          height: `calc(100% ${showHeader || showSearch || showFilter ? "- 46px" : ""} ${
-            showPager ? " - 1.75rem" : ""
-          }`,
-        }}
-      >
-        <div className='simpletable-holder'>
-          <table
-            id={id}
-            className={`simpletable ${tableClassName}`}
-          >
-            <thead>
-              <tr>
-                {selectable && <SimpleTableSelectHeader />}
-                <SimpleTableHeader />
-              </tr>
-            </thead>
-            <SimpleTableBody />
-          </table>
-        </div>
-      </div>
-      <div
-        className='simpletable-footer-holder'
-        style={{ backgroundColor: mainBackgroundColor }}
-      >
-        {showPager && <SimpleTablePager />}
+        {showPager && (
+          <div className={styles.footerHolder}>
+            <SimpleTablePager />
+          </div>
+        )}
       </div>
     </SimpleTableContext.Provider>
   );

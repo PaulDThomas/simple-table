@@ -1,0 +1,85 @@
+.main {
+  height: 100%;
+  width: 100%;
+}
+
+h5.title {
+  font-size: 24px;
+  height: 30px;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.title small {
+  font-size: small;
+}
+
+.scroll {
+  width: 100%;
+  overflow: auto;
+  background-color: var(--st-main-background-color);
+}
+.scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll::-webkit-scrollbar-track {
+  border-radius: 100px;
+  background-color: var(--st-main-background-color);
+}
+
+.scroll::-webkit-scrollbar-corner {
+  background-color: var(--st-main-background-color);
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  border-radius: 100px;
+}
+.scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.holder {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.titleHolder {
+  display: flex;
+  background-color: var(--st-main-background-color);
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+  align-content: stretch;
+  height: 30px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  white-space: nowrap;
+  box-sizing: content-box;
+}
+
+.table {
+  position: relative;
+  border-collapse: collapse;
+  width: 1px;
+  table-layout: fixed;
+}
+
+.footerHolder {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  height: 1.75rem;
+  justify-content: flex-end;
+  white-space: nowrap;
+  background-color: var(--st-main-background-color);
+}
+.footerHolder svg {
+  cursor: pointer;
+}
+.footerHolder select {
+  border-radius: 4px;
+}

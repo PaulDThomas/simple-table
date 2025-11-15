@@ -1,13 +1,14 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
-import { SimpleTableContext } from "./SimpleTableContext";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { act } from "react";
+import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableHeader } from "./SimpleTableHeader";
-import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort } from "./interface";
+import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
 
 jest.mock("./SimpleTableHeaderContents");
 
 const mockSort = jest.fn();
 
-const mockFields: iSimpleTableField[] = [
+const mockFields: ISimpleTableField[] = [
   { name: "tlfId", hidden: true },
   {
     name: "displayName",
@@ -20,14 +21,14 @@ const mockFields: iSimpleTableField[] = [
   { name: "description", hidden: false, label: "Description" },
 ];
 
-const mockData: iSimpleTableRow[] = [
+const mockData: ISimpleTableRow[] = [
   { TlfId: 1, displayName: "Lead", description: "Magic lead" },
   { TlfId: 2, displayName: "Tester", description: "A tester" },
   { TlfId: 3, displayName: "Other user", description: "Important VIP" },
 ];
 
-const mockSortUp: iSimpleTableSort = { name: "displayName", asc: true };
-const mockSortDown: iSimpleTableSort = { name: "description", asc: false };
+const mockSortUp: ISimpleTableSort = { name: "displayName", asc: true };
+const mockSortDown: ISimpleTableSort = { name: "description", asc: false };
 
 const mockSorting = jest.fn();
 
@@ -50,19 +51,16 @@ describe("Simple table header renders", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "testtable",
           fields: mockFields,
           keyField: "userId",
           viewData: mockData,
           totalRows: mockData.length,
-          firstRow: 0,
-          pageRows: 50,
           sortBy: mockSortDown,
-          columnWidths: [],
           currentColumnItems: [
             { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
           ],
-          currentColumnFilter: null,
           currentColumnFilters: [
             { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
           ],
@@ -88,14 +86,13 @@ describe("Resize table cell", () => {
       render(
         <SimpleTableContext.Provider
           value={{
+            ...defaultContext,
             id: "testtable",
             fields: mockFields,
             keyField: "userId",
             viewData: mockData,
             totalRows: mockData.length,
             sortBy: mockSortUp,
-            firstRow: 0,
-            pageRows: 50,
             updateSortBy: mockSorting,
             columnWidths: [],
             currentColumnItems: [
@@ -107,7 +104,7 @@ describe("Resize table cell", () => {
             ],
           }}
         >
-          <div data-testid='container'>
+          <div data-testid="container">
             <table>
               <thead>
                 <tr>
@@ -121,7 +118,7 @@ describe("Resize table cell", () => {
     });
     const container = await screen.findByTestId("container");
     const cells = container.querySelectorAll("th");
-    const rhs = container.querySelectorAll("th div.resize-handle");
+    const rhs = container.querySelectorAll("th div.resizeHandle");
     const th = cells[0];
     const rh = rhs[0];
     expect(th).toBeInTheDocument();

@@ -1,0 +1,7 @@
+:root {
+  --st-main-background-color: white;
+  --st-header-background-color: white;
+  --st-selected-background-color: rgba(0, 0, 0, 0.8);
+  --st-select-active: rgb(255, 153, 0);
+  --st-select-inactive: rgba(0, 0, 0, 0.2);
+}

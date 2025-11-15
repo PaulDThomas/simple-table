@@ -1,0 +1,32 @@
+.cell {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  border-left: 1px dotted transparent;
+  border-right: 1px dotted transparent;
+  background-color: var(--st-header-background-color);
+}
+
+.cell:hover {
+  border-left: 1px solid rgba(0, 0, 0, 0.75);
+}
+.cell:hover {
+  border-right: 1px solid rgba(0, 0, 0, 0.75);
+}
+
+.resizeHandle {
+  display: inline-block;
+  position: absolute;
+  cursor: col-resize;
+  width: 4px;
+  right: 0px;
+  top: 0;
+  z-index: 10;
+  height: 100%;
+  border-right: 2px solid transparent;
+}
+
+.resizeHandle:hover {
+  border-color: rgba(0, 0, 0, 0.75);
+  background: rgba(20, 20, 20, 0.5);
+}

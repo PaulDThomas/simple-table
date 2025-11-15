@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import { iSimpleTableField, iSimpleTableRow } from "./interface";
+import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTableCell } from "./SimpleTableCell";
-import { SimpleTableContext } from "./SimpleTableContext";
+import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
 
-const mockFields: iSimpleTableField[] = [
+const mockFields: ISimpleTableField[] = [
   { name: "userId", label: "User ID" },
   { name: "hierarchyId", label: "Hierarchy ID" },
   { name: "displayName", label: "Name" },
@@ -22,7 +22,7 @@ enum mockEnum {
   three = "THREE",
 }
 
-const mockAccesses: iSimpleTableRow[] = [
+const mockAccesses: ISimpleTableRow[] = [
   {
     userId: 1,
     hierarchyId: 10,
@@ -56,17 +56,12 @@ describe("Bad cell rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -74,7 +69,7 @@ describe("Bad cell rendering", () => {
             <tr>
               <SimpleTableCell
                 rowId={"abc"}
-                cellField='col1'
+                cellField="col1"
                 columnNumber={1}
                 rowNumber={0}
               />
@@ -90,17 +85,12 @@ describe("Bad cell rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -109,7 +99,7 @@ describe("Bad cell rendering", () => {
               <SimpleTableCell
                 rowNumber={0}
                 rowId={"abc"}
-                cellField='hierarchyId'
+                cellField="hierarchyId"
                 columnNumber={1}
               />
             </tr>
@@ -124,17 +114,12 @@ describe("Bad cell rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -142,7 +127,7 @@ describe("Bad cell rendering", () => {
             <tr>
               <SimpleTableCell
                 rowId={1}
-                cellField='hierarchyLabel'
+                cellField="hierarchyLabel"
                 columnNumber={1}
                 rowNumber={0}
               />
@@ -160,17 +145,12 @@ describe("Cell render, show things", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -178,7 +158,7 @@ describe("Cell render, show things", () => {
             <tr>
               <SimpleTableCell
                 rowId={2}
-                cellField='displayName'
+                cellField="displayName"
                 columnNumber={0}
                 rowNumber={0}
               />
@@ -194,17 +174,12 @@ describe("Cell render, show things", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -212,7 +187,7 @@ describe("Cell render, show things", () => {
             <tr>
               <SimpleTableCell
                 rowId={2}
-                cellField='userId'
+                cellField="userId"
                 columnNumber={0}
                 rowNumber={0}
               />
@@ -228,17 +203,12 @@ describe("Cell render, show things", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -246,7 +216,7 @@ describe("Cell render, show things", () => {
             <tr>
               <SimpleTableCell
                 rowId={2}
-                cellField='allowed'
+                cellField="allowed"
                 columnNumber={0}
                 rowNumber={0}
               />
@@ -262,16 +232,12 @@ describe("Cell render, show things", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
           currentColumnFilters: [],
         }}
       >
@@ -280,7 +246,7 @@ describe("Cell render, show things", () => {
             <tr>
               <SimpleTableCell
                 rowId={2}
-                cellField='accessLevel'
+                cellField="accessLevel"
                 columnNumber={0}
                 rowNumber={0}
               />
@@ -292,21 +258,16 @@ describe("Cell render, show things", () => {
     expect(screen.queryByText("false")).toBeInTheDocument();
   });
 
-  test("Basic render, boolean", async () => {
+  test("Basic render, customField", async () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "test-table",
           fields: mockFields,
           keyField: "userId",
           viewData: mockAccesses,
           totalRows: mockAccesses.length,
-          firstRow: 0,
-          pageRows: 50,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -314,7 +275,7 @@ describe("Cell render, show things", () => {
             <tr>
               <SimpleTableCell
                 rowId={2}
-                cellField='customField'
+                cellField="customField"
                 columnNumber={0}
                 rowNumber={2}
               />

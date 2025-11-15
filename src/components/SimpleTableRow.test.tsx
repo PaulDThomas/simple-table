@@ -1,15 +1,15 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { act } from "react-dom/test-utils";
-import { iSimpleTableField, iSimpleTableRow } from "./interface";
-import { SimpleTableContext } from "./SimpleTableContext";
+import { act } from "react";
+import { ISimpleTableField, ISimpleTableRow } from "./interface";
+import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableRow } from "./SimpleTableRow";
 
-const mockFields: iSimpleTableField[] = [
+const mockFields: ISimpleTableField[] = [
   { name: "userId", hidden: true, label: "UserId" },
   { name: "displayName", label: "Display name" },
 ];
 
-const mockData: iSimpleTableRow = {
+const mockData: ISimpleTableRow = {
   userId: 3,
   displayName: "Some user",
 };
@@ -20,18 +20,13 @@ describe("Access rights row rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "testtable",
           fields: mockFields,
           keyField: "userId",
           viewData: [mockData],
           totalRows: [mockData].length,
-          firstRow: 0,
-          pageRows: 50,
           selectable: true,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
@@ -51,6 +46,7 @@ describe("Access rights row rendering", () => {
     render(
       <SimpleTableContext.Provider
         value={{
+          ...defaultContext,
           id: "testtable",
           fields: mockFields,
           keyField: "userId",
@@ -61,10 +57,6 @@ describe("Access rights row rendering", () => {
           selectable: true,
           currentSelection: [3],
           toggleSelection: mockToggle,
-          columnWidths: [],
-          currentColumnItems: [],
-          currentColumnFilter: null,
-          currentColumnFilters: [],
         }}
       >
         <table>
