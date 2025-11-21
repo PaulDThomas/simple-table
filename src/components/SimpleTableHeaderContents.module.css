@@ -2,7 +2,7 @@
   position: fixed;
   height: 200px;
   width: 200px;
-  z-index: 1000;
+  z-index: 3000;
   border: 1px solid black;
   border-top-right-radius: 8px;
   border-bottom-left-radius: 8px;
