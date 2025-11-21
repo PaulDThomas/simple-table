@@ -146,9 +146,10 @@ export const SimpleTablePopover = ({
       className={styles.filterHolder}
       style={{
         visibility: position.top !== undefined ? "visible" : "hidden",
-        top: `${position.top}px`,
-        left: position.left !== undefined ? `${position.left}px` : undefined,
-        right: position.right !== undefined ? `${position.right}px` : undefined,
+        top: position.top !== undefined ? `${position.top}px` : "auto",
+        bottom: "auto",
+        left: position.left !== undefined ? `${position.left}px` : "auto",
+        right: position.right !== undefined ? `${position.right}px` : "auto",
         resize: alignment === "right" ? "none" : undefined,
       }}
     >
