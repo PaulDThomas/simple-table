@@ -1,6 +1,6 @@
 {
   "name": "@asup/simple-table",
-  "version": "1.4.19",
+  "version": "1.4.20",
   "description": "REACT table, because I wanted one that took an array of objects as an input.",
   "author": "Paul Thomas <@PaulDThomas>",
   "private": false,
