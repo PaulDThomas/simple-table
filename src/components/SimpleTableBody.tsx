@@ -1,7 +1,7 @@
 import { useContext } from "react";
+import styles from "./SimpleTableBody.module.css";
 import { SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableRow } from "./SimpleTableRow";
-import styles from "./SimpleTableBody.module.css";
 
 export const SimpleTableBody = (): JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);

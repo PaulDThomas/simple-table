@@ -1,9 +1,9 @@
 import { Key, useContext, useMemo } from "react";
-import { ISimpleTableField, ISimpleTableRow } from "./interface";
-import { SimpleTableContext } from "./SimpleTableContext";
-import styles from "./SimpleTableCell.module.css";
-import "./SimpleTableCell.css";
 import { simpleTableNullDate } from "../functions/simpleTableNullDate";
+import { ISimpleTableField, ISimpleTableRow } from "./interface";
+import "./SimpleTableCell.css";
+import styles from "./SimpleTableCell.module.css";
+import { SimpleTableContext } from "./SimpleTableContext";
 
 interface SimpleTableCellProps {
   rowId: Key;
