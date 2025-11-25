@@ -1,4 +1,4 @@
-import { Key, useCallback, useEffect, useMemo, useState } from "react";
+import { Key, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { columnFilterValue } from "../functions/simpleTableNullDate";
 import styles from "./SimpleTable.module.css";
 import { SimpleTableBody } from "./SimpleTableBody";
@@ -83,25 +83,73 @@ export const SimpleTable = ({
   selectActiveColor = "rgb(255, 153, 0)",
   ...rest
 }: SimpleTableProps): React.JSX.Element => {
+  // Load local settings once on mount
+  const localSettingsText =
+    typeof window !== "undefined"
+      ? window.localStorage.getItem(`asup.simple-table.${id}.settings`)
+      : null;
+  const localSettings = localSettingsText
+    ? (JSON.parse(localSettingsText) as SimpleTableLocalSettings)
+    : null;
+
   const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
-  useEffect(() => setTableData(data), [data]);
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
   const [sortBy, setSortBy] = useState<ISimpleTableSort | null>(null);
   const [searchText, setSearchText] = useState<string>("");
-  const [columnWidths, setColumnWidths] = useState<{ name: string; width: string }[]>([]);
-  useEffect(
-    () =>
-      setColumnWidths(
-        fields
-          .filter((f) => f.width !== undefined)
-          .map((f) => ({ name: f.name, width: f.width as string })),
-      ),
-    [fields],
-  );
 
-  const [firstRow, setFirstRow] = useState(0);
-  const [pageRows, setPageRows] = useState(25);
+  // Initialize columnWidths from localStorage or fields
+  const [columnWidths, setColumnWidths] = useState<{ name: string; width: string }[]>(() => {
+    if (localSettings?.headerWidths && Array.isArray(localSettings.headerWidths)) {
+      // Check if it's the old format (string[]) or new format ({ name, width }[])
+      if (
+        localSettings.headerWidths.length > 0 &&
+        !localSettings.headerWidths.every((c) => typeof c === "string" || c === null)
+      ) {
+        return localSettings.headerWidths as { name: string; width: string }[];
+      }
+    }
+    return fields
+      .filter((f) => f.width !== undefined)
+      .map((f) => ({ name: f.name, width: f.width as string }));
+  });
+
+  // Initialize pageRows from localStorage or props
+  const [firstRow, setFirstRow] = useState(showPager === false ? 0 : 0);
+  const [pageRows, setPageRows] = useState(() => {
+    if (showPager === false) return Infinity;
+    if (localSettings?.pageRows && showPager) {
+      return localSettings.pageRows === "Infinity" ? Infinity : localSettings.pageRows;
+    }
+    return 25;
+  });
+
+  // Sync external data prop changes - disable eslint for valid prop sync pattern
+
   useEffect(() => {
+    setTableData(data);
+  }, [data]);
+
+  // Sync column widths when fields change (not on initial mount, as useState initializer handles that)
+  const fieldsInitialized = useRef(false);
+  useEffect(() => {
+    if (!fieldsInitialized.current) {
+      fieldsInitialized.current = true;
+      return;
+    }
+    setColumnWidths(
+      fields
+        .filter((f) => f.width !== undefined)
+        .map((f) => ({ name: f.name, width: f.width as string })),
+    );
+  }, [fields]);
+
+  // Sync pager state when showPager changes (not on initial mount, as useState initializer handles that)
+  const showPagerInitialized = useRef(false);
+  useEffect(() => {
+    if (!showPagerInitialized.current) {
+      showPagerInitialized.current = true;
+      return;
+    }
     if (showPager === false) {
       setFirstRow(0);
       setPageRows(Infinity);
@@ -161,11 +209,15 @@ export const SimpleTable = ({
           .reduce((prev, cur) => prev && cur, true);
       })
       .sort(sortFn);
-    if (_viewData.length <= firstRow) {
+    return _viewData;
+  }, [currentColumnFilters, filterFn, searchFn, sortFn, tableData]);
+
+  // Reset firstRow when viewData length changes and firstRow is out of bounds
+  useEffect(() => {
+    if (viewData.length <= firstRow && viewData.length > 0) {
       setFirstRow(0);
     }
-    return _viewData;
-  }, [currentColumnFilters, filterFn, firstRow, searchFn, sortFn, tableData]);
+  }, [viewData.length, firstRow]);
 
   // Update sort order
   const updateSortBy = useCallback(
@@ -247,14 +299,16 @@ export const SimpleTable = ({
     [id],
   );
 
-  // Load any previous settings, should only run on load
+  // Migrate old settings format if needed (one-time effect on mount)
+  const hasRunMigrationRef = useRef(false);
   useEffect(() => {
+    if (hasRunMigrationRef.current) return;
+    hasRunMigrationRef.current = true;
+
     const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
     if (localSettingsText) {
       const localSettings = JSON.parse(localSettingsText) as SimpleTableLocalSettings;
-      if (localSettings.pageRows && showPager)
-        setPageRows(localSettings.pageRows === "Infinity" ? Infinity : localSettings.pageRows);
-      // Reset previous version settings
+      // Migrate old string[] format to new { name, width }[] format
       if (
         localSettings.headerWidths &&
         Array.isArray(localSettings.headerWidths) &&
@@ -267,12 +321,12 @@ export const SimpleTable = ({
             name: f.name,
             width: `${(localSettings.headerWidths as (string | null)[])[ix] ?? "undefined"}`,
           }));
+        // Only update localStorage, not state, to preserve original behavior
+        // where columnWidths only contains explicitly resized columns
         updateLocalSettings("headerWidths", newColumnWidths);
-      } else if (localSettings.headerWidths && Array.isArray(localSettings.headerWidths)) {
-        setColumnWidths(localSettings.headerWidths as { name: string; width: string }[]);
       }
     }
-  }, [fields, id, showPager, updateLocalSettings]);
+  }, [fields, id, updateLocalSettings]);
 
   useEffect(() => {
     if (mainBackgroundColor)

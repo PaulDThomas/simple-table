@@ -1,4 +1,4 @@
-import { useCallback, useContext, useRef } from "react";
+import React, { useCallback, useContext, useEffect, useRef } from "react";
 import { SimpleTableContext } from "./SimpleTableContext";
 import styles from "./SimpleTableHeader.module.css";
 import { SimpleTableHeaderContents } from "./SimpleTableHeaderContents";
@@ -6,6 +6,7 @@ import { SimpleTableHeaderContents } from "./SimpleTableHeaderContents";
 export const SimpleTableHeader = (): React.JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
   const targetCell = useRef<HTMLTableCellElement | null>(null);
+  const mouseUpRef = useRef<(() => void) | null>(null);
 
   const mouseMove = useCallback((e: MouseEvent) => {
     if (targetCell.current !== null) {
@@ -26,9 +27,16 @@ export const SimpleTableHeader = (): React.JSX.Element => {
       }
       targetCell.current = null;
       window.removeEventListener("mousemove", mouseMove);
-      window.removeEventListener("mouseup", mouseUp);
+      if (mouseUpRef.current) {
+        window.removeEventListener("mouseup", mouseUpRef.current);
+      }
     }
   }, [mouseMove, simpleTableContext]);
+
+  // Keep ref updated with latest mouseUp in an effect
+  useEffect(() => {
+    mouseUpRef.current = mouseUp;
+  }, [mouseUp]);
 
   const mouseDown = useCallback(
     (e: React.MouseEvent) => {
