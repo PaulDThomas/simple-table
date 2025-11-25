@@ -15,7 +15,7 @@ export const SimpleTablePopover = ({
   anchorElement,
   onClose,
   ...rest
-}: SimpleTablePopoverProps): JSX.Element | null => {
+}: SimpleTablePopoverProps): React.JSX.Element | null => {
   const [position, setPosition] = useState<{
     top: number | undefined;
     left: number | undefined;

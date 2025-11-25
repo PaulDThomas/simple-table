@@ -82,7 +82,7 @@ export const SimpleTable = ({
   selectInactiveColor = "rgb(0, 0, 0, 0.2)",
   selectActiveColor = "rgb(255, 153, 0)",
   ...rest
-}: SimpleTableProps): JSX.Element => {
+}: SimpleTableProps): React.JSX.Element => {
   const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
   useEffect(() => setTableData(data), [data]);
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);

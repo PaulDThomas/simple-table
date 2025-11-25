@@ -14,7 +14,7 @@ interface ISimspleTableHeaderContentsProps {
 export const SimpleTableHeaderContents = ({
   field,
   columnNumber,
-}: ISimspleTableHeaderContentsProps): JSX.Element => {
+}: ISimspleTableHeaderContentsProps): React.JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
   const filterIconRef = useRef<HTMLSpanElement>(null);
 

@@ -1,3 +1,4 @@
+import React from "react";
 import { ISimpleTableField } from "../interface";
 
 interface ISimspleTableHeaderContentsProps {
@@ -8,7 +9,7 @@ interface ISimspleTableHeaderContentsProps {
 export const SimpleTableHeaderContents = ({
   field,
   columnNumber,
-}: ISimspleTableHeaderContentsProps): JSX.Element => {
+}: ISimspleTableHeaderContentsProps): React.JSX.Element => {
   return (
     <>
       {columnNumber}:{field.name}

@@ -3,7 +3,7 @@ import styles from "./SimpleTableBody.module.css";
 import { SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableRow } from "./SimpleTableRow";
 
-export const SimpleTableBody = (): JSX.Element => {
+export const SimpleTableBody = (): React.JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   return (

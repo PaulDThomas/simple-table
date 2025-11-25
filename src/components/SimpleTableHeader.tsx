@@ -3,7 +3,7 @@ import { SimpleTableContext } from "./SimpleTableContext";
 import styles from "./SimpleTableHeader.module.css";
 import { SimpleTableHeaderContents } from "./SimpleTableHeaderContents";
 
-export const SimpleTableHeader = (): JSX.Element => {
+export const SimpleTableHeader = (): React.JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
   const targetCell = useRef<HTMLTableCellElement | null>(null);
 

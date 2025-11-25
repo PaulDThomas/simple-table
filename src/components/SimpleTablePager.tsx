@@ -4,7 +4,7 @@ import { SimpleTableContext } from "./SimpleTableContext";
 import styles from "./SimpleTablePager.module.css";
 import { PagerEndSvg, PagerNextSvg, PagerPrevSvg, PagerStartSvg } from "./Svgs";
 
-export const SimpleTablePager = (): JSX.Element => {
+export const SimpleTablePager = (): React.JSX.Element => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   return (
