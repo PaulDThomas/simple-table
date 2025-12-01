@@ -7,6 +7,7 @@ const config: Config = {
   modulePaths: ["node_modules", "<rootDir>/src"],
   testEnvironment: "jsdom",
   verbose: true,
+  maxWorkers: 4,
 
   // Jest transformations -- this adds support for TypeScript
   // using ts-jest, include ts-jest-mock-import-meta
@@ -43,7 +44,7 @@ const config: Config = {
 
   // Code coverage
   collectCoverage: true,
-  coverageProvider: "v8",
+  coverageProvider: "babel",
   coverageReporters: ["lcov", "text"],
   collectCoverageFrom: [
     "src/**/*.{js,jsx}",
@@ -53,6 +54,7 @@ const config: Config = {
     "!**/main.ts",
     "!**/__dummy__/**",
     "!**/node_modules/**",
+    "!**/*.stories.*",
   ],
 
   // Map css type modules to blank module

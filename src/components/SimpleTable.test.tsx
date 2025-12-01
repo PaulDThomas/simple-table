@@ -491,6 +491,138 @@ describe("Local settings", () => {
     expect(pagerSelect).toBeInTheDocument();
     expect(pagerSelect).toHaveValue("All");
 
+    // Check width settings
+    const header1 = screen.getByText("Hierarchy").closest("th") as HTMLElement;
+    expect(header1).toHaveStyle("width: 200px");
+    const header2 = screen.getByText("Display name").closest("th") as HTMLElement;
+    expect(header2).toHaveStyle("width: 300px");
+
+    // Clean up
+    window.localStorage.removeItem("asup.simple-table.test-table.settings");
+  });
+
+  test("Loads column widths from column settings", async () => {
+    const updatedMockFields = mockFields.map((field) => {
+      if (field.name === "hierarchyLabel") {
+        return { ...field, width: "150px" };
+      }
+      return field;
+    });
+    await act(async () => {
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          searchLabel="SEARCH HERE"
+          filterLabel="FILTER HERE"
+          showFilter={true}
+          showSearch={true}
+          fields={updatedMockFields}
+          keyField={"userId"}
+          data={mockAccesses}
+          selectable
+          currentSelection={[1, 2]}
+          setCurrentSelection={mockSetSelection}
+        />,
+      );
+    });
+
+    // Check width setting
+    const header = screen.getByText("Hierarchy").closest("th") as HTMLElement;
+    expect(header).toHaveStyle("width: 150px");
+  });
+
+  test("Load settings with numeric pageRows", async () => {
+    // Test with numeric pageRows (not a string)
+    const mockSetSelection = jest.fn();
+    window.localStorage.setItem(
+      "asup.simple-table.test-table.settings",
+      JSON.stringify({
+        pageRows: 50,
+      }),
+    );
+
+    await act(async () => {
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          fields={mockFields}
+          keyField={"userId"}
+          data={mockAccesses}
+          selectable
+          currentSelection={[1, 2]}
+          setCurrentSelection={mockSetSelection}
+        />,
+      );
+    });
+
+    const pagerSelect = screen.getByLabelText("Visible rows");
+    expect(pagerSelect).toHaveValue("50");
+
+    window.localStorage.removeItem("asup.simple-table.test-table.settings");
+  });
+
+  test("Ignores invalid local settings - non-object", async () => {
+    window.localStorage.setItem("asup.simple-table.test-table.settings", JSON.stringify("invalid"));
+
+    await act(async () => {
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          fields={mockFields}
+          keyField={"userId"}
+          data={mockAccesses}
+        />,
+      );
+    });
+
+    expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+    window.localStorage.removeItem("asup.simple-table.test-table.settings");
+  });
+
+  test("Ignores invalid local settings - invalid pageRows type", async () => {
+    window.localStorage.setItem(
+      "asup.simple-table.test-table.settings",
+      JSON.stringify({ pageRows: { invalid: true } }),
+    );
+
+    await act(async () => {
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          fields={mockFields}
+          keyField={"userId"}
+          data={mockAccesses}
+        />,
+      );
+    });
+
+    expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+    window.localStorage.removeItem("asup.simple-table.test-table.settings");
+  });
+
+  test("Ignores invalid local settings - invalid headerWidths type", async () => {
+    window.localStorage.setItem(
+      "asup.simple-table.test-table.settings",
+      JSON.stringify({ headerWidths: "invalid" }),
+    );
+
+    await act(async () => {
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          fields={mockFields}
+          keyField={"userId"}
+          data={mockAccesses}
+        />,
+      );
+    });
+
+    expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
     window.localStorage.removeItem("asup.simple-table.test-table.settings");
   });
 
@@ -744,5 +876,85 @@ describe("Test callbacks", () => {
     expect(
       container.querySelector("#test-table > tbody > tr:first-child > td:first-child")?.textContent,
     ).toEqual("1");
+  });
+
+  test("Fields without width use default column widths", async () => {
+    // Test with fields that have no width property - covers line 132
+    const fieldsNoWidth: ISimpleTableField[] = [
+      { name: "userId", label: "User ID", hidden: true },
+      { name: "hierarchyLabel", label: "Hierarchy" },
+      { name: "displayName", label: "Display name" },
+    ];
+    await act(async () =>
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          fields={fieldsNoWidth}
+          keyField={"userId"}
+          data={mockAccesses}
+        />,
+      ),
+    );
+    expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+    expect(screen.queryByText("Hierarchy")).toBeInTheDocument();
+  });
+
+  test("Column filter reduces view data", async () => {
+    // Test with column filters active - covers lines 204-205
+    const user = userEvent.setup();
+    const fieldsWithFilter: ISimpleTableField[] = [
+      { name: "userId", label: "User ID", hidden: true },
+      {
+        name: "hierarchyLabel",
+        label: "Hierarchy",
+        canColumnFilter: true,
+      },
+      { name: "displayName", label: "Display name" },
+      {
+        name: "accessLevel",
+        label: "Access level",
+        canColumnFilter: true,
+      },
+    ];
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            fields={fieldsWithFilter}
+            keyField={"userId"}
+            data={mockAccesses}
+          />
+        </div>,
+      ),
+    );
+    const container = screen.getByTestId("container");
+    // Should show all rows initially
+    expect(container.querySelectorAll("#test-table > tbody > tr").length).toEqual(3);
+
+    // Click on the column filter icon for Hierarchy (first filter icon)
+    const filterIcons = screen.getAllByLabelText("Column filter");
+    expect(filterIcons[0]).toBeInTheDocument();
+    await user.click(filterIcons[0]);
+
+    // Select only "Corporate" from the filter
+    const corporateCheckbox = screen.getByLabelText("Corporate");
+
+    // Uncheck all first
+    await user.click(screen.getByLabelText("Column filter toggle"));
+    // Then check only Corporate
+    await user.click(corporateCheckbox.parentElement!);
+
+    // Close the filter
+    const closeButton = screen.getByLabelText("Close filter");
+    await user.click(closeButton);
+
+    // Should now only show 1 row (Corporate)
+    expect(container.querySelectorAll("#test-table > tbody > tr").length).toEqual(1);
+    expect(screen.queryByText("User-view")).toBeInTheDocument();
+    expect(screen.queryByText("User-admin")).not.toBeInTheDocument();
+    expect(screen.queryByText("User-lead")).not.toBeInTheDocument();
   });
 });

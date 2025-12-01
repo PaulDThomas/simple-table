@@ -130,4 +130,142 @@ describe("Resize table cell", () => {
     fireEvent.mouseMove(rh, { clientX: -100, clientY: -100 });
     fireEvent.mouseUp(rh);
   });
+
+  test("Mouse move without mouseDown does nothing", async () => {
+    const mockSetColumnWidth = jest.fn();
+    await act(async () => {
+      render(
+        <SimpleTableContext.Provider
+          value={{
+            ...defaultContext,
+            id: "testtable",
+            fields: mockFields,
+            keyField: "userId",
+            viewData: mockData,
+            totalRows: mockData.length,
+            sortBy: mockSortUp,
+            updateSortBy: mockSorting,
+            columnWidths: [],
+            setColumnWidth: mockSetColumnWidth,
+            currentColumnItems: [
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
+            ],
+            currentColumnFilter: null,
+            currentColumnFilters: [
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
+            ],
+          }}
+        >
+          <div data-testid="container">
+            <table>
+              <thead>
+                <tr>
+                  <SimpleTableHeader />
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </SimpleTableContext.Provider>,
+      );
+    });
+    const container = await screen.findByTestId("container");
+    const rh = container.querySelectorAll("th div.resizeHandle")[0];
+    // Just fire mouseMove without mouseDown - should not cause errors
+    fireEvent.mouseMove(rh, { clientX: 300, clientY: 100 });
+    // Fire mouseUp without mouseDown - covers the mouseUp path when targetCell is null
+    fireEvent.mouseUp(rh);
+    expect(mockSetColumnWidth).not.toHaveBeenCalled();
+  });
+
+  test("Resize with width callback", async () => {
+    const mockSetColumnWidth = jest.fn();
+    await act(async () => {
+      render(
+        <SimpleTableContext.Provider
+          value={{
+            ...defaultContext,
+            id: "testtable",
+            fields: mockFields,
+            keyField: "userId",
+            viewData: mockData,
+            totalRows: mockData.length,
+            sortBy: mockSortUp,
+            updateSortBy: mockSorting,
+            columnWidths: [],
+            setColumnWidth: mockSetColumnWidth,
+            currentColumnItems: [
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
+            ],
+            currentColumnFilter: null,
+            currentColumnFilters: [
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
+            ],
+          }}
+        >
+          <div data-testid="container">
+            <table>
+              <thead>
+                <tr>
+                  <SimpleTableHeader />
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </SimpleTableContext.Provider>,
+      );
+    });
+    const container = await screen.findByTestId("container");
+    const rhs = container.querySelectorAll("th div.resizeHandle");
+    const rh = rhs[0];
+    fireEvent.mouseDown(rh);
+    fireEvent.mouseMove(window, { clientX: 300, clientY: 100 });
+    fireEvent.mouseUp(window);
+    expect(mockSetColumnWidth).toHaveBeenCalledWith("displayName", "300px");
+  });
+
+  test("Resize without setColumnWidth callback", async () => {
+    await act(async () => {
+      render(
+        <SimpleTableContext.Provider
+          value={{
+            ...defaultContext,
+            id: "testtable",
+            fields: mockFields,
+            keyField: "userId",
+            viewData: mockData,
+            totalRows: mockData.length,
+            sortBy: mockSortUp,
+            updateSortBy: mockSorting,
+            columnWidths: [],
+            // No setColumnWidth provided
+            currentColumnItems: [
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
+            ],
+            currentColumnFilter: null,
+            currentColumnFilters: [
+              { columnName: "displayName", values: ["Lead", "Tester", "Other user"] },
+            ],
+          }}
+        >
+          <div data-testid="container">
+            <table>
+              <thead>
+                <tr>
+                  <SimpleTableHeader />
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </SimpleTableContext.Provider>,
+      );
+    });
+    const container = await screen.findByTestId("container");
+    const rhs = container.querySelectorAll("th div.resizeHandle");
+    const rh = rhs[0];
+    fireEvent.mouseDown(rh);
+    fireEvent.mouseMove(window, { clientX: 300, clientY: 100 });
+    fireEvent.mouseUp(window);
+    // Should complete without error even without callback
+    expect(container).toBeInTheDocument();
+  });
 });

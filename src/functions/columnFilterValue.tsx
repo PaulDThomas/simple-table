@@ -1,22 +1,4 @@
-import { ISimpleTableCellRenderProps } from "../components";
-import styles from "../components/SimpleTableCell.module.css";
-
-export const convertDateToLocaleString = (s: string | Date): string => {
-  const d = s instanceof Date ? s : new Date(s);
-  return !isNaN(d.getTime())
-    ? `${new Date(d.getTime() - d.getTimezoneOffset() * 60000)
-        .toISOString()
-        .slice(0, 16)
-        .replace(/[T]/, " ")}`
-    : "Invalid date";
-};
-
-export const convertLocaleDateToUTCString = (s: string): string => {
-  const d = new Date(s);
-  return d instanceof Date && !isNaN(d.getTime())
-    ? `${new Date(d.getTime()).toISOString()}`
-    : "Invalid date";
-};
+import { convertDateToLocaleString } from "./convertDateToLocaleString";
 
 export const columnFilterValue = (dataItem: unknown, showBlank = true): string => {
   if (
@@ -56,14 +38,3 @@ export const columnFilterValue = (dataItem: unknown, showBlank = true): string =
       return dataItem === undefined ? "<blank>" : "⁉️⁉️";
   }
 };
-
-export const simpleTableNullDate = ({
-  rowData,
-  cellField,
-}: ISimpleTableCellRenderProps): JSX.Element => (
-  <div
-    className={`simple-table-null-date-cell overflow-hidden ${typeof rowData[cellField] === "number" ? styles.textRight : styles.textLeft}`}
-  >
-    <span>{columnFilterValue(rowData[cellField], false)}</span>
-  </div>
-);

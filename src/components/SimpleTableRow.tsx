@@ -8,7 +8,7 @@ interface SimpleTableRowProps {
   rowNumber: number;
 }
 
-export const SimpleTableRow = ({ rowId, rowNumber }: SimpleTableRowProps): JSX.Element => {
+export const SimpleTableRow = ({ rowId, rowNumber }: SimpleTableRowProps): React.ReactElement => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   return (

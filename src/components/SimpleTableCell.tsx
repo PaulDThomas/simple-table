@@ -1,9 +1,8 @@
 import { Key, useContext, useMemo } from "react";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
-import { SimpleTableContext } from "./SimpleTableContext";
 import styles from "./SimpleTableCell.module.css";
-import "./SimpleTableCell.css";
-import { simpleTableNullDate } from "../functions/simpleTableNullDate";
+import { SimpleTableContext } from "./SimpleTableContext";
+import { SimpleTableNullDate } from "./SimpleTableNullDate";
 
 interface SimpleTableCellProps {
   rowId: Key;
@@ -17,7 +16,7 @@ export const SimpleTableCell = ({
   cellField,
   columnNumber,
   rowNumber,
-}: SimpleTableCellProps): JSX.Element => {
+}: SimpleTableCellProps): React.ReactElement => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   const field: ISimpleTableField | undefined = useMemo(
@@ -38,19 +37,21 @@ export const SimpleTableCell = ({
       key={cellField}
       className={styles.cell}
     >
-      {!field || !rowData
-        ? `${!rowData ? "Row data" : ""}${!rowData && !field ? ", " : ""}${
-            !field ? "Field" : ""
-          } not found`
-        : field.renderFn
-          ? field.renderFn({ rowData, columnNumber, field, cellField: field.name, rowNumber })
-          : simpleTableNullDate({
-              rowData,
-              columnNumber,
-              field,
-              cellField: field.name,
-              rowNumber,
-            })}
+      {!field || !rowData ? (
+        `${!rowData ? "Row data" : ""}${!rowData && !field ? ", " : ""}${
+          !field ? "Field" : ""
+        } not found`
+      ) : field.renderFn ? (
+        field.renderFn({ rowData, columnNumber, field, cellField: field.name, rowNumber })
+      ) : (
+        <SimpleTableNullDate
+          rowData={rowData}
+          columnNumber={columnNumber}
+          field={field}
+          cellField={field.name}
+          rowNumber={rowNumber}
+        />
+      )}
     </td>
   );
 };

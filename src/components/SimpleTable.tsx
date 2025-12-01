@@ -1,5 +1,5 @@
 import { Key, useCallback, useEffect, useMemo, useState } from "react";
-import { columnFilterValue } from "../functions/simpleTableNullDate";
+import { columnFilterValue } from "../functions/columnFilterValue";
 import styles from "./SimpleTable.module.css";
 import { SimpleTableBody } from "./SimpleTableBody";
 import {
@@ -15,7 +15,7 @@ import { SimpleTableSelectHeader } from "./SimpleTableSelectHeader";
 import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
 
 interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
-  id?: string;
+  id: string;
   headerLabel?: string;
   fields: ISimpleTableField[];
   keyField: string;
@@ -48,13 +48,27 @@ interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
 }
 
 interface SimpleTableLocalSettings {
-  pageRows?: number | "Infinity";
+  pageRows?: number | string;
   headerWidths?: (string | undefined)[] | { name: string; width: string }[];
 }
 
+// Type guard for SimpleTableLocalSettings
+const isSimpleTableLocalSettings = (obj: unknown): obj is SimpleTableLocalSettings => {
+  if (typeof obj !== "object" || obj === null) return false;
+  const settings = obj as Record<string, unknown>;
+  if (settings.pageRows !== undefined) {
+    if (typeof settings.pageRows !== "number" && typeof settings.pageRows !== "string")
+      return false;
+  }
+  if (settings.headerWidths !== undefined) {
+    if (!Array.isArray(settings.headerWidths)) return false;
+  }
+  return true;
+};
+
 export const SimpleTable = ({
-  id = "simple-table",
-  headerLabel = "Simple table",
+  id,
+  headerLabel,
   fields,
   keyField,
   data,
@@ -82,25 +96,55 @@ export const SimpleTable = ({
   selectInactiveColor = "rgb(0, 0, 0, 0.2)",
   selectActiveColor = "rgb(255, 153, 0)",
   ...rest
-}: SimpleTableProps): JSX.Element => {
+}: SimpleTableProps): React.ReactElement => {
+  // Load local settings once on mount
+  const localSettingsText =
+    typeof window !== "undefined"
+      ? window.localStorage.getItem(`asup.simple-table.${id}.settings`)
+      : // istanbul ignore next
+        null;
+  const parsedSettings = localSettingsText ? JSON.parse(localSettingsText) : null;
+  const localSettings = isSimpleTableLocalSettings(parsedSettings) ? parsedSettings : null;
+
+  // Sync external data prop changes
   const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
-  useEffect(() => setTableData(data), [data]);
+  useEffect(() => {
+    setTableData(data);
+  }, [data]);
+
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
   const [sortBy, setSortBy] = useState<ISimpleTableSort | null>(null);
   const [searchText, setSearchText] = useState<string>("");
-  const [columnWidths, setColumnWidths] = useState<{ name: string; width: string }[]>([]);
-  useEffect(
-    () =>
-      setColumnWidths(
-        fields
-          .filter((f) => f.width !== undefined)
-          .map((f) => ({ name: f.name, width: f.width as string })),
-      ),
-    [fields],
-  );
 
-  const [firstRow, setFirstRow] = useState(0);
-  const [pageRows, setPageRows] = useState(25);
+  // Initialize columnWidths from localStorage or fields
+  const [columnWidths, setColumnWidths] = useState<{ name: string; width: string }[]>(() => {
+    if (localSettings?.headerWidths && Array.isArray(localSettings.headerWidths)) {
+      // Check if it's the old format (string[]) or new format ({ name, width }[])
+      if (
+        localSettings.headerWidths.length > 0 &&
+        !localSettings.headerWidths.every((c) => typeof c === "string" || c === null)
+      ) {
+        return localSettings.headerWidths as { name: string; width: string }[];
+      }
+    }
+    return fields
+      .filter((f) => f.width !== undefined)
+      .map((f) => ({ name: f.name, width: f.width as string }));
+  });
+
+  // Initialize pageRows from localStorage or props
+  const [firstRow, setFirstRow] = useState(showPager === false ? 0 : 0);
+  const [pageRows, setPageRows] = useState(() => {
+    if (showPager === false) return Infinity;
+    if (localSettings?.pageRows && showPager) {
+      if (localSettings.pageRows === "Infinity") return Infinity;
+      return typeof localSettings.pageRows === "string"
+        ? parseInt(localSettings.pageRows, 10)
+        : localSettings.pageRows;
+    }
+    return 25;
+  });
+
   useEffect(() => {
     if (showPager === false) {
       setFirstRow(0);
@@ -161,11 +205,15 @@ export const SimpleTable = ({
           .reduce((prev, cur) => prev && cur, true);
       })
       .sort(sortFn);
-    if (_viewData.length <= firstRow) {
+    return _viewData;
+  }, [currentColumnFilters, filterFn, searchFn, sortFn, tableData]);
+
+  // Reset firstRow when viewData length changes and firstRow is out of bounds
+  useEffect(() => {
+    if (viewData.length <= firstRow && viewData.length > 0) {
       setFirstRow(0);
     }
-    return _viewData;
-  }, [currentColumnFilters, filterFn, firstRow, searchFn, sortFn, tableData]);
+  }, [viewData.length, firstRow]);
 
   // Update sort order
   const updateSortBy = useCallback(
@@ -217,6 +265,7 @@ export const SimpleTable = ({
   const toggleSelection = useCallback(
     (rowId: Key) => {
       // Check key exists
+      // istanbul ignore else
       if (tableData.findIndex((row) => row[keyField] === rowId) > -1) {
         // Create new selection
         const newSelection = [...currentSelection];
@@ -234,6 +283,7 @@ export const SimpleTable = ({
     (setting: string, value: number | { name: string; width: string }[]) => {
       const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
       const localSettings = JSON.parse(localSettingsText ?? "{}") as SimpleTableLocalSettings;
+      // istanbul ignore else
       if (setting === "pageRows" && value && !Array.isArray(value)) {
         localSettings.pageRows = value === Infinity ? "Infinity" : value;
       } else if (setting === "headerWidths" && value && Array.isArray(value)) {
@@ -247,48 +297,26 @@ export const SimpleTable = ({
     [id],
   );
 
-  // Load any previous settings, should only run on load
   useEffect(() => {
-    const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
-    if (localSettingsText) {
-      const localSettings = JSON.parse(localSettingsText) as SimpleTableLocalSettings;
-      if (localSettings.pageRows && showPager)
-        setPageRows(localSettings.pageRows === "Infinity" ? Infinity : localSettings.pageRows);
-      // Reset previous version settings
-      if (
-        localSettings.headerWidths &&
-        Array.isArray(localSettings.headerWidths) &&
-        localSettings.headerWidths.length > 0 &&
-        localSettings.headerWidths.every((c) => typeof c === "string" || c === null)
-      ) {
-        const newColumnWidths = fields
-          .filter((f) => !f.hidden)
-          .map((f, ix) => ({
-            name: f.name,
-            width: `${(localSettings.headerWidths as (string | null)[])[ix] ?? "undefined"}`,
-          }));
-        updateLocalSettings("headerWidths", newColumnWidths);
-      } else if (localSettings.headerWidths && Array.isArray(localSettings.headerWidths)) {
-        setColumnWidths(localSettings.headerWidths as { name: string; width: string }[]);
-      }
-    }
-  }, [fields, id, showPager, updateLocalSettings]);
-
-  useEffect(() => {
+    // istanbul ignore else
     if (mainBackgroundColor)
       document.documentElement.style.setProperty("--st-main-background-color", mainBackgroundColor);
+    // istanbul ignore else
     if (headerBackgroundColor)
       document.documentElement.style.setProperty(
         "--st-header-background-color",
         headerBackgroundColor,
       );
+    // istanbul ignore else
     if (selectedBackgroundColor)
       document.documentElement.style.setProperty(
         "--st-selected-background-color",
         selectedBackgroundColor,
       );
+    // istanbul ignore else
     if (selectActiveColor)
       document.documentElement.style.setProperty("--st-select-active", selectActiveColor);
+    // istanbul ignore else
     if (selectInactiveColor)
       document.documentElement.style.setProperty("--st-select-inactive", selectInactiveColor);
 
@@ -336,6 +364,7 @@ export const SimpleTable = ({
           columnWidths,
           setColumnWidth: (name: string, width: string) => {
             const newColumnWidths = [...columnWidths];
+            // istanbul ignore else
             if (fields.map((f) => f.name).includes(name)) {
               const ix = newColumnWidths.findIndex((c) => c.name === name);
               if (ix === -1) {

@@ -1,5 +1,5 @@
 import { ISimpleTableRow, ISimpleTableSort } from "../components";
-import { columnFilterValue } from "./simpleTableNullDate";
+import { columnFilterValue } from "./columnFilterValue";
 
 export const simpleTableSortFn = (
   a: ISimpleTableRow,

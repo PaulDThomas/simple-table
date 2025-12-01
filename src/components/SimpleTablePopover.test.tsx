@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import React from "react";
 import { SimpleTablePopover } from "./SimpleTablePopover";
 
 // Mock ResizeObserver
@@ -6,6 +7,22 @@ global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
+};
+
+// Helper component to pass ref properly
+const PopoverWrapper = ({
+  anchorElement,
+  ...props
+}: Omit<React.ComponentProps<typeof SimpleTablePopover>, "anchorElementRef"> & {
+  anchorElement: HTMLElement | null;
+}) => {
+  const ref = React.useRef<HTMLElement | null>(anchorElement);
+  return (
+    <SimpleTablePopover
+      {...props}
+      anchorElementRef={ref}
+    />
+  );
 };
 
 describe("SimpleTablePopover", () => {
@@ -64,13 +81,13 @@ describe("SimpleTablePopover", () => {
 
   test("No anchor element still renders", () => {
     render(
-      <SimpleTablePopover
+      <PopoverWrapper
         isVisible={true}
         anchorElement={null}
         onClose={jest.fn()}
       >
         <div data-testid="popover-content">Test content</div>
-      </SimpleTablePopover>,
+      </PopoverWrapper>,
     );
 
     expect(screen.queryByTestId("popover-content")).toBeInTheDocument();
@@ -86,7 +103,7 @@ describe("SimpleTablePopover", () => {
     mockAnchorElement.dataset.top = "100";
     mockAnchorElement.dataset.bottom = "150";
     render(
-      <SimpleTablePopover
+      <PopoverWrapper
         isVisible={true}
         anchorElement={mockAnchorElement}
         onClose={mockClose}
@@ -94,7 +111,7 @@ describe("SimpleTablePopover", () => {
         data-width="250px"
       >
         <div data-testid="popover-content">Test content</div>
-      </SimpleTablePopover>,
+      </PopoverWrapper>,
     );
 
     const popoverContent = screen.getByTestId("popover-content");
@@ -134,7 +151,7 @@ describe("SimpleTablePopover", () => {
 
     await act(async () =>
       render(
-        <SimpleTablePopover
+        <PopoverWrapper
           isVisible={true}
           anchorElement={mockAnchorElement}
           onClose={mockClose}
@@ -142,7 +159,7 @@ describe("SimpleTablePopover", () => {
           data-width="400px"
         >
           <div data-testid="popover-content">Test content</div>
-        </SimpleTablePopover>,
+        </PopoverWrapper>,
       ),
     );
     const popover = screen.getByTestId("popover-content").parentElement;
@@ -165,13 +182,13 @@ describe("SimpleTablePopover", () => {
 
   test("does not render when isVisible is false", () => {
     render(
-      <SimpleTablePopover
+      <PopoverWrapper
         isVisible={false}
         anchorElement={mockAnchorElement}
         onClose={jest.fn()}
       >
         <div data-testid="popover-content">Test content</div>
-      </SimpleTablePopover>,
+      </PopoverWrapper>,
     );
 
     expect(screen.queryByTestId("popover-content")).not.toBeInTheDocument();
@@ -186,13 +203,13 @@ describe("SimpleTablePopover", () => {
     mockAnchorElement.dataset.right = "-50";
 
     render(
-      <SimpleTablePopover
+      <PopoverWrapper
         isVisible={true}
         anchorElement={mockAnchorElement}
         onClose={mockClose}
       >
         <div data-testid="popover-content">Test content</div>
-      </SimpleTablePopover>,
+      </PopoverWrapper>,
     );
 
     expect(mockClose).toHaveBeenCalled();
@@ -201,13 +218,13 @@ describe("SimpleTablePopover", () => {
   test("closes when escape key is pressed", () => {
     const mockClose = jest.fn();
     render(
-      <SimpleTablePopover
+      <PopoverWrapper
         isVisible={true}
         anchorElement={mockAnchorElement}
         onClose={mockClose}
       >
         <div data-testid="popover-content">Test content</div>
-      </SimpleTablePopover>,
+      </PopoverWrapper>,
     );
 
     // Simulate pressing Escape
@@ -219,7 +236,7 @@ describe("SimpleTablePopover", () => {
     const mockClose = jest.fn();
     await act(async () =>
       render(
-        <SimpleTablePopover
+        <PopoverWrapper
           isVisible={true}
           anchorElement={mockAnchorElement}
           onClose={mockClose}
@@ -227,7 +244,7 @@ describe("SimpleTablePopover", () => {
           data-width="250px"
         >
           <div data-testid="popover-content">Test content</div>
-        </SimpleTablePopover>,
+        </PopoverWrapper>,
       ),
     );
     // Shrink the window height to cause the popover to shrink too

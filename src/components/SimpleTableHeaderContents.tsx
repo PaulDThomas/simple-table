@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { ISimpleTableField } from "./interface";
 import { SimpleTableColumnFilter } from "./SimpleTableColumnFilter";
 import { SimpleTableContext } from "./SimpleTableContext";
@@ -14,7 +14,7 @@ interface ISimspleTableHeaderContentsProps {
 export const SimpleTableHeaderContents = ({
   field,
   columnNumber,
-}: ISimspleTableHeaderContentsProps): JSX.Element => {
+}: ISimspleTableHeaderContentsProps): React.ReactElement => {
   const simpleTableContext = useContext(SimpleTableContext);
   const filterIconRef = useRef<HTMLSpanElement>(null);
 
@@ -39,7 +39,7 @@ export const SimpleTableHeaderContents = ({
       {field.canColumnFilter && (
         <SimpleTablePopover
           isVisible={isFilterActive}
-          anchorElement={filterIconRef.current}
+          anchorElementRef={filterIconRef}
           onClose={() => simpleTableContext.setCurrentColumnFilter(null)}
         >
           <SimpleTableColumnFilter columnName={field.name} />

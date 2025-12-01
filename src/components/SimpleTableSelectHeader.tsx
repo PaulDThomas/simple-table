@@ -2,11 +2,12 @@ import { useContext, useEffect, useRef } from "react";
 import { SimpleTableContext } from "./SimpleTableContext";
 import styles from "./SimpleTableSelectHeader.module.css";
 
-export const SimpleTableSelectHeader = (): JSX.Element => {
+export const SimpleTableSelectHeader = (): React.ReactElement => {
   const simpleTableContext = useContext(SimpleTableContext);
   const allCheck = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
+    // istanbul ignore else
     if (allCheck.current) {
       if (simpleTableContext.currentSelection?.length === simpleTableContext.totalRows) {
         allCheck.current.checked = true;

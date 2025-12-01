@@ -233,4 +233,61 @@ describe("SimpleTableColumnFilter", () => {
     await user.click(searchToggle);
     expect(screen.queryByLabelText("Other user")).not.toBeChecked();
   });
+
+  test("Close filter when no setCurrentColumnFilters available", async () => {
+    const mockSetCurrentFilter = jest.fn();
+    await act(async () => {
+      render(
+        <MockComponent
+          currentColumnFilters={[]}
+          setCurrentColumnFilter={mockSetCurrentFilter}
+          setCurrentColumnFilters={
+            undefined as unknown as (ret: ISimpleTableColumnFilter[]) => void
+          }
+        />,
+      );
+    });
+    // Should still render
+    expect(screen.queryByText("6 items selected")).toBeInTheDocument();
+  });
+
+  test("Toggle search filter with empty search text does nothing", async () => {
+    const user = userEvent.setup();
+    const mockSet = jest.fn();
+    const mockSetCurrentFilter = jest.fn();
+    await act(async () => {
+      render(
+        <MockComponent
+          currentColumnFilters={[]}
+          setCurrentColumnFilter={mockSetCurrentFilter}
+          setCurrentColumnFilters={mockSet}
+        />,
+      );
+    });
+    const searchToggle = screen.queryByLabelText("Column search filter toggle") as HTMLInputElement;
+    expect(searchToggle).toBeInTheDocument();
+    // Click with empty search - should not change anything
+    await user.click(searchToggle.parentElement!);
+    expect(screen.queryByText("6 items selected")).toBeInTheDocument();
+  });
+
+  test("Handle existing filter index", async () => {
+    const user = userEvent.setup();
+    const mockSet = jest.fn();
+    const mockSetCurrentFilter = jest.fn();
+    await act(async () => {
+      render(
+        <MockComponent
+          currentColumnFilters={[{ columnName: "displayName", values: ["Lead"] }]}
+          setCurrentColumnFilter={mockSetCurrentFilter}
+          setCurrentColumnFilters={mockSet}
+        />,
+      );
+    });
+    expect(screen.queryByText("1 item selected")).toBeInTheDocument();
+    // Close should update existing filter
+    const closeButton = screen.queryByLabelText("Close filter");
+    await user.click(closeButton!);
+    expect(mockSet).toHaveBeenCalled();
+  });
 });

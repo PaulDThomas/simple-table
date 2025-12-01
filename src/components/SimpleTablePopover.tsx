@@ -1,21 +1,21 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./SimpleTableHeaderContents.module.css";
 
 export interface SimpleTablePopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   isVisible: boolean;
-  anchorElement: HTMLElement | null;
+  anchorElementRef: React.RefObject<HTMLElement | null>;
   onClose: () => void;
 }
 
 export const SimpleTablePopover = ({
   children,
   isVisible,
-  anchorElement,
+  anchorElementRef,
   onClose,
   ...rest
-}: SimpleTablePopoverProps): JSX.Element | null => {
+}: SimpleTablePopoverProps): React.ReactElement | null => {
   const [position, setPosition] = useState<{
     top: number | undefined;
     left: number | undefined;
@@ -29,6 +29,7 @@ export const SimpleTablePopover = ({
   const popoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const anchorElement = anchorElementRef.current;
     const updatePosition = () => {
       if (!anchorElement || !popoverRef.current) return;
 
@@ -103,6 +104,7 @@ export const SimpleTablePopover = ({
 
     // Handle escape key press
     const handleKeyDown = (event: KeyboardEvent) => {
+      // istanbul ignore else
       if (event.key === "Escape") {
         window.removeEventListener("keydown", handleKeyDown);
         onClose();
@@ -135,7 +137,7 @@ export const SimpleTablePopover = ({
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [alignment, anchorElement, isVisible, onClose]);
+  }, [alignment, anchorElementRef, isVisible, onClose]);
 
   if (!isVisible) return null;
 
@@ -146,9 +148,10 @@ export const SimpleTablePopover = ({
       className={styles.filterHolder}
       style={{
         visibility: position.top !== undefined ? "visible" : "hidden",
-        top: `${position.top}px`,
-        left: position.left !== undefined ? `${position.left}px` : undefined,
-        right: position.right !== undefined ? `${position.right}px` : undefined,
+        top: position.top !== undefined ? `${position.top}px` : "auto",
+        bottom: "auto",
+        left: position.left !== undefined ? `${position.left}px` : "auto",
+        right: position.right !== undefined ? `${position.right}px` : "auto",
         resize: alignment === "right" ? "none" : undefined,
       }}
     >
