@@ -38,19 +38,21 @@ export const SimpleTableCell = ({
       key={cellField}
       className={styles.cell}
     >
-      {!field || !rowData
-        ? `${!rowData ? "Row data" : ""}${!rowData && !field ? ", " : ""}${
-            !field ? "Field" : ""
-          } not found`
-        : field.renderFn
-          ? field.renderFn({ rowData, columnNumber, field, cellField: field.name, rowNumber })
-          : SimpleTableNullDateCell({
-              rowData,
-              columnNumber,
-              field,
-              cellField: field.name,
-              rowNumber,
-            })}
+      {!field || !rowData ? (
+        `${!rowData ? "Row data" : ""}${!rowData && !field ? ", " : ""}${
+          !field ? "Field" : ""
+        } not found`
+      ) : field.renderFn ? (
+        field.renderFn({ rowData, columnNumber, field, cellField: field.name, rowNumber })
+      ) : (
+        <SimpleTableNullDateCell
+          rowData={rowData}
+          columnNumber={columnNumber}
+          field={field}
+          cellField={field.name}
+          rowNumber={rowNumber}
+        />
+      )}
     </td>
   );
 };
