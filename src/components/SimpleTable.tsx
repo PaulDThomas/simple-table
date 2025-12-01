@@ -82,7 +82,7 @@ export const SimpleTable = ({
   selectInactiveColor = "rgb(0, 0, 0, 0.2)",
   selectActiveColor = "rgb(255, 153, 0)",
   ...rest
-}: SimpleTableProps): React.JSX.Element => {
+}: SimpleTableProps): React.ReactElement => {
   // Load local settings once on mount
   const localSettingsText =
     typeof window !== "undefined"

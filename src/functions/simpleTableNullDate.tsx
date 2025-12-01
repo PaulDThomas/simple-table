@@ -61,7 +61,7 @@ export const columnFilterValue = (dataItem: unknown, showBlank = true): string =
 export const simpleTableNullDate = ({
   rowData,
   cellField,
-}: ISimpleTableCellRenderProps): React.JSX.Element => (
+}: ISimpleTableCellRenderProps): React.ReactElement => (
   <div
     className={`simple-table-null-date-cell overflow-hidden ${typeof rowData[cellField] === "number" ? styles.textRight : styles.textLeft}`}
   >

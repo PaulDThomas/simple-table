@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { SimpleTableContext } from "./SimpleTableContext";
 import styles from "./SimpleTableSearch.module.css";
 
-export const SimpleTableSearch = (): React.JSX.Element => {
+export const SimpleTableSearch = (): React.ReactElement => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   return (

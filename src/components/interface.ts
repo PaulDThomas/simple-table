@@ -28,7 +28,7 @@ export interface ISimpleTableField {
   sortFn?: (a: ISimpleTableRow, b: ISimpleTableRow, sortBy: ISimpleTableSort) => number;
   searchFn?: (a: ISimpleTableRow, searchText: string) => boolean;
   filterOutFn?: (a: ISimpleTableRow) => boolean;
-  headerRenderFn?: (a: ISimpleTableHeaderRenderProps) => React.JSX.Element;
-  renderFn?: (a: ISimpleTableCellRenderProps) => React.JSX.Element;
+  headerRenderFn?: (a: ISimpleTableHeaderRenderProps) => React.ReactElement;
+  renderFn?: (a: ISimpleTableCellRenderProps) => React.ReactElement;
   canColumnFilter?: boolean;
 }

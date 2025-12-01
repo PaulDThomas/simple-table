@@ -9,7 +9,7 @@ interface ISimspleTableHeaderContentsProps {
 export const SimpleTableHeaderContents = ({
   field,
   columnNumber,
-}: ISimspleTableHeaderContentsProps): React.JSX.Element => {
+}: ISimspleTableHeaderContentsProps): React.ReactElement => {
   return (
     <>
       {columnNumber}:{field.name}

@@ -17,7 +17,7 @@ export const SimpleTableCell = ({
   cellField,
   columnNumber,
   rowNumber,
-}: SimpleTableCellProps): React.JSX.Element => {
+}: SimpleTableCellProps): React.ReactElement => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   const field: ISimpleTableField | undefined = useMemo(
