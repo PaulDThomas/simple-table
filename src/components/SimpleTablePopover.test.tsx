@@ -17,9 +17,6 @@ const PopoverWrapper = ({
   anchorElement: HTMLElement | null;
 }) => {
   const ref = React.useRef<HTMLElement | null>(anchorElement);
-  // Sync ref when anchorElement changes (test helper pattern)
-  // eslint-disable-next-line react-hooks/refs
-  ref.current = anchorElement;
   return (
     <SimpleTablePopover
       {...props}

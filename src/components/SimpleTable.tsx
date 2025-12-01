@@ -1,5 +1,5 @@
+import { columnFilterValue } from "functions/columnFilterValue";
 import { Key, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { columnFilterValue } from "../functions/simpleTableNullDate";
 import styles from "./SimpleTable.module.css";
 import { SimpleTableBody } from "./SimpleTableBody";
 import {
@@ -123,8 +123,7 @@ export const SimpleTable = ({
     return 25;
   });
 
-  // Sync external data prop changes - disable eslint for valid prop sync pattern
-
+  // Sync external data prop changes
   useEffect(() => {
     setTableData(data);
   }, [data]);
