@@ -1,7 +1,7 @@
 import React from "react";
 import { ISimpleTableCellRenderProps } from ".";
-import styles from "../components/SimpleTableCell.module.css";
 import { columnFilterValue } from "../functions/columnFilterValue";
+import styles from "./SimpleTableCell.module.css";
 
 export const SimpleTableNullDate = ({
   rowData,
