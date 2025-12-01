@@ -1,3 +1,4 @@
+import React from "react";
 import { ISimpleTableCellRenderProps } from "../components";
 import styles from "../components/SimpleTableCell.module.css";
 
@@ -60,7 +61,7 @@ export const columnFilterValue = (dataItem: unknown, showBlank = true): string =
 export const simpleTableNullDate = ({
   rowData,
   cellField,
-}: ISimpleTableCellRenderProps): JSX.Element => (
+}: ISimpleTableCellRenderProps): React.JSX.Element => (
   <div
     className={`simple-table-null-date-cell overflow-hidden ${typeof rowData[cellField] === "number" ? styles.textRight : styles.textLeft}`}
   >
