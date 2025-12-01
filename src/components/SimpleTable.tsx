@@ -1,4 +1,4 @@
-import { Key, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Key, useCallback, useEffect, useMemo, useState } from "react";
 import { columnFilterValue } from "../functions/columnFilterValue";
 import styles from "./SimpleTable.module.css";
 import { SimpleTableBody } from "./SimpleTableBody";
@@ -105,7 +105,12 @@ export const SimpleTable = ({
   const parsedSettings = localSettingsText ? JSON.parse(localSettingsText) : null;
   const localSettings = isSimpleTableLocalSettings(parsedSettings) ? parsedSettings : null;
 
+  // Sync external data prop changes
   const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
+  useEffect(() => {
+    setTableData(data);
+  }, [data]);
+
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
   const [sortBy, setSortBy] = useState<ISimpleTableSort | null>(null);
   const [searchText, setSearchText] = useState<string>("");
@@ -139,32 +144,7 @@ export const SimpleTable = ({
     return 25;
   });
 
-  // Sync external data prop changes
   useEffect(() => {
-    setTableData(data);
-  }, [data]);
-
-  // Sync column widths when fields change (not on initial mount, as useState initializer handles that)
-  const fieldsInitialized = useRef(false);
-  useEffect(() => {
-    if (!fieldsInitialized.current) {
-      fieldsInitialized.current = true;
-      return;
-    }
-    setColumnWidths(
-      fields
-        .filter((f) => f.width !== undefined)
-        .map((f) => ({ name: f.name, width: f.width as string })),
-    );
-  }, [fields]);
-
-  // Sync pager state when showPager changes (not on initial mount, as useState initializer handles that)
-  const showPagerInitialized = useRef(false);
-  useEffect(() => {
-    if (!showPagerInitialized.current) {
-      showPagerInitialized.current = true;
-      return;
-    }
     if (showPager === false) {
       setFirstRow(0);
       setPageRows(Infinity);
@@ -313,35 +293,6 @@ export const SimpleTable = ({
     },
     [id],
   );
-
-  // Migrate old settings format if needed (one-time effect on mount)
-  const hasRunMigrationRef = useRef(false);
-  useEffect(() => {
-    if (hasRunMigrationRef.current) return;
-    hasRunMigrationRef.current = true;
-
-    const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
-    if (localSettingsText) {
-      const localSettings = JSON.parse(localSettingsText) as SimpleTableLocalSettings;
-      // Migrate old string[] format to new { name, width }[] format
-      if (
-        localSettings.headerWidths &&
-        Array.isArray(localSettings.headerWidths) &&
-        localSettings.headerWidths.length > 0 &&
-        localSettings.headerWidths.every((c) => typeof c === "string" || c === null)
-      ) {
-        const newColumnWidths = fields
-          .filter((f) => !f.hidden)
-          .map((f, ix) => ({
-            name: f.name,
-            width: `${(localSettings.headerWidths as (string | null)[])[ix] ?? "undefined"}`,
-          }));
-        // Only update localStorage, not state, to preserve original behavior
-        // where columnWidths only contains explicitly resized columns
-        updateLocalSettings("headerWidths", newColumnWidths);
-      }
-    }
-  }, [fields, id, updateLocalSettings]);
 
   useEffect(() => {
     if (mainBackgroundColor)

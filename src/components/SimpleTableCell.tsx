@@ -1,9 +1,8 @@
 import { Key, useContext, useMemo } from "react";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
-import "./SimpleTableCell.css";
 import styles from "./SimpleTableCell.module.css";
 import { SimpleTableContext } from "./SimpleTableContext";
-import { SimpleTableNullDateCell } from "./SimpleTableNullDateCell";
+import { SimpleTableNullDate } from "./SimpleTableNullDate";
 
 interface SimpleTableCellProps {
   rowId: Key;
@@ -45,7 +44,7 @@ export const SimpleTableCell = ({
       ) : field.renderFn ? (
         field.renderFn({ rowData, columnNumber, field, cellField: field.name, rowNumber })
       ) : (
-        <SimpleTableNullDateCell
+        <SimpleTableNullDate
           rowData={rowData}
           columnNumber={columnNumber}
           field={field}

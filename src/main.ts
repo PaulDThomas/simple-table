@@ -1,5 +1,5 @@
 import "../global.d.ts";
-import { SimpleTableNullDateCell } from "./components/SimpleTableNullDateCell.js";
+import { SimpleTableNullDate } from "./components/SimpleTableNullDate.js";
 import { columnFilterValue } from "./functions/columnFilterValue.js";
 import { convertDateToLocaleString } from "./functions/convertDateToLocaleString.js";
 import { convertLocaleDateToUTCString } from "./functions/convertLocaleDateToUTCString.js";
@@ -11,6 +11,6 @@ export {
   columnFilterValue,
   convertDateToLocaleString,
   convertLocaleDateToUTCString,
-  SimpleTableNullDateCell,
+  SimpleTableNullDate,
   simpleTableSortFn,
 };

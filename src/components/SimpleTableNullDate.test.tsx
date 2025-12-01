@@ -2,13 +2,13 @@ import { render, screen } from "@testing-library/react";
 import { columnFilterValue } from "../functions/columnFilterValue";
 import { convertDateToLocaleString } from "../functions/convertDateToLocaleString";
 import { convertLocaleDateToUTCString } from "../functions/convertLocaleDateToUTCString";
-import { SimpleTableNullDateCell } from "./SimpleTableNullDateCell";
+import { SimpleTableNullDate } from "./SimpleTableNullDate";
 
 describe("Test print date function", () => {
   test("Correctly process null", async () => {
     render(
       <div data-testid="cell">
-        {SimpleTableNullDateCell({
+        {SimpleTableNullDate({
           rowData: { date: null },
           cellField: "date",
           field: { name: "date" },
@@ -22,7 +22,7 @@ describe("Test print date function", () => {
   test("Correctly process date", async () => {
     render(
       <div data-testid="cell">
-        {SimpleTableNullDateCell({
+        {SimpleTableNullDate({
           rowData: { date: new Date("2022-01-01") },
           cellField: "date",
           field: { name: "date" },
@@ -37,7 +37,7 @@ describe("Test print date function", () => {
   test("Correctly processes string date", async () => {
     render(
       <div data-testid="cell">
-        {SimpleTableNullDateCell({
+        {SimpleTableNullDate({
           rowData: { date: "2022-01-01T00:00:00Z" },
           cellField: "date",
           field: { name: "date" },
@@ -51,7 +51,7 @@ describe("Test print date function", () => {
   test("Correctly process string", async () => {
     render(
       <div data-testid="cell">
-        {SimpleTableNullDateCell({
+        {SimpleTableNullDate({
           rowData: { date: "2022-01-01" },
           cellField: "date",
           field: { name: "date" },
