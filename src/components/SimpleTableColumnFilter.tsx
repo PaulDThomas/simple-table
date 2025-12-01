@@ -1,5 +1,5 @@
 import { isEqual } from "lodash";
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import cbStyles from "./SimpleTableCheckBox.module.css";
 import styles from "./SimpleTableColumnFilter.module.css";
 import { ISimpleTableColumnFilter, SimpleTableContext } from "./SimpleTableContext";
@@ -14,65 +14,61 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
   const matchCheck = useRef<HTMLInputElement | null>(null);
   const [matchSearch, setMatchSearch] = useState<boolean>(true);
 
-  const availableList = useMemo(() => {
-    return (
-      simpleTableContext.currentColumnItems
-        .find((cf) => cf.columnName === columnName)
-        ?.values.sort((a, b) => a.localeCompare(b)) ?? []
-    );
-  }, [columnName, simpleTableContext]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const availableList =
+    simpleTableContext.currentColumnItems
+      .find((cf) => cf.columnName === columnName)
+      ?.values.sort((a, b) => a.localeCompare(b)) ?? [];
 
   const [currentFilter, setCurrentFilter] = useState<string[]>(
     simpleTableContext.currentColumnFilters?.find((cf) => cf.columnName === columnName)?.values ??
       availableList,
   );
 
-  const onClose = useCallback(
-    (values?: string[]) => {
-      // istanbul ignore else
-      if (simpleTableContext.setCurrentColumnFilters) {
-        const newColumnFilters = [...simpleTableContext.currentColumnFilters];
-        const newColumnFilter: ISimpleTableColumnFilter = {
-          columnName,
-          values: values ?? currentFilter,
-        };
-        const ix = simpleTableContext.currentColumnFilters.findIndex(
-          (cf) => cf.columnName === columnName,
-        );
-        // If the current filter is the same as the available list, remove it
-        if (isEqual(availableList, currentFilter)) {
-          // istanbul ignore else
-          if (ix > -1) {
-            newColumnFilters.splice(ix, 1);
-          }
-        } else {
-          if (ix > -1) {
-            newColumnFilters.splice(ix, 1, newColumnFilter);
-          } else {
-            newColumnFilters.push(newColumnFilter);
-          }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const onClose = (values?: string[]) => {
+    // istanbul ignore else
+    if (simpleTableContext.setCurrentColumnFilters) {
+      const newColumnFilters = [...simpleTableContext.currentColumnFilters];
+      const newColumnFilter: ISimpleTableColumnFilter = {
+        columnName,
+        values: values ?? currentFilter,
+      };
+      const ix = simpleTableContext.currentColumnFilters.findIndex(
+        (cf) => cf.columnName === columnName,
+      );
+      // If the current filter is the same as the available list, remove it
+      if (isEqual(availableList, currentFilter)) {
+        // istanbul ignore else
+        if (ix > -1) {
+          newColumnFilters.splice(ix, 1);
         }
-        simpleTableContext.setCurrentColumnFilters(newColumnFilters);
+      } else {
+        if (ix > -1) {
+          newColumnFilters.splice(ix, 1, newColumnFilter);
+        } else {
+          newColumnFilters.push(newColumnFilter);
+        }
       }
-      setLocalFilter("");
-      setCurrentFilter([]);
-      simpleTableContext.setCurrentColumnFilter(null);
-    },
-    [availableList, columnName, currentFilter, simpleTableContext],
-  );
+      simpleTableContext.setCurrentColumnFilters(newColumnFilters);
+    }
+    setLocalFilter("");
+    setCurrentFilter([]);
+    simpleTableContext.setCurrentColumnFilter(null);
+  };
 
   // Toggle all viewed rows
-  const toggleCurrentColumnFilter = useCallback(() => {
+  const toggleCurrentColumnFilter = () => {
     // Add all items if they are not already in the current filter
     if (currentFilter.length < availableList.length) {
       setCurrentFilter(availableList);
     } else {
       setCurrentFilter([]);
     }
-  }, [availableList, currentFilter.length]);
+  };
 
   // Toggle all viewed rows
-  const toggleCurrentColumnSearchFilter = useCallback(() => {
+  const toggleCurrentColumnSearchFilter = () => {
     // istanbul ignore else
     if (availableList) {
       const searchedItems = availableList.filter((v) =>
@@ -91,26 +87,23 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
         setMatchSearch(false);
       }
     }
-  }, [availableList, currentFilter, localFilter]);
+  };
 
-  const selectBodyRow = useCallback(
-    (
-      e: React.MouseEvent<HTMLElement, MouseEvent> | React.ChangeEvent<HTMLInputElement>,
-      v: string,
-    ) => {
-      e.stopPropagation();
-      e.preventDefault();
-      const newFilter = [...currentFilter];
-      const ix = newFilter.findIndex((cf) => cf === v);
-      if (ix > -1) {
-        newFilter.splice(ix, 1);
-      } else {
-        newFilter.push(v);
-      }
-      setCurrentFilter(newFilter);
-    },
-    [currentFilter],
-  );
+  const selectBodyRow = (
+    e: React.MouseEvent<HTMLElement, MouseEvent> | React.ChangeEvent<HTMLInputElement>,
+    v: string,
+  ) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const newFilter = [...currentFilter];
+    const ix = newFilter.findIndex((cf) => cf === v);
+    if (ix > -1) {
+      newFilter.splice(ix, 1);
+    } else {
+      newFilter.push(v);
+    }
+    setCurrentFilter(newFilter);
+  };
 
   const bodyRow = (v: string, i: number) => (
     <tr key={i}>

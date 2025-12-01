@@ -1,4 +1,4 @@
-import { Key, useCallback, useEffect, useMemo, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { columnFilterValue } from "../functions/columnFilterValue";
 import styles from "./SimpleTable.module.css";
 import { SimpleTableBody } from "./SimpleTableBody";
@@ -155,58 +155,46 @@ export const SimpleTable = ({
   const [currentColumnFilter, setCurrentColumnFilter] = useState<number | null>(null);
   const [currentColumnFilters, setCurrentColumnFilters] = useState<ISimpleTableColumnFilter[]>([]);
 
-  const filterFn = useCallback(
-    (row: ISimpleTableRow) => {
-      if (showFilter && filterData) {
-        const filterFns = fields
-          .filter((f) => f.filterOutFn)
-          .map((f) => f.filterOutFn as (a: ISimpleTableRow) => boolean);
-        return !filterFns.some((fn) => fn(row));
-      } else return true;
-    },
-    [fields, filterData, showFilter],
-  );
+  const filterFn = (row: ISimpleTableRow) => {
+    if (showFilter && filterData) {
+      const filterFns = fields
+        .filter((f) => f.filterOutFn)
+        .map((f) => f.filterOutFn as (a: ISimpleTableRow) => boolean);
+      return !filterFns.some((fn) => fn(row));
+    } else return true;
+  };
 
-  const searchFn = useCallback(
-    (row: ISimpleTableRow) => {
-      if (showSearch && searchText.trim().length > 0) {
-        const searchFns = fields
-          .filter((f) => f.searchFn)
-          .map((f) => f.searchFn as (a: ISimpleTableRow, searchText: string) => boolean);
-        return searchFns.some((fn) => fn(row, searchText));
-      } else return true;
-    },
-    [fields, searchText, showSearch],
-  );
+  const searchFn = (row: ISimpleTableRow) => {
+    if (showSearch && searchText.trim().length > 0) {
+      const searchFns = fields
+        .filter((f) => f.searchFn)
+        .map((f) => f.searchFn as (a: ISimpleTableRow, searchText: string) => boolean);
+      return searchFns.some((fn) => fn(row, searchText));
+    } else return true;
+  };
 
-  const sortFn = useCallback(
-    (rowa: ISimpleTableRow, rowb: ISimpleTableRow) => {
-      try {
-        const sortFn = fields.find((f) => f.name === sortBy?.name)?.sortFn;
-        if (sortFn && sortBy)
-          return sortBy.asc ? sortFn(rowa, rowb, sortBy) : -sortFn(rowa, rowb, sortBy);
-        else return 0;
-      } catch (error) {
-        console.warn(`Sort failed because ${error}`);
-        return 0;
-      }
-    },
-    [fields, sortBy],
-  );
+  const sortFn = (rowa: ISimpleTableRow, rowb: ISimpleTableRow) => {
+    try {
+      const sortFn = fields.find((f) => f.name === sortBy?.name)?.sortFn;
+      if (sortFn && sortBy)
+        return sortBy.asc ? sortFn(rowa, rowb, sortBy) : -sortFn(rowa, rowb, sortBy);
+      else return 0;
+    } catch (error) {
+      console.warn(`Sort failed because ${error}`);
+      return 0;
+    }
+  };
 
   // Get view data
-  const viewData = useMemo(() => {
-    const _viewData = tableData
-      .filter(filterFn)
-      .filter(searchFn)
-      .filter((row) => {
-        return currentColumnFilters
-          .map((cf) => cf.values.includes(columnFilterValue(row[cf.columnName])))
-          .reduce((prev, cur) => prev && cur, true);
-      })
-      .sort(sortFn);
-    return _viewData;
-  }, [currentColumnFilters, filterFn, searchFn, sortFn, tableData]);
+  const viewData = tableData
+    .filter(filterFn)
+    .filter(searchFn)
+    .filter((row) => {
+      return currentColumnFilters
+        .map((cf) => cf.values.includes(columnFilterValue(row[cf.columnName])))
+        .reduce((prev, cur) => prev && cur, true);
+    })
+    .sort(sortFn);
 
   // Reset firstRow when viewData length changes and firstRow is out of bounds
   useEffect(() => {
@@ -216,33 +204,27 @@ export const SimpleTable = ({
   }, [viewData.length, firstRow]);
 
   // Update sort order
-  const updateSortBy = useCallback(
-    (field: ISimpleTableField) => {
-      if (field.name === sortBy?.name && sortBy?.asc === false) {
-        setSortBy(null);
-      } else {
-        setSortBy({
-          name: field.name,
-          asc: field.name === sortBy?.name ? !sortBy.asc : true,
-        });
-      }
-    },
-    [sortBy],
-  );
+  const updateSortBy = (field: ISimpleTableField) => {
+    if (field.name === sortBy?.name && sortBy?.asc === false) {
+      setSortBy(null);
+    } else {
+      setSortBy({
+        name: field.name,
+        asc: field.name === sortBy?.name ? !sortBy.asc : true,
+      });
+    }
+  };
 
   // Get current column items
-  const currentColumnItems = useMemo(() => {
-    const ret = fields
-      .filter((f) => f.canColumnFilter)
-      .map((f) => ({
-        columnName: f.name,
-        values: Array.from(new Set(tableData.map((t) => columnFilterValue(t[f.name])))),
-      }));
-    return ret;
-  }, [fields, tableData]);
+  const currentColumnItems = fields
+    .filter((f) => f.canColumnFilter)
+    .map((f) => ({
+      columnName: f.name,
+      values: Array.from(new Set(viewData.map((t) => columnFilterValue(t[f.name])))),
+    }));
 
   // Toggle all viewed rows
-  const toggleAllCurrentSelection = useCallback(() => {
+  const toggleAllCurrentSelection = () => {
     // Select available if some are not selected
     const viewedKeys: Key[] = viewData
       .filter(
@@ -260,42 +242,37 @@ export const SimpleTable = ({
     else {
       setCurrentSelection?.(currentSelection.filter((s) => !viewedKeys.includes(s)));
     }
-  }, [currentSelection, keyField, setCurrentSelection, viewData]);
+  };
+
   // Toggle individual row
-  const toggleSelection = useCallback(
-    (rowId: Key) => {
-      // Check key exists
-      // istanbul ignore else
-      if (tableData.findIndex((row) => row[keyField] === rowId) > -1) {
-        // Create new selection
-        const newSelection = [...currentSelection];
-        const ix = newSelection.findIndex((s) => s === rowId);
-        if (ix > -1) newSelection.splice(ix, 1);
-        else newSelection.push(rowId);
-        setCurrentSelection?.(newSelection);
-      }
-    },
-    [currentSelection, keyField, setCurrentSelection, tableData],
-  );
+  const toggleSelection = (rowId: Key) => {
+    // Check key exists
+    // istanbul ignore else
+    if (tableData.findIndex((row) => row[keyField] === rowId) > -1) {
+      // Create new selection
+      const newSelection = [...currentSelection];
+      const ix = newSelection.findIndex((s) => s === rowId);
+      if (ix > -1) newSelection.splice(ix, 1);
+      else newSelection.push(rowId);
+      setCurrentSelection?.(newSelection);
+    }
+  };
 
   // Save local settings
-  const updateLocalSettings = useCallback(
-    (setting: string, value: number | { name: string; width: string }[]) => {
-      const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
-      const localSettings = JSON.parse(localSettingsText ?? "{}") as SimpleTableLocalSettings;
-      // istanbul ignore else
-      if (setting === "pageRows" && value && !Array.isArray(value)) {
-        localSettings.pageRows = value === Infinity ? "Infinity" : value;
-      } else if (setting === "headerWidths" && value && Array.isArray(value)) {
-        localSettings.headerWidths = value;
-      }
-      window.localStorage.setItem(
-        `asup.simple-table.${id}.settings`,
-        JSON.stringify(localSettings),
-      );
-    },
-    [id],
-  );
+  const updateLocalSettings = (
+    setting: string,
+    value: number | { name: string; width: string }[],
+  ) => {
+    const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
+    const localSettings = JSON.parse(localSettingsText ?? "{}") as SimpleTableLocalSettings;
+    // istanbul ignore else
+    if (setting === "pageRows" && value && !Array.isArray(value)) {
+      localSettings.pageRows = value === Infinity ? "Infinity" : value;
+    } else if (setting === "headerWidths" && value && Array.isArray(value)) {
+      localSettings.headerWidths = value;
+    }
+    window.localStorage.setItem(`asup.simple-table.${id}.settings`, JSON.stringify(localSettings));
+  };
 
   useEffect(() => {
     // istanbul ignore else

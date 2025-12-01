@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { SimpleTableContext } from "./SimpleTableContext";
 import styles from "./SimpleTableHeader.module.css";
 import { SimpleTableHeaderContents } from "./SimpleTableHeaderContents";
@@ -8,7 +8,7 @@ export const SimpleTableHeader = (): React.ReactElement => {
   const targetCell = useRef<HTMLTableCellElement | null>(null);
   const mouseUpRef = useRef<(() => void) | null>(null);
 
-  const mouseMove = useCallback((e: MouseEvent) => {
+  const mouseMove = (e: MouseEvent) => {
     // istanbul ignore else
     if (targetCell.current !== null) {
       const t = targetCell.current as HTMLTableCellElement;
@@ -17,9 +17,10 @@ export const SimpleTableHeader = (): React.ReactElement => {
         t.style.width = `${width}px`;
       }
     }
-  }, []);
+  };
 
-  const mouseUp = useCallback(() => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const mouseUp = () => {
     // istanbul ignore else
     if (targetCell.current) {
       const name = targetCell.current.dataset.columnName;
@@ -35,26 +36,22 @@ export const SimpleTableHeader = (): React.ReactElement => {
         window.removeEventListener("mouseup", mouseUpRef.current);
       }
     }
-  }, [mouseMove, simpleTableContext]);
+  };
 
   // Keep ref updated with latest mouseUp in an effect
   useEffect(() => {
     mouseUpRef.current = mouseUp;
   }, [mouseUp]);
 
-  const mouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      targetCell.current = (e.currentTarget as HTMLDivElement)
-        .parentElement as HTMLTableCellElement;
-      // istanbul ignore else
-      if (targetCell.current) {
-        window.addEventListener("mousemove", mouseMove);
-        window.addEventListener("mouseup", mouseUp);
-      }
-    },
-    [mouseMove, mouseUp],
-  );
+  const mouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    targetCell.current = (e.currentTarget as HTMLDivElement).parentElement as HTMLTableCellElement;
+    // istanbul ignore else
+    if (targetCell.current) {
+      window.addEventListener("mousemove", mouseMove);
+      window.addEventListener("mouseup", mouseUp);
+    }
+  };
 
   return (
     <>

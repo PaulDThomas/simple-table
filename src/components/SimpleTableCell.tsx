@@ -1,4 +1,4 @@
-import { Key, useContext, useMemo } from "react";
+import { Key, useContext } from "react";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import styles from "./SimpleTableCell.module.css";
 import { SimpleTableContext } from "./SimpleTableContext";
@@ -19,14 +19,12 @@ export const SimpleTableCell = ({
 }: SimpleTableCellProps): React.ReactElement => {
   const simpleTableContext = useContext(SimpleTableContext);
 
-  const field: ISimpleTableField | undefined = useMemo(
-    () => simpleTableContext.fields.find((f) => f.name === cellField),
-    [cellField, simpleTableContext.fields],
+  const field: ISimpleTableField | undefined = simpleTableContext.fields.find(
+    (f) => f.name === cellField,
   );
 
-  const rowData: ISimpleTableRow | undefined = useMemo(
-    () => simpleTableContext.viewData.find((d) => d[simpleTableContext.keyField] === rowId),
-    [rowId, simpleTableContext.keyField, simpleTableContext.viewData],
+  const rowData: ISimpleTableRow | undefined = simpleTableContext.viewData.find(
+    (d) => d[simpleTableContext.keyField] === rowId,
   );
 
   return (
