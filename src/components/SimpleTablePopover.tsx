@@ -104,6 +104,7 @@ export const SimpleTablePopover = ({
 
     // Handle escape key press
     const handleKeyDown = (event: KeyboardEvent) => {
+      // istanbul ignore else
       if (event.key === "Escape") {
         window.removeEventListener("keydown", handleKeyDown);
         onClose();

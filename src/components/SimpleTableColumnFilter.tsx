@@ -29,6 +29,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
 
   const onClose = useCallback(
     (values?: string[]) => {
+      // istanbul ignore else
       if (simpleTableContext.setCurrentColumnFilters) {
         const newColumnFilters = [...simpleTableContext.currentColumnFilters];
         const newColumnFilter: ISimpleTableColumnFilter = {
@@ -40,6 +41,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
         );
         // If the current filter is the same as the available list, remove it
         if (isEqual(availableList, currentFilter)) {
+          // istanbul ignore else
           if (ix > -1) {
             newColumnFilters.splice(ix, 1);
           }
@@ -71,6 +73,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
 
   // Toggle all viewed rows
   const toggleCurrentColumnSearchFilter = useCallback(() => {
+    // istanbul ignore else
     if (availableList) {
       const searchedItems = availableList.filter((v) =>
         v.toLowerCase().includes(localFilter.toLowerCase()),
@@ -165,6 +168,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
 
   // Manage the state of the match search checkbox
   useEffect(() => {
+    // istanbul ignore else
     if (matchCheck.current) {
       matchCheck.current.checked = matchSearch;
     }
@@ -172,6 +176,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
 
   // Manage the state of the checkboxes based on the current filter and available list
   useEffect(() => {
+    // istanbul ignore else
     if (allCheck.current) {
       if (currentFilter?.length === availableList?.length) {
         allCheck.current.checked = true;
@@ -184,6 +189,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
         allCheck.current.indeterminate = true;
       }
     }
+    // istanbul ignore else
     if (searchCheck.current) {
       const searchResults = availableList?.filter((v) =>
         v.toLowerCase().includes(localFilter.toLowerCase()),

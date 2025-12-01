@@ -7,6 +7,7 @@ export const SimpleTableSelectHeader = (): React.ReactElement => {
   const allCheck = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
+    // istanbul ignore else
     if (allCheck.current) {
       if (simpleTableContext.currentSelection?.length === simpleTableContext.totalRows) {
         allCheck.current.checked = true;

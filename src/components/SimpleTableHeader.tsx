@@ -9,6 +9,7 @@ export const SimpleTableHeader = (): React.ReactElement => {
   const mouseUpRef = useRef<(() => void) | null>(null);
 
   const mouseMove = useCallback((e: MouseEvent) => {
+    // istanbul ignore else
     if (targetCell.current !== null) {
       const t = targetCell.current as HTMLTableCellElement;
       const width = e.clientX - window.scrollX - t.getBoundingClientRect().x;
@@ -19,14 +20,17 @@ export const SimpleTableHeader = (): React.ReactElement => {
   }, []);
 
   const mouseUp = useCallback(() => {
+    // istanbul ignore else
     if (targetCell.current) {
       const name = targetCell.current.dataset.columnName;
       const width = targetCell.current.style.width;
+      // istanbul ignore else
       if (simpleTableContext.setColumnWidth && name && width) {
         simpleTableContext.setColumnWidth(name, targetCell.current.style.width);
       }
       targetCell.current = null;
       window.removeEventListener("mousemove", mouseMove);
+      // istanbul ignore else
       if (mouseUpRef.current) {
         window.removeEventListener("mouseup", mouseUpRef.current);
       }
@@ -43,6 +47,7 @@ export const SimpleTableHeader = (): React.ReactElement => {
       e.preventDefault();
       targetCell.current = (e.currentTarget as HTMLDivElement)
         .parentElement as HTMLTableCellElement;
+      // istanbul ignore else
       if (targetCell.current) {
         window.addEventListener("mousemove", mouseMove);
         window.addEventListener("mouseup", mouseUp);

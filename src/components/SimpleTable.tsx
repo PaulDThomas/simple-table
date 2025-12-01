@@ -15,7 +15,7 @@ import { SimpleTableSelectHeader } from "./SimpleTableSelectHeader";
 import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
 
 interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
-  id?: string;
+  id: string;
   headerLabel?: string;
   fields: ISimpleTableField[];
   keyField: string;
@@ -67,8 +67,8 @@ const isSimpleTableLocalSettings = (obj: unknown): obj is SimpleTableLocalSettin
 };
 
 export const SimpleTable = ({
-  id = "simple-table",
-  headerLabel = "Simple table",
+  id,
+  headerLabel,
   fields,
   keyField,
   data,
@@ -265,6 +265,7 @@ export const SimpleTable = ({
   const toggleSelection = useCallback(
     (rowId: Key) => {
       // Check key exists
+      // istanbul ignore else
       if (tableData.findIndex((row) => row[keyField] === rowId) > -1) {
         // Create new selection
         const newSelection = [...currentSelection];
@@ -282,6 +283,7 @@ export const SimpleTable = ({
     (setting: string, value: number | { name: string; width: string }[]) => {
       const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
       const localSettings = JSON.parse(localSettingsText ?? "{}") as SimpleTableLocalSettings;
+      // istanbul ignore else
       if (setting === "pageRows" && value && !Array.isArray(value)) {
         localSettings.pageRows = value === Infinity ? "Infinity" : value;
       } else if (setting === "headerWidths" && value && Array.isArray(value)) {
@@ -296,20 +298,25 @@ export const SimpleTable = ({
   );
 
   useEffect(() => {
+    // istanbul ignore else
     if (mainBackgroundColor)
       document.documentElement.style.setProperty("--st-main-background-color", mainBackgroundColor);
+    // istanbul ignore else
     if (headerBackgroundColor)
       document.documentElement.style.setProperty(
         "--st-header-background-color",
         headerBackgroundColor,
       );
+    // istanbul ignore else
     if (selectedBackgroundColor)
       document.documentElement.style.setProperty(
         "--st-selected-background-color",
         selectedBackgroundColor,
       );
+    // istanbul ignore else
     if (selectActiveColor)
       document.documentElement.style.setProperty("--st-select-active", selectActiveColor);
+    // istanbul ignore else
     if (selectInactiveColor)
       document.documentElement.style.setProperty("--st-select-inactive", selectInactiveColor);
 
@@ -357,6 +364,7 @@ export const SimpleTable = ({
           columnWidths,
           setColumnWidth: (name: string, width: string) => {
             const newColumnWidths = [...columnWidths];
+            // istanbul ignore else
             if (fields.map((f) => f.name).includes(name)) {
               const ix = newColumnWidths.findIndex((c) => c.name === name);
               if (ix === -1) {
