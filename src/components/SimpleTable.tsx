@@ -101,7 +101,8 @@ export const SimpleTable = ({
   const localSettingsText =
     typeof window !== "undefined"
       ? window.localStorage.getItem(`asup.simple-table.${id}.settings`)
-      : null;
+      : // istanbul ignore next
+        null;
   const parsedSettings = localSettingsText ? JSON.parse(localSettingsText) : null;
   const localSettings = isSimpleTableLocalSettings(parsedSettings) ? parsedSettings : null;
 
