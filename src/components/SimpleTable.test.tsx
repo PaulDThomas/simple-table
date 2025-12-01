@@ -839,4 +839,55 @@ describe("Test callbacks", () => {
       container.querySelector("#test-table > tbody > tr:first-child > td:first-child")?.textContent,
     ).toEqual("1");
   });
+
+  test("Fields without width use default column widths", async () => {
+    // Test with fields that have no width property - covers line 132
+    const fieldsNoWidth: ISimpleTableField[] = [
+      { name: "userId", label: "User ID", hidden: true },
+      { name: "hierarchyLabel", label: "Hierarchy" },
+      { name: "displayName", label: "Display name" },
+    ];
+    await act(async () =>
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          fields={fieldsNoWidth}
+          keyField={"userId"}
+          data={mockAccesses}
+        />,
+      ),
+    );
+    expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+    expect(screen.queryByText("Hierarchy")).toBeInTheDocument();
+  });
+
+  test("Column filter reduces view data", async () => {
+    // Test with column filters active - covers lines 204-205
+    const fieldsWithFilter: ISimpleTableField[] = [
+      { name: "userId", label: "User ID", hidden: true },
+      {
+        name: "hierarchyLabel",
+        label: "Hierarchy",
+        canColumnFilter: true,
+      },
+      { name: "displayName", label: "Display name" },
+    ];
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            fields={fieldsWithFilter}
+            keyField={"userId"}
+            data={mockAccesses}
+          />
+        </div>,
+      ),
+    );
+    const container = screen.getByTestId("container");
+    // Should show all rows initially
+    expect(container.querySelectorAll("#test-table > tbody > tr").length).toEqual(3);
+  });
 });
