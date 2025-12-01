@@ -44,7 +44,7 @@ const config: Config = {
 
   // Code coverage
   collectCoverage: true,
-  coverageProvider: "v8",
+  coverageProvider: "babel",
   coverageReporters: ["lcov", "text"],
   collectCoverageFrom: [
     "src/**/*.{js,jsx}",
@@ -54,6 +54,7 @@ const config: Config = {
     "!**/main.ts",
     "!**/__dummy__/**",
     "!**/node_modules/**",
+    "!**/*.stories.*",
   ],
 
   // Map css type modules to blank module
