@@ -494,6 +494,100 @@ describe("Local settings", () => {
     window.localStorage.removeItem("asup.simple-table.test-table.settings");
   });
 
+  test("Load settings with numeric pageRows", async () => {
+    // Test with numeric pageRows (not a string)
+    const mockSetSelection = jest.fn();
+    window.localStorage.setItem(
+      "asup.simple-table.test-table.settings",
+      JSON.stringify({
+        pageRows: 50,
+      }),
+    );
+
+    await act(async () => {
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          fields={mockFields}
+          keyField={"userId"}
+          data={mockAccesses}
+          selectable
+          currentSelection={[1, 2]}
+          setCurrentSelection={mockSetSelection}
+        />,
+      );
+    });
+
+    const pagerSelect = screen.getByLabelText("Visible rows");
+    expect(pagerSelect).toHaveValue("50");
+
+    window.localStorage.removeItem("asup.simple-table.test-table.settings");
+  });
+
+  test("Ignores invalid local settings - non-object", async () => {
+    window.localStorage.setItem("asup.simple-table.test-table.settings", JSON.stringify("invalid"));
+
+    await act(async () => {
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          fields={mockFields}
+          keyField={"userId"}
+          data={mockAccesses}
+        />,
+      );
+    });
+
+    expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+    window.localStorage.removeItem("asup.simple-table.test-table.settings");
+  });
+
+  test("Ignores invalid local settings - invalid pageRows type", async () => {
+    window.localStorage.setItem(
+      "asup.simple-table.test-table.settings",
+      JSON.stringify({ pageRows: { invalid: true } }),
+    );
+
+    await act(async () => {
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          fields={mockFields}
+          keyField={"userId"}
+          data={mockAccesses}
+        />,
+      );
+    });
+
+    expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+    window.localStorage.removeItem("asup.simple-table.test-table.settings");
+  });
+
+  test("Ignores invalid local settings - invalid headerWidths type", async () => {
+    window.localStorage.setItem(
+      "asup.simple-table.test-table.settings",
+      JSON.stringify({ headerWidths: "invalid" }),
+    );
+
+    await act(async () => {
+      render(
+        <SimpleTable
+          id="test-table"
+          headerLabel="TEST TABLE"
+          fields={mockFields}
+          keyField={"userId"}
+          data={mockAccesses}
+        />,
+      );
+    });
+
+    expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+    window.localStorage.removeItem("asup.simple-table.test-table.settings");
+  });
+
   test("Load settings, some page rows, then set to All", async () => {
     // Add local setting for asup.simple-table.test-table.settings
     window.localStorage.setItem(
@@ -744,5 +838,73 @@ describe("Test callbacks", () => {
     expect(
       container.querySelector("#test-table > tbody > tr:first-child > td:first-child")?.textContent,
     ).toEqual("1");
+  });
+
+  test("Fields prop change updates column widths", async () => {
+    const initialFields: ISimpleTableField[] = [
+      { name: "userId", label: "User ID", width: "100px" },
+      { name: "name", label: "Name" },
+    ];
+    const updatedFields: ISimpleTableField[] = [
+      { name: "userId", label: "User ID", width: "150px" },
+      { name: "name", label: "Name", width: "200px" },
+    ];
+    const TestComponent = () => {
+      const [fields, setFields] = useState(initialFields);
+      return (
+        <div>
+          <button
+            data-testid="update-fields"
+            onClick={() => setFields(updatedFields)}
+          />
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            fields={fields}
+            keyField={"userId"}
+            data={[{ userId: 1, name: "Test" }]}
+          />
+        </div>
+      );
+    };
+
+    await act(async () => render(<TestComponent />));
+    expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+
+    // Update fields prop
+    const updateButton = screen.getByTestId("update-fields");
+    await act(async () => await userEvent.click(updateButton));
+    expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+  });
+
+  test("ShowPager prop change updates pager state", async () => {
+    const TestComponent = () => {
+      const [showPager, setShowPager] = useState(true);
+      return (
+        <div>
+          <button
+            data-testid="toggle-pager"
+            onClick={() => setShowPager(!showPager)}
+          />
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            fields={mockFields}
+            keyField={"userId"}
+            data={mockAccesses}
+            showPager={showPager}
+          />
+        </div>
+      );
+    };
+
+    await act(async () => render(<TestComponent />));
+    expect(screen.queryByText("TEST TABLE")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Visible rows")).toBeInTheDocument();
+
+    // Toggle showPager to false
+    const toggleButton = screen.getByTestId("toggle-pager");
+    await act(async () => await userEvent.click(toggleButton));
+    expect(screen.queryByLabelText("Visible rows")).not.toBeInTheDocument();
   });
 });

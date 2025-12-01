@@ -1,5 +1,5 @@
-import { columnFilterValue } from "functions/columnFilterValue";
 import { Key, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { columnFilterValue } from "../functions/columnFilterValue";
 import styles from "./SimpleTable.module.css";
 import { SimpleTableBody } from "./SimpleTableBody";
 import {
@@ -48,9 +48,23 @@ interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
 }
 
 interface SimpleTableLocalSettings {
-  pageRows?: number | "Infinity";
+  pageRows?: number | string;
   headerWidths?: (string | undefined)[] | { name: string; width: string }[];
 }
+
+// Type guard for SimpleTableLocalSettings
+const isSimpleTableLocalSettings = (obj: unknown): obj is SimpleTableLocalSettings => {
+  if (typeof obj !== "object" || obj === null) return false;
+  const settings = obj as Record<string, unknown>;
+  if (settings.pageRows !== undefined) {
+    if (typeof settings.pageRows !== "number" && typeof settings.pageRows !== "string")
+      return false;
+  }
+  if (settings.headerWidths !== undefined) {
+    if (!Array.isArray(settings.headerWidths)) return false;
+  }
+  return true;
+};
 
 export const SimpleTable = ({
   id = "simple-table",
@@ -88,9 +102,8 @@ export const SimpleTable = ({
     typeof window !== "undefined"
       ? window.localStorage.getItem(`asup.simple-table.${id}.settings`)
       : null;
-  const localSettings = localSettingsText
-    ? (JSON.parse(localSettingsText) as SimpleTableLocalSettings)
-    : null;
+  const parsedSettings = localSettingsText ? JSON.parse(localSettingsText) : null;
+  const localSettings = isSimpleTableLocalSettings(parsedSettings) ? parsedSettings : null;
 
   const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
@@ -118,7 +131,10 @@ export const SimpleTable = ({
   const [pageRows, setPageRows] = useState(() => {
     if (showPager === false) return Infinity;
     if (localSettings?.pageRows && showPager) {
-      return localSettings.pageRows === "Infinity" ? Infinity : localSettings.pageRows;
+      if (localSettings.pageRows === "Infinity") return Infinity;
+      return typeof localSettings.pageRows === "string"
+        ? parseInt(localSettings.pageRows, 10)
+        : localSettings.pageRows;
     }
     return 25;
   });

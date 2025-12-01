@@ -5,23 +5,6 @@ import { cleanup } from "@testing-library/react";
 // @ts-expect-error - React 19 internal property for testing
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
-// Suppress React 19 act() warnings that occur during async state updates
-// These warnings are expected when testing components with useEffect
-const originalConsoleError = console.error;
-beforeAll(() => {
-  console.error = (...args: unknown[]) => {
-    const firstArg = args[0];
-    if (typeof firstArg === "string" && firstArg.includes("not configured to support act")) {
-      return;
-    }
-    originalConsoleError.apply(console, args);
-  };
-});
-
-afterAll(() => {
-  console.error = originalConsoleError;
-});
-
 // Workaround for cssstyle 4.x CSS parsing issues in jsdom
 // See: https://github.com/jsdom/jsdom/issues/3746
 beforeAll(() => {
