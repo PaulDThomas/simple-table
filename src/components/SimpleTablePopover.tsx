@@ -152,7 +152,7 @@ export const SimpleTablePopover = ({
         bottom: "auto",
         left: position.left !== undefined ? `${position.left}px` : "auto",
         right: position.right !== undefined ? `${position.right}px` : "auto",
-        resize: alignment === "right" ? "none" : undefined,
+        resize: alignment === "right" ? "vertical" : undefined,
       }}
     >
       {children}
