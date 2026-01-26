@@ -957,4 +957,64 @@ describe("Test callbacks", () => {
     expect(screen.queryByText("User-admin")).not.toBeInTheDocument();
     expect(screen.queryByText("User-lead")).not.toBeInTheDocument();
   });
+
+  test("Column filter shows all values excluding filters on other columns (Excel-like behavior)", async () => {
+    // Test that currentColumnItems excludes the filter on its own column but includes other filters
+    // Mock data reminder:
+    // - Some TA -> admin (3)
+    // - SubHierarchy -> lead (0)
+    // - Corporate -> viewer (2)
+    const user = userEvent.setup();
+    const fieldsWithFilter: ISimpleTableField[] = [
+      { name: "userId", label: "User ID", hidden: true },
+      {
+        name: "hierarchyLabel",
+        label: "Hierarchy",
+        canColumnFilter: true,
+      },
+      {
+        name: "accessLevel",
+        label: "Access level",
+        canColumnFilter: true,
+      },
+    ];
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            fields={fieldsWithFilter}
+            keyField={"userId"}
+            data={mockAccesses}
+          />
+        </div>,
+      ),
+    );
+
+    const filterIcons = screen.getAllByLabelText("Column filter");
+
+    // PART 1: Filter Hierarchy to "Corporate" only
+    await user.click(filterIcons[0]); // Open Hierarchy filter
+
+    // All three hierarchy values should be available initially (no filters yet)
+    expect(screen.getByLabelText("Some TA")).toBeInTheDocument();
+    expect(screen.getByLabelText("SubHierarchy")).toBeInTheDocument();
+    expect(screen.getByLabelText("Corporate")).toBeInTheDocument();
+
+    // Select only "Corporate"
+    await user.click(screen.getByLabelText("Column filter toggle")); // Uncheck all
+    await user.click(screen.getByLabelText("Corporate").parentElement!); // Check only Corporate
+    await user.click(screen.getByLabelText("Close filter")); // Close
+
+    // PART 2: Open Access level filter - should only show "2" (viewer)
+    // because that's the only access level in Corporate (the Hierarchy filter affects this)
+    await user.click(filterIcons[1]); // Open Access level filter
+
+    expect(screen.queryByLabelText("0")).not.toBeInTheDocument(); // lead - not in Corporate
+    expect(screen.getByLabelText("2")).toBeInTheDocument(); // viewer - in Corporate
+    expect(screen.queryByLabelText("3")).not.toBeInTheDocument(); // admin - not in Corporate
+
+    // This demonstrates that OTHER column filters affect available values
+  });
 });

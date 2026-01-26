@@ -12,7 +12,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [localFilter, setLocalFilter] = useState<string>("");
   const matchCheck = useRef<HTMLInputElement | null>(null);
-  const [matchSearch, setMatchSearch] = useState<boolean>(true);
+  const [matchSearch, setMatchSearch] = useState<boolean>(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const availableList =
@@ -23,6 +23,13 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
   const [currentFilter, setCurrentFilter] = useState<string[]>(
     simpleTableContext.currentColumnFilters?.find((cf) => cf.columnName === columnName)?.values ??
       availableList,
+  );
+
+  const filteredItems = availableList.filter((v) =>
+    v.toLowerCase().includes(localFilter.toLowerCase()),
+  );
+  const filteredOutItems = availableList.filter(
+    (v) => !v.toLowerCase().includes(localFilter.toLowerCase()),
   );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -57,6 +64,24 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
     simpleTableContext.setCurrentColumnFilter(null);
   };
 
+  // Handle typing into the filter box
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newFilter = e.currentTarget.value;
+    const newMatchSearch =
+      localFilter.trim().length === 0 && newFilter.trim().length > 0
+        ? true
+        : localFilter.trim().length > 0 && newFilter.trim().length === 0
+          ? false
+          : matchSearch;
+    setLocalFilter(newFilter);
+    setMatchSearch(newMatchSearch);
+    setCurrentFilter(
+      newMatchSearch
+        ? availableList.filter((v) => v.toLowerCase().includes(newFilter.toLowerCase()))
+        : availableList,
+    );
+  };
+
   // Toggle all viewed rows
   const toggleCurrentColumnFilter = () => {
     // Add all items if they are not already in the current filter
@@ -80,6 +105,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
           ...searchedItems,
           ...currentFilter.filter((v) => !searchedItems.includes(v)),
         ]);
+        setMatchSearch(true);
       }
       // Remove selection if all are included
       else {
@@ -119,7 +145,10 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
             role="checkbox"
             className={simpleTableContext.filterCheckClassName}
             checked={currentFilter.includes(v)}
-            onChange={(e) => selectBodyRow(e, v)}
+            onChange={
+              // istanbul ignore next -- this element is hidden
+              (e) => selectBodyRow(e, v)
+            }
           />
         </div>
       </td>
@@ -217,16 +246,7 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
                   id={`${simpleTableContext.id}-columnfilter-${columnName}-filter`}
                   aria-label="Column filter search"
                   value={localFilter}
-                  onChange={(e) => {
-                    setLocalFilter(e.currentTarget.value);
-                    if (matchSearch) {
-                      setCurrentFilter(
-                        availableList.filter((v) =>
-                          v.toLowerCase().includes(e.currentTarget.value.toLowerCase()),
-                        ),
-                      );
-                    }
-                  }}
+                  onChange={handleFilterChange}
                 />
                 <div className={styles.close}>
                   <CloseSvg onClick={() => onClose()} />
@@ -293,26 +313,29 @@ export const SimpleTableColumnFilter = ({ columnName }: { columnName: string }) 
         </thead>
 
         <tbody className={styles.scroll}>
-          {availableList
-            .filter((v) => v.toLowerCase().includes(localFilter.toLowerCase()))
-            .map(bodyRow)}
-          {availableList.filter(
-            (v) =>
-              !v.toLowerCase().includes(localFilter.toLowerCase()) && currentFilter.includes(v),
-          ).length > 0 && (
+          {filteredItems.length === 0 ? (
             <tr>
-              <th
+              <td
                 colSpan={2}
-                style={{ backgroundColor: "grey" }}
-              ></th>
+                style={{ textAlign: "center" }}
+              >
+                No matching items
+              </td>
             </tr>
+          ) : (
+            filteredItems.map(bodyRow)
           )}
-          {availableList
-            .filter(
-              (v) =>
-                !v.toLowerCase().includes(localFilter.toLowerCase()) && currentFilter.includes(v),
-            )
-            .map(bodyRow)}
+          {filteredOutItems.length > 0 && (
+            <>
+              <tr>
+                <th
+                  colSpan={2}
+                  style={{ backgroundColor: "grey" }}
+                ></th>
+              </tr>
+              {filteredOutItems.map(bodyRow)}
+            </>
+          )}
         </tbody>
         <tfoot>
           <tr>

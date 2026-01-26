@@ -94,7 +94,8 @@ describe("SimpleTableColumnFilter", () => {
     const search = screen.queryByLabelText("Column filter search") as HTMLInputElement;
     expect(screen.queryByLabelText("Lead")).toBeInTheDocument();
     await act(async () => await user.type(search, "Te"));
-    expect(screen.queryByLabelText("Lead")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Lead")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Lead")).not.toBeChecked();
     await act(async () => await user.type(search, "{enter}"));
     expect(mockSetCurrentFilter).toHaveBeenCalledWith(null);
     expect(mockSet).toHaveBeenCalledWith([
@@ -216,22 +217,111 @@ describe("SimpleTableColumnFilter", () => {
     // Add different search text
     await user.clear(search);
     await user.type(search, "oth");
-    expect(screen.queryByText("4 items selected")).toBeInTheDocument();
+    expect(screen.queryByText("1 item selected")).toBeInTheDocument();
     const otherUserToggle = screen.queryByLabelText("Other user");
     expect(otherUserToggle).toBeInTheDocument();
-    expect(otherUserToggle).not.toBeChecked();
-    await user.click(otherUserToggle!.parentElement!);
     expect(otherUserToggle).toBeChecked();
 
-    // Remove previous item
+    // Non-matching items stay visible but unchecked
     expect(screen.queryByLabelText("Tester 2")).toBeInTheDocument();
-    expect(screen.queryByLabelText("Tester 2")).toBeChecked();
-    await user.click(screen.queryByLabelText("Tester 2")!);
-    expect(screen.queryByLabelText("Tester 2")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Tester 2")).not.toBeChecked();
 
-    // Remove other user
+    // Clear search selection
     await user.click(searchToggle);
     expect(screen.queryByLabelText("Other user")).not.toBeChecked();
+    expect(searchToggle).not.toBeChecked();
+    expect(searchToggle.indeterminate).toBe(false);
+    expect(matchToggle).not.toBeChecked();
+    expect(screen.queryByText("0 items selected")).toBeInTheDocument();
+  });
+
+  test("shows No matching items when search has no results", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      render(
+        <MockComponent
+          currentColumnFilters={[]}
+          setCurrentColumnFilter={jest.fn()}
+          setCurrentColumnFilters={jest.fn()}
+        />,
+      );
+    });
+
+    const search = screen.getByLabelText("Column filter search") as HTMLInputElement;
+    await user.clear(search);
+    await user.type(search, "zzz");
+
+    expect(screen.getByText("No matching items")).toBeInTheDocument();
+    // Non-matching items remain available below the separator
+    expect(screen.getByLabelText("Tester 1")).toBeInTheDocument();
+  });
+
+  test("clicking a body row checkbox toggles selection", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      render(
+        <MockComponent
+          currentColumnFilters={[]}
+          setCurrentColumnFilter={jest.fn()}
+          setCurrentColumnFilters={jest.fn()}
+        />,
+      );
+    });
+
+    // All six items selected initially
+    expect(screen.getByText("6 items selected")).toBeInTheDocument();
+
+    const tester3 = screen.getByLabelText("Tester 3");
+    expect(tester3).toBeChecked();
+
+    // Toggle off via container click to exercise selectBodyRow path
+    await user.click(tester3.parentElement!);
+    expect(tester3).not.toBeChecked();
+    expect(screen.getByText("5 items selected")).toBeInTheDocument();
+
+    // Toggle back on
+    await user.click(tester3.parentElement!);
+    expect(tester3).toBeChecked();
+    expect(screen.getByText("6 items selected")).toBeInTheDocument();
+  });
+
+  test("handleFilterChange toggles match search on type and clear", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      render(
+        <MockComponent
+          currentColumnFilters={[]}
+          setCurrentColumnFilter={jest.fn()}
+          setCurrentColumnFilters={jest.fn()}
+        />,
+      );
+    });
+
+    const search = screen.getByLabelText("Column filter search") as HTMLInputElement;
+    const matchToggle = screen.getByLabelText("Match search filter") as HTMLInputElement;
+    const searchToggle = screen.getByLabelText("Column search filter toggle") as HTMLInputElement;
+    const allToggle = screen.getByLabelText("Column filter toggle") as HTMLInputElement;
+
+    // Type first character: match search should enable and filtered selections should apply
+    await user.type(search, "T");
+    expect(matchToggle).toBeChecked();
+    expect(searchToggle).toBeChecked();
+    expect(allToggle.indeterminate).toBe(true);
+    expect(screen.getByText("5 items selected")).toBeInTheDocument();
+
+    // Continue typing while non-empty: retain match search state
+    await user.type(search, "e");
+    expect(matchToggle).toBeChecked();
+    expect(searchToggle).toBeChecked();
+    expect(screen.getByText("4 items selected")).toBeInTheDocument();
+
+    // Clearing search should disable match search and restore full selection
+    await user.clear(search);
+    expect(matchToggle).not.toBeChecked();
+    expect(searchToggle).not.toBeChecked();
+    expect(searchToggle.indeterminate).toBe(false);
+    expect(allToggle).toBeChecked();
+    expect(screen.getByText("6 items selected")).toBeInTheDocument();
   });
 
   test("Close filter when no setCurrentColumnFilters available", async () => {

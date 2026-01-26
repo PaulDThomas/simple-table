@@ -216,11 +216,24 @@ export const SimpleTable = ({
   };
 
   // Get current column items
+  // For each column, show values that exist after applying OTHER column filters (Excel-like behavior)
   const currentColumnItems = fields
     .filter((f) => f.canColumnFilter)
     .map((f) => ({
       columnName: f.name,
-      values: Array.from(new Set(viewData.map((t) => columnFilterValue(t[f.name])))),
+      values: Array.from(
+        new Set(
+          tableData
+            .filter((row) => {
+              // Apply all column filters EXCEPT the one for this column
+              return currentColumnFilters
+                .filter((cf) => cf.columnName !== f.name)
+                .map((cf) => cf.values.includes(columnFilterValue(row[cf.columnName])))
+                .reduce((prev, cur) => prev && cur, true);
+            })
+            .map((t) => columnFilterValue(t[f.name])),
+        ),
+      ),
     }));
 
   // Toggle all viewed rows
