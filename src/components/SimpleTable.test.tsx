@@ -1018,3 +1018,183 @@ describe("Test callbacks", () => {
     // This demonstrates that OTHER column filters affect available values
   });
 });
+
+// Mock data reminder for cascading slicer tests:
+// - User-admin:  hierarchyLabel="Some TA",     accessLevel=3 (admin)
+// - User-lead:   hierarchyLabel="SubHierarchy", accessLevel=0 (lead)
+// - User-view:   hierarchyLabel="Corporate",    accessLevel=2 (viewer)
+// filterOutFn on accessLevel filters OUT admin (accessLevel === eAccessLevel.admin === 3)
+// searchFn on hierarchyLabel matches rows whose hierarchyLabel contains the search text
+const cascadeFields: ISimpleTableField[] = [
+  { name: "userId", label: "User ID", hidden: true },
+  {
+    name: "hierarchyLabel",
+    label: "Hierarchy",
+    searchFn: (rowData, searchText) =>
+      (rowData.hierarchyLabel as string).toLowerCase().includes(searchText.toLowerCase().trim()),
+    canColumnFilter: true,
+  },
+  {
+    name: "accessLevel",
+    label: "Access level",
+    filterOutFn: (rowData) => (rowData.accessLevel as eAccessLevel) === eAccessLevel.admin,
+    canColumnFilter: true,
+  },
+];
+
+describe("Cascading slicer (column filter) behavior", () => {
+  test("Global filterFn removes values from slicer options", async () => {
+    // When the global filter checkbox is active, filterOutFn removes admin rows from the base
+    // used to build slicer options — so "Some TA" and accessLevel "3" should NOT appear
+    const user = userEvent.setup();
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            fields={cascadeFields}
+            keyField="userId"
+            data={mockAccesses}
+            showFilter={true}
+            showSearch={false}
+            filterLabel="FILTER HERE"
+          />
+        </div>,
+      ),
+    );
+
+    // Activate global filter (now filterFn excludes admin rows from baseForColumnItems)
+    const filterCheckbox = screen.getByRole("checkbox");
+    await user.click(filterCheckbox);
+
+    const filterIcons = screen.getAllByLabelText("Column filter");
+
+    // Hierarchy slicer: "Some TA" belongs to admin, so it must not appear
+    await user.click(filterIcons[0]);
+    expect(screen.queryByLabelText("Some TA")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("SubHierarchy")).toBeInTheDocument();
+    expect(screen.getByLabelText("Corporate")).toBeInTheDocument();
+    await user.click(screen.getByLabelText("Close filter"));
+
+    // Access level slicer: "3" (admin) must not appear
+    await user.click(filterIcons[1]);
+    expect(screen.queryByLabelText("3")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("0")).toBeInTheDocument();
+    expect(screen.getByLabelText("2")).toBeInTheDocument();
+  });
+
+  test("Search (searchFn) narrows slicer options to matching rows only", async () => {
+    // Typing "TA" matches only the "Some TA" hierarchy row via its searchFn
+    // Slicer options should therefore only reflect that one row
+    const user = userEvent.setup();
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            fields={cascadeFields}
+            keyField="userId"
+            data={mockAccesses}
+            showFilter={false}
+            showSearch={true}
+          />
+        </div>,
+      ),
+    );
+
+    const searchBox = screen.getByRole("searchbox");
+    await act(async () => await user.type(searchBox, "TA"));
+    expect(searchBox).toHaveValue("TA");
+
+    const filterIcons = screen.getAllByLabelText("Column filter");
+
+    // Hierarchy slicer: only "Some TA" should appear
+    await user.click(filterIcons[0]);
+    expect(screen.getByLabelText("Some TA")).toBeInTheDocument();
+    expect(screen.queryByLabelText("SubHierarchy")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Corporate")).not.toBeInTheDocument();
+    await user.click(screen.getByLabelText("Close filter"));
+
+    // Access level slicer: only "3" (admin, the user in "Some TA") should appear
+    await user.click(filterIcons[1]);
+    expect(screen.getByLabelText("3")).toBeInTheDocument();
+    expect(screen.queryByLabelText("0")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("2")).not.toBeInTheDocument();
+  });
+
+  test("A column's own active filter does not restrict its own slicer option list", async () => {
+    // After filtering Hierarchy to "Corporate", reopening the Hierarchy slicer
+    // must still show all three values (own-column filter is excluded from its own base)
+    const user = userEvent.setup();
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            fields={cascadeFields}
+            keyField="userId"
+            data={mockAccesses}
+          />
+        </div>,
+      ),
+    );
+
+    // Set Hierarchy filter to "Corporate" only
+    await user.click(screen.getAllByLabelText("Column filter")[0]);
+    await user.click(screen.getByLabelText("Column filter toggle")); // uncheck all
+    await user.click(screen.getByLabelText("Corporate").parentElement!); // check Corporate
+    await user.click(screen.getByLabelText("Close filter"));
+
+    // After filtering, the Hierarchy icon becomes "Column filter (Active)" — re-query it
+    // Reopen Hierarchy slicer — all three values must still be present
+    await user.click(screen.getByLabelText("Column filter (Active)"));
+    expect(screen.getByLabelText("Some TA")).toBeInTheDocument();
+    expect(screen.getByLabelText("SubHierarchy")).toBeInTheDocument();
+    expect(screen.getByLabelText("Corporate")).toBeInTheDocument();
+  });
+
+  test("Cross-filter: multiple column filters combine with AND and cascade options correctly", async () => {
+    // Filter Hierarchy to "Corporate" + "SubHierarchy"
+    // viewData should contain 2 rows (viewer + lead)
+    // Access level slicer should show "0" and "2" but NOT "3" (admin has "Some TA")
+    const user = userEvent.setup();
+    await act(async () =>
+      render(
+        <div data-testid="container">
+          <SimpleTable
+            id="test-table"
+            headerLabel="TEST TABLE"
+            fields={cascadeFields}
+            keyField="userId"
+            data={mockAccesses}
+          />
+        </div>,
+      ),
+    );
+
+    const container = screen.getByTestId("container");
+
+    // Filter Hierarchy to "Corporate" and "SubHierarchy" (exclude "Some TA" / admin)
+    await user.click(screen.getAllByLabelText("Column filter")[0]);
+    await user.click(screen.getByLabelText("Column filter toggle")); // uncheck all
+    await user.click(screen.getByLabelText("Corporate").parentElement!);
+    await user.click(screen.getByLabelText("SubHierarchy").parentElement!);
+    await user.click(screen.getByLabelText("Close filter"));
+
+    // Confirm only 2 rows visible (Corporate=viewer + SubHierarchy=lead; Some TA=admin excluded)
+    expect(container.querySelectorAll("#test-table > tbody > tr").length).toEqual(2);
+    expect(screen.queryByText("Corporate")).toBeInTheDocument();
+    expect(screen.queryByText("SubHierarchy")).toBeInTheDocument();
+    expect(screen.queryByText("Some TA")).not.toBeInTheDocument();
+
+    // After filtering, the Hierarchy icon becomes "Column filter (Active)".
+    // Access level is still inactive — re-query to get the correct live element.
+    await user.click(screen.getByLabelText("Column filter"));
+    expect(screen.getByLabelText("0")).toBeInTheDocument(); // lead
+    expect(screen.getByLabelText("2")).toBeInTheDocument(); // viewer
+    expect(screen.queryByLabelText("3")).not.toBeInTheDocument(); // admin excluded by Hierarchy filter
+  });
+});

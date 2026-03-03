@@ -217,13 +217,15 @@ export const SimpleTable = ({
 
   // Get current column items
   // For each column, show values that exist after applying OTHER column filters (Excel-like behavior)
+  const baseForColumnItems = tableData.filter(filterFn).filter(searchFn);
+
   const currentColumnItems = fields
     .filter((f) => f.canColumnFilter)
     .map((f) => ({
       columnName: f.name,
       values: Array.from(
         new Set(
-          tableData
+          baseForColumnItems
             .filter((row) => {
               // Apply all column filters EXCEPT the one for this column
               return currentColumnFilters
