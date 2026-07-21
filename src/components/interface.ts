@@ -19,7 +19,6 @@ export interface ISimpleTableCellRenderProps extends ISimpleTableHeaderRenderPro
   cellField: string;
   rowData: ISimpleTableRow;
   rowNumber: number;
-  columnFilterValueFn?: (dataItem: unknown, showBlank?: boolean) => string;
 }
 
 export interface ISimpleTableField {

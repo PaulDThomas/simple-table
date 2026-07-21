@@ -105,6 +105,16 @@ export const SimpleTable = ({
         null;
   const parsedSettings = localSettingsText ? JSON.parse(localSettingsText) : null;
   const localSettings = isSimpleTableLocalSettings(parsedSettings) ? parsedSettings : null;
+  const columnFilterValueFns: Record<string, (dataItem: unknown, showBlank?: boolean) => string> =
+    fields
+      .filter((f) => f.columnFilterValueFn)
+      .reduce(
+        (acc, f) => {
+          acc[f.name] = f.columnFilterValueFn as (dataItem: unknown, showBlank?: boolean) => string;
+          return acc;
+        },
+        {} as Record<string, (dataItem: unknown, showBlank?: boolean) => string>,
+      );
 
   // Sync external data prop changes
   const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
@@ -195,11 +205,7 @@ export const SimpleTable = ({
       return currentColumnFilters
         .map((cf) =>
           cf.values.includes(
-            columnFilterValue(
-              row[cf.columnName],
-              true,
-              fields.find((f) => f.name === cf.columnName)?.columnFilterValueFn,
-            ),
+            columnFilterValue(row[cf.columnName], true, columnFilterValueFns[cf.columnName]),
           ),
         )
         .reduce((prev, cur) => prev && cur, true);
@@ -221,7 +227,7 @@ export const SimpleTable = ({
       setSortBy({
         name: field.name,
         asc: field.name === sortBy?.name ? !sortBy.asc : true,
-        columnFilterValueFn: field.columnFilterValueFn,
+        columnFilterValueFn: columnFilterValueFns[field.name],
       });
     }
   };
@@ -241,7 +247,11 @@ export const SimpleTable = ({
                 .filter((cf) => cf.columnName !== f.name)
                 .map((cf) =>
                   cf.values.includes(
-                    columnFilterValue(row[cf.columnName], true, f.columnFilterValueFn),
+                    columnFilterValue(
+                      row[cf.columnName],
+                      true,
+                      columnFilterValueFns[cf.columnName],
+                    ),
                   ),
                 )
                 .reduce((prev, cur) => prev && cur, true);
