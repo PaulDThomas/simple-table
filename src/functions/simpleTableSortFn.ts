@@ -6,8 +6,11 @@ export const simpleTableSortFn = (
   b: ISimpleTableRow,
   sortBy: ISimpleTableSort,
 ) => {
-  const ret =
-    typeof a[sortBy.name] === "number" || typeof b[sortBy.name] === "number"
+  const ret = sortBy.columnFilterValueFn
+    ? columnFilterValue(a[sortBy.name], false, sortBy.columnFilterValueFn).localeCompare(
+        columnFilterValue(b[sortBy.name], false, sortBy.columnFilterValueFn),
+      )
+    : typeof a[sortBy.name] === "number" || typeof b[sortBy.name] === "number"
       ? ((typeof a[sortBy.name] === "number" ? a[sortBy.name] : -Infinity) as number) -
         ((typeof b[sortBy.name] === "number" ? b[sortBy.name] : -Infinity) as number)
       : a[sortBy.name] instanceof Date && b[sortBy.name] instanceof Date

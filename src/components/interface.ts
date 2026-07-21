@@ -7,6 +7,7 @@ export interface ISimpleTableRow {
 export interface ISimpleTableSort {
   name: string;
   asc: boolean;
+  columnFilterValueFn?: (dataItem: unknown, showBlank?: boolean) => string;
 }
 
 export interface ISimpleTableHeaderRenderProps {
@@ -18,6 +19,7 @@ export interface ISimpleTableCellRenderProps extends ISimpleTableHeaderRenderPro
   cellField: string;
   rowData: ISimpleTableRow;
   rowNumber: number;
+  columnFilterValueFn?: (dataItem: unknown, showBlank?: boolean) => string;
 }
 
 export interface ISimpleTableField {
@@ -31,4 +33,5 @@ export interface ISimpleTableField {
   headerRenderFn?: (a: ISimpleTableHeaderRenderProps) => React.ReactElement;
   renderFn?: (a: ISimpleTableCellRenderProps) => React.ReactElement;
   canColumnFilter?: boolean;
+  columnFilterValueFn?: (dataItem: unknown, showBlank?: boolean) => string;
 }

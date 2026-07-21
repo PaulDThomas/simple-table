@@ -191,7 +191,15 @@ export const SimpleTable = ({
     .filter(searchFn)
     .filter((row) => {
       return currentColumnFilters
-        .map((cf) => cf.values.includes(columnFilterValue(row[cf.columnName])))
+        .map((cf) =>
+          cf.values.includes(
+            columnFilterValue(
+              row[cf.columnName],
+              true,
+              fields.find((f) => f.name === cf.columnName)?.columnFilterValueFn,
+            ),
+          ),
+        )
         .reduce((prev, cur) => prev && cur, true);
     })
     .sort(sortFn);
@@ -211,6 +219,7 @@ export const SimpleTable = ({
       setSortBy({
         name: field.name,
         asc: field.name === sortBy?.name ? !sortBy.asc : true,
+        columnFilterValueFn: field.columnFilterValueFn,
       });
     }
   };
@@ -228,10 +237,14 @@ export const SimpleTable = ({
               // Apply all column filters EXCEPT the one for this column
               return currentColumnFilters
                 .filter((cf) => cf.columnName !== f.name)
-                .map((cf) => cf.values.includes(columnFilterValue(row[cf.columnName])))
+                .map((cf) =>
+                  cf.values.includes(
+                    columnFilterValue(row[cf.columnName], true, f.columnFilterValueFn),
+                  ),
+                )
                 .reduce((prev, cur) => prev && cur, true);
             })
-            .map((t) => columnFilterValue(t[f.name])),
+            .map((t) => columnFilterValue(t[f.name], true, f.columnFilterValueFn)),
         ),
       ),
     }));

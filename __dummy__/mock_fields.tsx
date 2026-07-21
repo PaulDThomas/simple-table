@@ -54,12 +54,16 @@ export const mockFields: ISimpleTableField[] = [
     sortFn: simpleTableSortFn,
     renderFn: ({ rowData }) => {
       return rowData.car_make ? (
-        <div className="overflow-hidden">{rowData.car_make as string}</div>
+        <div className="overflow-hidden">
+          {rowData.car_make === "Ford" ? "Another FORD classic" : `${rowData.car_make}`}
+        </div>
       ) : (
         <div>No car</div>
       );
     },
     filterOutFn: (rowData) => (rowData.car_make as string | null) === null,
+    columnFilterValueFn: (dataItem) =>
+      dataItem === null ? "<no car>" : dataItem === "Ford" ? "Another FORD classic" : `${dataItem}`,
     width: "140px",
     canColumnFilter: true,
   },

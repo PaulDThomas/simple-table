@@ -1,6 +1,13 @@
 import { convertDateToLocaleString } from "./convertDateToLocaleString";
 
-export const columnFilterValue = (dataItem: unknown, showBlank = true): string => {
+export const columnFilterValue = (
+  dataItem: unknown,
+  showBlank = true,
+  customFilterValueFn?: (dataItem: unknown, showBlank?: boolean) => string,
+): string => {
+  if (customFilterValueFn) {
+    return customFilterValueFn(dataItem, showBlank);
+  }
   if (
     !showBlank &&
     (dataItem === null ||

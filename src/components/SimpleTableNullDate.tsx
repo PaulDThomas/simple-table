@@ -6,6 +6,7 @@ import styles from "./SimpleTableCell.module.css";
 export const SimpleTableNullDate = ({
   rowData,
   cellField,
+  field,
 }: ISimpleTableCellRenderProps): React.ReactElement => (
   <div
     className={[
@@ -14,6 +15,6 @@ export const SimpleTableNullDate = ({
       typeof rowData[cellField] === "number" ? styles.textRight : styles.textLeft,
     ].join(" ")}
   >
-    <span>{columnFilterValue(rowData[cellField], false)}</span>
+    <span>{columnFilterValue(rowData[cellField], false, field.columnFilterValueFn)}</span>
   </div>
 );
