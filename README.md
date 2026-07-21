@@ -122,6 +122,7 @@ interface iSimpleTableField {
     filterOutFn?: (a: iSimpleTableRow) => boolean;
     headerRenderFn?: (a: iSimpleTableHeaderRenderProps) => JSX.Element
     renderFn?: (a: iSimpleTableCellRenderProps) => JSX.Element;
+    columnFilterValueFn?: (dataItem: unknown, showBlank?: boolean) => string;
 }
 ```
 
@@ -151,20 +152,52 @@ const fields: iSimpleTableField[] = [
       return rowData.car_make ? <div>{rowData.car_make as string}</div> : <div>No car</div>;
     },
     filterOutFn: (rowData) => (rowData.car_make as string | null) === null,
+    columnFilterValueFn: (dataItem, showBlank = true) => {
+      const value = (dataItem as string | null) ?? '';
+      if (!showBlank && value.trim() === '') {
+        return '';
+      }
+      return value.trim() === '' ? '<blank>' : value.toUpperCase();
+    },
   },
   ...,
 ];
 ```
 
-### Sort function
+### Column filter value function
 
-Specify a column sort function, where `sortBy` returns the name and sort direction returned.  
-**NB** do not use the sort direction in the sorting algorithm, this will be applied by the table, however it is available for reference.
+Specify how a field value should be converted into text for sorting and column-filter option generation.
+This is useful when values are complex types (for example arrays or objects), or when you want to normalize values (for example case-insensitive sorting/filter labels).
+
+`columnFilterValueFn` receives:
+
+- `dataItem`: the raw value from the current row for this field
+- `showBlank`: whether blank values should be displayed as `<blank>` (`true`) or omitted (`false`)
+
+It must return a string.
 
 ```
-const sortFn = (a: iSimpleTableRow, b: iSimpleTableRow, sortBy: iSimpleTableSort) => {
-  return (a[sortBy.name] as string).localeCompare(b[sortBy.name] as string);
+const columnFilterValueFn = (dataItem: unknown, showBlank = true): string => {
+  if (Array.isArray(dataItem)) {
+    return dataItem.join(', ');
+  }
+
+  const value = (dataItem as string | null) ?? '';
+  if (!showBlank && value.trim() === '') {
+    return '';
+  }
+
+  return value.trim() === '' ? '<blank>' : value;
 };
+```
+
+### Filter out function
+
+Specify how an each row should be filtered when the filter box is checked, on a field by field basis.
+Should return a truthy or falsy value. **NB** A true value will remove the row.
+
+```
+const filterOutFn = (rowData: iSimpleTableRow) => { return (rowData.car_make as string | null) === null; };
 ```
 
 ### Search function
@@ -178,13 +211,15 @@ const searchFn = (rowData: iSimpleTableRow, searchText: string) => {
 };
 ```
 
-### Filter out function
+### Sort function
 
-Specify how an each row should be filtered when the filter box is checked, on a field by field basis.
-Should return a truthy or falsy value. **NB** A true value will remove the row.
+Specify a column sort function, where `sortBy` returns the name and sort direction returned.  
+**NB** do not use the sort direction in the sorting algorithm, this will be applied by the table, however it is available for reference.
 
 ```
-const filterOutFn = (rowData: iSimpleTableRow) => { return (rowData.car_make as string | null) === null; };
+const sortFn = (a: iSimpleTableRow, b: iSimpleTableRow, sortBy: iSimpleTableSort) => {
+  return (a[sortBy.name] as string).localeCompare(b[sortBy.name] as string);
+};
 ```
 
 ## Header Cell and Body Cell rendering
@@ -225,7 +260,7 @@ const renderFn = ({ columnNnumber, cellField, rowData }:iSimpleTableCellRenderPr
 
 # VS code launch settings
 
-Use these configurations to attach to chrome, then launch the server
+Use these configurations to attach to chrome, then launch Storybook
 
 ```
 "configurations": [
@@ -240,16 +275,13 @@ Use these configurations to attach to chrome, then launch the server
     }
   },
   {
-    "name": "Launch NPM web server",
-    "command": "npm start",
+    "name": "Launch Storybook",
+    "command": "npm run storybook",
     "request": "launch",
     "type": "node-terminal",
     "cwd": "${workspaceRoot}",
-    "env": {
-      "PORT": "1234"
-    },
     "serverReadyAction": {
-      "pattern": "Server running at (http://localhost:[0-9]+)",
+      "pattern": "Local:\\s+(http://localhost:[0-9]+/?)+",
       "uriFormat": "%s",
       "action": "openExternally"
     }
