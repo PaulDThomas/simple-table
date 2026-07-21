@@ -1,4 +1,4 @@
-import { Key, useEffect, useState } from "react";
+import { Key, startTransition, useEffect, useState } from "react";
 import { columnFilterValue } from "../functions/columnFilterValue";
 import styles from "./SimpleTable.module.css";
 import { SimpleTableBody } from "./SimpleTableBody";
@@ -109,7 +109,7 @@ export const SimpleTable = ({
   // Sync external data prop changes
   const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
   useEffect(() => {
-    setTableData(data);
+    startTransition(() => setTableData(data));
   }, [data]);
 
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
@@ -147,8 +147,10 @@ export const SimpleTable = ({
 
   useEffect(() => {
     if (showPager === false) {
-      setFirstRow(0);
-      setPageRows(Infinity);
+      startTransition(() => {
+        setFirstRow(0);
+        setPageRows(Infinity);
+      });
     }
   }, [showPager]);
 
@@ -207,7 +209,7 @@ export const SimpleTable = ({
   // Reset firstRow when viewData length changes and firstRow is out of bounds
   useEffect(() => {
     if (viewData.length <= firstRow && viewData.length > 0) {
-      setFirstRow(0);
+      startTransition(() => setFirstRow(0));
     }
   }, [viewData.length, firstRow]);
 
