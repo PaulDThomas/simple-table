@@ -16,7 +16,7 @@ const mockData: ISimpleTableRow[] = [
   { userId: "four", displayName: "Another user" },
 ];
 
-const mockSetSearch = jest.fn();
+const mockSetSearch = vi.fn();
 
 describe("Simple table search rendering", () => {
   test("Initial render", async () => {

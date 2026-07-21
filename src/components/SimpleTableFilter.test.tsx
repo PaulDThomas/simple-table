@@ -4,7 +4,7 @@ import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableFilter } from "./SimpleTableFilter";
 
-const mockFilter = jest.fn();
+const mockFilter = vi.fn();
 
 const mockFields: ISimpleTableField[] = [
   { name: "tlfId", hidden: false },

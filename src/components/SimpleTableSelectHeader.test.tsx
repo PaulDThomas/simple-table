@@ -15,7 +15,7 @@ const mockData: ISimpleTableRow[] = [
   { userId: "four", displayName: "Another user" },
 ];
 
-const mockToggle = jest.fn();
+const mockToggle = vi.fn();
 
 describe("Simple table header checkbox rendering", () => {
   test("Unchecked render", async () => {

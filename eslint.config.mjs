@@ -3,11 +3,11 @@ import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
-import jest from "eslint-plugin-jest";
 import eslintPluginPrettierRecommented from "eslint-plugin-prettier/recommended";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import unusedImports from "eslint-plugin-unused-imports";
+import vitest from "eslint-plugin-vitest";
 import globals from "globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -30,7 +30,7 @@ export default [
       "plugin:react/recommended",
       "plugin:react-hooks/recommended",
       "plugin:@typescript-eslint/recommended",
-      "plugin:jest/recommended",
+      "plugin:vitest/recommended",
     ),
   ),
   {
@@ -38,7 +38,7 @@ export default [
       react: fixupPluginRules(react),
       "@typescript-eslint": fixupPluginRules(typescriptEslint),
       "react-hooks": fixupPluginRules(reactHooks),
-      jest: fixupPluginRules(jest),
+      vitest: fixupPluginRules(vitest),
       "unused-imports": unusedImports,
     },
 
@@ -46,9 +46,8 @@ export default [
       globals: {
         ...Object.fromEntries(Object.entries(globals.node).map(([key]) => [key, "off"])),
         ...globals.browser,
-        ...globals.jest,
         ...globals.worker,
-        ...jest.environments.globals.globals,
+        ...vitest.environments.env.globals,
       },
 
       parser: tsParser,
@@ -79,8 +78,8 @@ export default [
       "prefer-const": 1,
       "spaced-comment": "error",
       "@typescript-eslint/no-unused-expressions": "warn",
-      "jest/no-identical-title": "error",
-      "jest/no-mocks-import": "off",
+      "vitest/no-identical-title": "error",
+      "vitest/no-import-node-test": "off",
       "react/react-in-jsx-scope": "off",
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "error",

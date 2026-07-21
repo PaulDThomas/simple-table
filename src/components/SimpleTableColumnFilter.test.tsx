@@ -21,8 +21,8 @@ describe("SimpleTableColumnFilter", () => {
   const MockComponent = ({
     currentColumnFilter = null,
     currentColumnFilters = [],
-    setCurrentColumnFilter = jest.fn(),
-    setCurrentColumnFilters = jest.fn(),
+    setCurrentColumnFilter = vi.fn(),
+    setCurrentColumnFilters = vi.fn(),
   }: {
     currentColumnFilter?: number | null;
     currentColumnFilters?: ISimpleTableColumnFilter[];
@@ -59,8 +59,8 @@ describe("SimpleTableColumnFilter", () => {
   });
 
   test("Basic render", async () => {
-    const mockSet = jest.fn();
-    const mockSetCurrentFilter = jest.fn();
+    const mockSet = vi.fn();
+    const mockSetCurrentFilter = vi.fn();
     await act(async () =>
       render(
         <MockComponent
@@ -80,8 +80,8 @@ describe("SimpleTableColumnFilter", () => {
 
   test("Type into filter", async () => {
     const user = userEvent.setup();
-    const mockSet = jest.fn();
-    const mockSetCurrentFilter = jest.fn();
+    const mockSet = vi.fn();
+    const mockSetCurrentFilter = vi.fn();
     await act(async () => {
       render(
         <MockComponent
@@ -105,8 +105,8 @@ describe("SimpleTableColumnFilter", () => {
 
   test("Check and uncheck all items", async () => {
     const user = userEvent.setup();
-    const mockSet = jest.fn();
-    const mockSetCurrentFilter = jest.fn();
+    const mockSet = vi.fn();
+    const mockSetCurrentFilter = vi.fn();
     await act(async () => {
       render(
         <MockComponent
@@ -136,8 +136,8 @@ describe("SimpleTableColumnFilter", () => {
 
   test("Remove existing filter by selecting all", async () => {
     const user = userEvent.setup();
-    const mockSet = jest.fn();
-    const mockSetCurrentFilter = jest.fn();
+    const mockSet = vi.fn();
+    const mockSetCurrentFilter = vi.fn();
     await act(async () => {
       render(
         <MockComponent
@@ -165,8 +165,8 @@ describe("SimpleTableColumnFilter", () => {
 
   test("Toggle search filter", async () => {
     const user = userEvent.setup();
-    const mockSet = jest.fn();
-    const mockSetCurrentFilter = jest.fn();
+    const mockSet = vi.fn();
+    const mockSetCurrentFilter = vi.fn();
     await act(async () => {
       render(
         <MockComponent
@@ -241,8 +241,8 @@ describe("SimpleTableColumnFilter", () => {
       render(
         <MockComponent
           currentColumnFilters={[]}
-          setCurrentColumnFilter={jest.fn()}
-          setCurrentColumnFilters={jest.fn()}
+          setCurrentColumnFilter={vi.fn()}
+          setCurrentColumnFilters={vi.fn()}
         />,
       );
     });
@@ -262,8 +262,8 @@ describe("SimpleTableColumnFilter", () => {
       render(
         <MockComponent
           currentColumnFilters={[]}
-          setCurrentColumnFilter={jest.fn()}
-          setCurrentColumnFilters={jest.fn()}
+          setCurrentColumnFilter={vi.fn()}
+          setCurrentColumnFilters={vi.fn()}
         />,
       );
     });
@@ -291,8 +291,8 @@ describe("SimpleTableColumnFilter", () => {
       render(
         <MockComponent
           currentColumnFilters={[]}
-          setCurrentColumnFilter={jest.fn()}
-          setCurrentColumnFilters={jest.fn()}
+          setCurrentColumnFilter={vi.fn()}
+          setCurrentColumnFilters={vi.fn()}
         />,
       );
     });
@@ -325,7 +325,7 @@ describe("SimpleTableColumnFilter", () => {
   });
 
   test("Close filter when no setCurrentColumnFilters available", async () => {
-    const mockSetCurrentFilter = jest.fn();
+    const mockSetCurrentFilter = vi.fn();
     await act(async () => {
       render(
         <MockComponent
@@ -343,8 +343,8 @@ describe("SimpleTableColumnFilter", () => {
 
   test("Toggle search filter with empty search text does nothing", async () => {
     const user = userEvent.setup();
-    const mockSet = jest.fn();
-    const mockSetCurrentFilter = jest.fn();
+    const mockSet = vi.fn();
+    const mockSetCurrentFilter = vi.fn();
     await act(async () => {
       render(
         <MockComponent
@@ -363,8 +363,8 @@ describe("SimpleTableColumnFilter", () => {
 
   test("Handle existing filter index", async () => {
     const user = userEvent.setup();
-    const mockSet = jest.fn();
-    const mockSetCurrentFilter = jest.fn();
+    const mockSet = vi.fn();
+    const mockSetCurrentFilter = vi.fn();
     await act(async () => {
       render(
         <MockComponent

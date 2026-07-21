@@ -31,7 +31,7 @@ describe("Simple table pager", () => {
 
   test("Button clicks", async () => {
     const user = userEvent.setup();
-    const mockFirstRow = jest.fn();
+    const mockFirstRow = vi.fn();
     render(
       <SimpleTableContext.Provider
         value={{
@@ -61,7 +61,7 @@ describe("Simple table pager", () => {
 
   test("Select options", async () => {
     const user = userEvent.setup();
-    const mockPageRows = jest.fn();
+    const mockPageRows = vi.fn();
     render(
       <SimpleTableContext.Provider
         value={{
@@ -88,7 +88,7 @@ describe("Simple table pager", () => {
 
   test("Select first row", async () => {
     const user = userEvent.setup();
-    const mockFirstRow = jest.fn();
+    const mockFirstRow = vi.fn();
     render(
       <SimpleTableContext.Provider
         value={{

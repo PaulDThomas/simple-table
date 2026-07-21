@@ -236,7 +236,7 @@ Use these configurations to attach to chrome, then launch the server
     "name": "Attach to Browser debug",
     "webRoot": "${workspaceFolder}",
     "sourceMapPathOverrides": {
-      "/__parcel_source_root/*": "${webRoot}/*"
+      "/src/*": "${webRoot}/src/*"
     }
   },
   {

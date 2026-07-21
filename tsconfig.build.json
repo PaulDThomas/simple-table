@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "outDir": "dist/esm",
+    "rootDir": "src"
+  },
+  "include": ["src", "global.d.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "demo",
+    "demo/dist",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.stories.tsx",
+    "src/**/__mocks__/**"
+  ]
+}
