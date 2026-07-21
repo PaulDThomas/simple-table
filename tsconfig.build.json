@@ -15,6 +15,7 @@
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
     "src/**/*.stories.tsx",
+    "src/setupTests.ts",
     "src/**/__mocks__/**"
   ]
 }

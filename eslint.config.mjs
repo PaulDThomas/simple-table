@@ -7,7 +7,6 @@ import eslintPluginPrettierRecommented from "eslint-plugin-prettier/recommended"
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import unusedImports from "eslint-plugin-unused-imports";
-import vitest from "eslint-plugin-vitest";
 import globals from "globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -30,7 +29,6 @@ export default [
       "plugin:react/recommended",
       "plugin:react-hooks/recommended",
       "plugin:@typescript-eslint/recommended",
-      "plugin:vitest/recommended",
     ),
   ),
   {
@@ -38,7 +36,6 @@ export default [
       react: fixupPluginRules(react),
       "@typescript-eslint": fixupPluginRules(typescriptEslint),
       "react-hooks": fixupPluginRules(reactHooks),
-      vitest: fixupPluginRules(vitest),
       "unused-imports": unusedImports,
     },
 
@@ -47,7 +44,14 @@ export default [
         ...Object.fromEntries(Object.entries(globals.node).map(([key]) => [key, "off"])),
         ...globals.browser,
         ...globals.worker,
-        ...vitest.environments.env.globals,
+        afterAll: "readonly",
+        afterEach: "readonly",
+        beforeAll: "readonly",
+        beforeEach: "readonly",
+        describe: "readonly",
+        expect: "readonly",
+        it: "readonly",
+        vi: "readonly",
       },
 
       parser: tsParser,
@@ -78,8 +82,6 @@ export default [
       "prefer-const": 1,
       "spaced-comment": "error",
       "@typescript-eslint/no-unused-expressions": "warn",
-      "vitest/no-identical-title": "error",
-      "vitest/no-import-node-test": "off",
       "react/react-in-jsx-scope": "off",
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "error",
