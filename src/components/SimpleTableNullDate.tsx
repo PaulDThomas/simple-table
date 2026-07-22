@@ -6,7 +6,6 @@ import styles from "./SimpleTableCell.module.css";
 export const SimpleTableNullDate = ({
   rowData,
   cellField,
-  field,
 }: ISimpleTableCellRenderProps): React.ReactElement => (
   <div
     className={[
