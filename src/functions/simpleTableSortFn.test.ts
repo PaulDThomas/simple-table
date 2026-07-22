@@ -34,23 +34,5 @@ describe("Test sort function", () => {
 
     expect(simpleTableSortFn(b, a, { name: "date", asc: true })).toEqual(86400000);
     expect(simpleTableSortFn(c, a, { name: "date", asc: true })).toEqual(-1);
-
-    const columnFilterValueFn = (dataItem: unknown) => {
-      return dataItem === null ? "002" : `${dataItem}`.padStart(3, "0");
-    };
-    expect(
-      simpleTableSortFn(a, b, {
-        name: "number",
-        asc: true,
-        columnFilterValueFn,
-      }),
-    ).toEqual(-1);
-    expect(
-      simpleTableSortFn(a, c, {
-        name: "number",
-        asc: true,
-        columnFilterValueFn,
-      }),
-    ).toEqual(1);
   });
 });

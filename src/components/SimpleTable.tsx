@@ -105,16 +105,6 @@ export const SimpleTable = ({
         null;
   const parsedSettings = localSettingsText ? JSON.parse(localSettingsText) : null;
   const localSettings = isSimpleTableLocalSettings(parsedSettings) ? parsedSettings : null;
-  const columnFilterValueFns: Record<string, (dataItem: unknown, showBlank?: boolean) => string> =
-    fields
-      .filter((f) => f.columnFilterValueFn)
-      .reduce(
-        (acc, f) => {
-          acc[f.name] = f.columnFilterValueFn as (dataItem: unknown, showBlank?: boolean) => string;
-          return acc;
-        },
-        {} as Record<string, (dataItem: unknown, showBlank?: boolean) => string>,
-      );
 
   // Sync external data prop changes
   const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
@@ -203,11 +193,7 @@ export const SimpleTable = ({
     .filter(searchFn)
     .filter((row) => {
       return currentColumnFilters
-        .map((cf) =>
-          cf.values.includes(
-            columnFilterValue(row[cf.columnName], true, columnFilterValueFns[cf.columnName]),
-          ),
-        )
+        .map((cf) => cf.values.some((v) => columnFilterValue(row[cf.columnName], true).includes(v)))
         .reduce((prev, cur) => prev && cur, true);
     })
     .sort(sortFn);
@@ -227,14 +213,13 @@ export const SimpleTable = ({
       setSortBy({
         name: field.name,
         asc: field.name === sortBy?.name ? !sortBy.asc : true,
-        columnFilterValueFn: columnFilterValueFns[field.name],
       });
     }
   };
 
   // Get current column items
   // For each column, show values that exist after applying OTHER column filters (Excel-like behavior)
-  const currentColumnItems = fields
+  const currentColumnItems: { columnName: string; values: string[] }[] = fields
     .filter((f) => f.canColumnFilter)
     .map((f) => ({
       columnName: f.name,
@@ -246,17 +231,11 @@ export const SimpleTable = ({
               return currentColumnFilters
                 .filter((cf) => cf.columnName !== f.name)
                 .map((cf) =>
-                  cf.values.includes(
-                    columnFilterValue(
-                      row[cf.columnName],
-                      true,
-                      columnFilterValueFns[cf.columnName],
-                    ),
-                  ),
+                  cf.values.some((v) => columnFilterValue(row[cf.columnName], true).includes(v)),
                 )
                 .reduce((prev, cur) => prev && cur, true);
             })
-            .map((t) => columnFilterValue(t[f.name], true, f.columnFilterValueFn)),
+            .flatMap((t) => columnFilterValue(t[f.name], true)),
         ),
       ),
     }));
