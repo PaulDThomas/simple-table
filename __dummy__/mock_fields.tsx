@@ -62,8 +62,6 @@ export const mockFields: ISimpleTableField[] = [
       );
     },
     filterOutFn: (rowData) => (rowData.car_make as string | null) === null,
-    columnFilterValueFn: (dataItem) =>
-      dataItem === null ? "<no car>" : dataItem === "Ford" ? "Another FORD classic" : `${dataItem}`,
     width: "140px",
     canColumnFilter: true,
   },
@@ -77,5 +75,36 @@ export const mockFields: ISimpleTableField[] = [
     sortFn: simpleTableSortFn,
     width: "160px",
     canColumnFilter: true,
+  },
+  {
+    name: "tags",
+    label: "Tags",
+    searchFn: (rowData, searchText) =>
+      ((rowData.tags as string[] | undefined) ?? []).some((tag) =>
+        tag.toLowerCase().includes(searchText.toLowerCase().trim()),
+      ),
+    width: "160px",
+    canColumnFilter: true,
+    renderFn: ({ rowData }) => {
+      const tags = rowData.tags as string[] | undefined;
+      if (!tags || tags.length === 0) {
+        return <div>No tags</div>;
+      }
+      return (
+        <div
+          className="overflow-hidden"
+          style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}
+        >
+          {tags.map((tag, index) => (
+            <span
+              key={index}
+              style={{ border: "1px solid #ccc", padding: "2px 4px", borderRadius: "4px" }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      );
+    },
   },
 ];
