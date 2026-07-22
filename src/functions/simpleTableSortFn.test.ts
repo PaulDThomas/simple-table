@@ -34,5 +34,12 @@ describe("Test sort function", () => {
 
     expect(simpleTableSortFn(b, a, { name: "date", asc: true })).toEqual(86400000);
     expect(simpleTableSortFn(c, a, { name: "date", asc: true })).toEqual(-1);
+
+    expect(simpleTableSortFn({ array: [] }, { array: [1] }, { name: "array", asc: true })).toEqual(
+      -1,
+    );
+    expect(simpleTableSortFn({ array: [1] }, { array: [] }, { name: "array", asc: true })).toEqual(
+      1,
+    );
   });
 });
