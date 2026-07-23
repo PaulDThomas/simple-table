@@ -12,8 +12,8 @@ export const simpleTableSortFn = (
         ((typeof b[sortBy.name] === "number" ? b[sortBy.name] : -Infinity) as number)
       : a[sortBy.name] instanceof Date && b[sortBy.name] instanceof Date
         ? (a[sortBy.name] as Date).getTime() - (b[sortBy.name] as Date).getTime()
-        : columnFilterValue(a[sortBy.name], false).localeCompare(
-            columnFilterValue(b[sortBy.name], false),
+        : (columnFilterValue(a[sortBy.name], false)[0] ?? "").localeCompare(
+            columnFilterValue(b[sortBy.name], false)[0] ?? "",
           );
   return ret;
 };

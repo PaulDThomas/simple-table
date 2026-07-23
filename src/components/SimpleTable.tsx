@@ -1,4 +1,4 @@
-import { Key, useEffect, useState } from "react";
+import { Key, startTransition, useEffect, useState } from "react";
 import { columnFilterValue } from "../functions/columnFilterValue";
 import styles from "./SimpleTable.module.css";
 import { SimpleTableBody } from "./SimpleTableBody";
@@ -109,7 +109,7 @@ export const SimpleTable = ({
   // Sync external data prop changes
   const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
   useEffect(() => {
-    setTableData(data);
+    startTransition(() => setTableData(data));
   }, [data]);
 
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
@@ -147,8 +147,10 @@ export const SimpleTable = ({
 
   useEffect(() => {
     if (showPager === false) {
-      setFirstRow(0);
-      setPageRows(Infinity);
+      startTransition(() => {
+        setFirstRow(0);
+        setPageRows(Infinity);
+      });
     }
   }, [showPager]);
 
@@ -191,7 +193,10 @@ export const SimpleTable = ({
     .filter(searchFn)
     .filter((row) => {
       return currentColumnFilters
-        .map((cf) => cf.values.includes(columnFilterValue(row[cf.columnName])))
+        .map((cf) => {
+          const columnValue = columnFilterValue(row[cf.columnName], true);
+          return cf.values.some((v) => columnValue.includes(v));
+        })
         .reduce((prev, cur) => prev && cur, true);
     })
     .sort(sortFn);
@@ -199,7 +204,7 @@ export const SimpleTable = ({
   // Reset firstRow when viewData length changes and firstRow is out of bounds
   useEffect(() => {
     if (viewData.length <= firstRow && viewData.length > 0) {
-      setFirstRow(0);
+      startTransition(() => setFirstRow(0));
     }
   }, [viewData.length, firstRow]);
 
@@ -217,7 +222,7 @@ export const SimpleTable = ({
 
   // Get current column items
   // For each column, show values that exist after applying OTHER column filters (Excel-like behavior)
-  const currentColumnItems = fields
+  const currentColumnItems: { columnName: string; values: string[] }[] = fields
     .filter((f) => f.canColumnFilter)
     .map((f) => ({
       columnName: f.name,
@@ -228,10 +233,13 @@ export const SimpleTable = ({
               // Apply all column filters EXCEPT the one for this column
               return currentColumnFilters
                 .filter((cf) => cf.columnName !== f.name)
-                .map((cf) => cf.values.includes(columnFilterValue(row[cf.columnName])))
+                .map((cf) => {
+                  const columnValue = columnFilterValue(row[cf.columnName], true);
+                  return cf.values.some((v) => columnValue.includes(v));
+                })
                 .reduce((prev, cur) => prev && cur, true);
             })
-            .map((t) => columnFilterValue(t[f.name])),
+            .flatMap((t) => columnFilterValue(t[f.name], true)),
         ),
       ),
     }));

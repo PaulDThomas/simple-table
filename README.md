@@ -21,7 +21,7 @@ npm install @asup/simple-table
 ## Usage
 
 ```
-import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort, SimpleTable } from '@asup/simple-table';
+import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort, SimpleTable } from '@asup/simple-table';
 ```
 
 ... inside REACT component
@@ -30,9 +30,9 @@ import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort, SimpleTable } fro
 <SimpleTable
   id?: string;
   headerLabel?: string;
-  fields: iSimpleTableField[];
+  fields: ISimpleTableField[];
   keyField: string;
-  data: iSimpleTableRow[];
+  data: ISimpleTableRow[];
   selectable?: boolean;
   currentSelection?: Key[];
   setCurrentSelection?: (ret: Key[]) => void;
@@ -88,7 +88,7 @@ import { iSimpleTableField, iSimpleTableRow, iSimpleTableSort, SimpleTable } fro
 Input data should be an array of objects
 
 ```
-interface iSimpleTableRow {
+interface ISimpleTableRow {
   [key: string]: unknown;
 }
 ```
@@ -112,23 +112,23 @@ however, there are no restrictions on data type for each element. Complex object
 Specify the fields to use in the table in the following format
 
 ```
-interface iSimpleTableField {
+interface ISimpleTableField {
     name: string;
     label?: string;
     hidden?: boolean;
     width?: string;
-    sortFn?: (a: iSimpleTableRow, b: iSimpleTableRow, sortBy: iSimpleTableSort) => number;
-    searchFn?: (a: iSimpleTableRow, searchText: string) => boolean;
-    filterOutFn?: (a: iSimpleTableRow) => boolean;
-    headerRenderFn?: (a: iSimpleTableHeaderRenderProps) => JSX.Element
-    renderFn?: (a: iSimpleTableCellRenderProps) => JSX.Element;
+    sortFn?: (a: ISimpleTableRow, b: ISimpleTableRow, sortBy: ISimpleTableSort) => number;
+    searchFn?: (a: ISimpleTableRow, searchText: string) => boolean;
+    filterOutFn?: (a: ISimpleTableRow) => boolean;
+    headerRenderFn?: (a: ISimpleTableHeaderRenderProps) => JSX.Element
+    renderFn?: (a: ISimpleTableCellRenderProps) => JSX.Element;
 }
 ```
 
 e.g.
 
 ```
-const fields: iSimpleTableField[] = [
+const fields: ISimpleTableField[] = [
   { name: 'id', hidden: true },
   {
     name: 'first_name',
@@ -156,15 +156,17 @@ const fields: iSimpleTableField[] = [
 ];
 ```
 
-### Sort function
+### Column header search and filter
 
-Specify a column sort function, where `sortBy` returns the name and sort direction returned.  
-**NB** do not use the sort direction in the sorting algorithm, this will be applied by the table, however it is available for reference.
+When generating options for column header filters, the table automatically handles arrays and objects by inspecting individual values. Array elements are each treated as a separate option; plain objects use their string representation. No custom conversion function is needed.
+
+### Filter out function
+
+Specify how an each row should be filtered when the filter box is checked, on a field by field basis.
+Should return a truthy or falsy value. **NB** A true value will remove the row.
 
 ```
-const sortFn = (a: iSimpleTableRow, b: iSimpleTableRow, sortBy: iSimpleTableSort) => {
-  return (a[sortBy.name] as string).localeCompare(b[sortBy.name] as string);
-};
+const filterOutFn = (rowData: ISimpleTableRow) => { return (rowData.car_make as string | null) === null; };
 ```
 
 ### Search function
@@ -173,18 +175,20 @@ Specify how an each row should be compared against the text in the search box, o
 Should return a truthy or falsy value.
 
 ```
-const searchFn = (rowData: iSimpleTableRow, searchText: string) => {
+const searchFn = (rowData: ISimpleTableRow, searchText: string) => {
   return ((rowData.car_make as string | null) ?? '').toLowerCase().includes(searchText.toLowerCase().trim());
 };
 ```
 
-### Filter out function
+### Sort function
 
-Specify how an each row should be filtered when the filter box is checked, on a field by field basis.
-Should return a truthy or falsy value. **NB** A true value will remove the row.
+Specify a column sort function, where `sortBy` returns the name and sort direction returned.  
+**NB** do not use the sort direction in the sorting algorithm, this will be applied by the table, however it is available for reference.
 
 ```
-const filterOutFn = (rowData: iSimpleTableRow) => { return (rowData.car_make as string | null) === null; };
+const sortFn = (a: ISimpleTableRow, b: ISimpleTableRow, sortBy: ISimpleTableSort) => {
+  return (a[sortBy.name] as string).localeCompare(b[sortBy.name] as string);
+};
 ```
 
 ## Header Cell and Body Cell rendering
@@ -194,14 +198,14 @@ If no custom render function for the field is specified for the cell or the head
 A custom render function can be supplied to alter this, which is supplied with the column number, field name and row data as an object. It must return a valid JSX element.
 
 ```
-interface iSimpleTableHeaderRenderProps {
+interface ISimpleTableHeaderRenderProps {
   columnNumber: number;
-  field: iSimpleTableField;
+  field: ISimpleTableField;
 }
 
-interface iSimpleTableCellRenderProps extends iSimpleTableHeaderRenderProps {
+interface ISimpleTableCellRenderProps extends ISimpleTableHeaderRenderProps {
   cellField: string;
-  rowData: iSimpleTableRow;
+  rowData: ISimpleTableRow;
   rowNumber: number;
 }
 ```
@@ -218,14 +222,14 @@ const headerRenderFn({ columnNumber, field }) => (
   </>
 );
 
-const renderFn = ({ columnNnumber, cellField, rowData }:iSimpleTableCellRenderProps):JSX.Element => {
+const renderFn = ({ columnNnumber, cellField, rowData }:ISimpleTableCellRenderProps):JSX.Element => {
   return rowData.car_make ? <div>{rowData.car_make as string}</div> : <div>No car</div>;
 };
 ```
 
 # VS code launch settings
 
-Use these configurations to attach to chrome, then launch the server
+Use these configurations to attach to chrome, then launch Storybook
 
 ```
 "configurations": [
@@ -240,16 +244,13 @@ Use these configurations to attach to chrome, then launch the server
     }
   },
   {
-    "name": "Launch NPM web server",
-    "command": "npm start",
+    "name": "Launch Storybook",
+    "command": "npm run storybook",
     "request": "launch",
     "type": "node-terminal",
     "cwd": "${workspaceRoot}",
-    "env": {
-      "PORT": "1234"
-    },
     "serverReadyAction": {
-      "pattern": "Server running at (http://localhost:[0-9]+)",
+      "pattern": "Local:\\s+(http://localhost:[0-9]+/?)+",
       "uriFormat": "%s",
       "action": "openExternally"
     }
