@@ -1,52 +1,77 @@
 import React from "react";
 
-export interface ISimpleTableRow {
-  [key: string]: unknown;
-}
+export type ISimpleTableRow = Record<string, unknown>;
 
-export type ISimpleTableSortFn = (
-  a: ISimpleTableRow,
-  b: ISimpleTableRow,
-  sortBy: ISimpleTableSort,
-) => number;
+export type ISimpleTableFieldName<T extends ISimpleTableRow = ISimpleTableRow> = Extract<
+  keyof T,
+  string
+>;
 
-export type ISimpleTableSearchFn = (a: ISimpleTableRow, searchText: string) => boolean;
+export type ISimpleTableSortFn<
+  T extends ISimpleTableRow = ISimpleTableRow,
+  K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
+> = (a: T, b: T, sortBy: ISimpleTableSort<T, K>) => number;
 
-export type ISimpleTableFilterOutFn = (a: ISimpleTableRow) => boolean;
+export type ISimpleTableSearchFn<T extends ISimpleTableRow = ISimpleTableRow> = (
+  a: T,
+  searchText: string,
+) => boolean;
 
-export type ISimpleTableHeaderRenderFn = (a: ISimpleTableHeaderRenderProps) => React.ReactElement;
+export type ISimpleTableFilterOutFn<T extends ISimpleTableRow = ISimpleTableRow> = (
+  a: T,
+) => boolean;
 
-export type ISimpleTableCellRenderFn = (a: ISimpleTableCellRenderProps) => React.ReactElement;
+export type ISimpleTableHeaderRenderFn<
+  T extends ISimpleTableRow = ISimpleTableRow,
+  K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
+> = (a: ISimpleTableHeaderRenderProps<T, K>) => React.ReactElement;
 
-export type ISimpleTableColumnFilterValueFn = (dataItem: unknown) => string[];
+export type ISimpleTableCellRenderFn<
+  T extends ISimpleTableRow = ISimpleTableRow,
+  K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
+> = (a: ISimpleTableCellRenderProps<T, K>) => React.ReactElement;
 
-export interface ISimpleTableSort {
-  name: string;
+export type ISimpleTableColumnFilterValueFn<TValue = unknown> = (dataItem: TValue) => string[];
+
+export interface ISimpleTableSort<
+  T extends ISimpleTableRow = ISimpleTableRow,
+  K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
+> {
+  name: K;
   asc: boolean;
-  columnFilterValueFn?: ISimpleTableColumnFilterValueFn;
+  columnFilterValueFn?: ISimpleTableColumnFilterValueFn<T[K]>;
 }
 
-export interface ISimpleTableHeaderRenderProps {
+export interface ISimpleTableHeaderRenderProps<
+  T extends ISimpleTableRow = ISimpleTableRow,
+  K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
+> {
   columnNumber: number;
-  field: ISimpleTableField;
+  field: ISimpleTableField<T, K>;
 }
 
-export interface ISimpleTableCellRenderProps extends ISimpleTableHeaderRenderProps {
-  cellField: string;
-  rowData: ISimpleTableRow;
+export interface ISimpleTableCellRenderProps<
+  T extends ISimpleTableRow = ISimpleTableRow,
+  K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
+> extends ISimpleTableHeaderRenderProps<T, K> {
+  cellField: K;
+  rowData: T;
   rowNumber: number;
 }
 
-export interface ISimpleTableField {
-  name: string;
+export interface ISimpleTableField<
+  T extends ISimpleTableRow = ISimpleTableRow,
+  K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
+> {
+  name: K;
   label?: string;
   hidden?: boolean;
   width?: string;
-  sortFn?: ISimpleTableSortFn;
-  searchFn?: ISimpleTableSearchFn;
-  filterOutFn?: ISimpleTableFilterOutFn;
-  headerRenderFn?: ISimpleTableHeaderRenderFn;
-  renderFn?: ISimpleTableCellRenderFn;
+  sortFn?: ISimpleTableSortFn<T, K>;
+  searchFn?: ISimpleTableSearchFn<T>;
+  filterOutFn?: ISimpleTableFilterOutFn<T>;
+  headerRenderFn?: ISimpleTableHeaderRenderFn<T, K>;
+  renderFn?: ISimpleTableCellRenderFn<T, K>;
   canColumnFilter?: boolean;
-  columnFilterValueFn?: ISimpleTableColumnFilterValueFn;
+  columnFilterValueFn?: ISimpleTableColumnFilterValueFn<T[K]>;
 }

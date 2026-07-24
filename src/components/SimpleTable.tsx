@@ -15,16 +15,19 @@ import { SimpleTableSelectHeader } from "./SimpleTableSelectHeader";
 import {
   ISimpleTableColumnFilterValueFn,
   ISimpleTableField,
+  ISimpleTableFieldName,
   ISimpleTableRow,
   ISimpleTableSort,
 } from "./interface";
 
-interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
+interface SimpleTableProps<
+  T extends ISimpleTableRow,
+> extends React.ComponentPropsWithoutRef<"table"> {
   id: string;
   headerLabel?: string;
-  fields: ISimpleTableField[];
-  keyField: string;
-  data: ISimpleTableRow[];
+  fields: ISimpleTableField<T>[];
+  keyField: ISimpleTableFieldName<T>;
+  data: T[];
   selectable?: boolean;
   currentSelection?: Key[];
   setCurrentSelection?: (ret: Key[]) => void;
@@ -35,7 +38,7 @@ interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
   initialFilterSelected?: boolean;
   filterLabel?: string;
   searchLabel?: string;
-  onWidthChange?: (ret: { name: string; width: string }[]) => void;
+  onWidthChange?: (ret: { name: ISimpleTableFieldName<T>; width: string }[]) => void;
   onPagerChange?: (ret: { firstRow: number; pageRows: number }) => void;
 
   tableClassName?: string;
@@ -71,37 +74,37 @@ const isSimpleTableLocalSettings = (obj: unknown): obj is SimpleTableLocalSettin
   return true;
 };
 
-export const SimpleTable = ({
+export const SimpleTable = <T extends ISimpleTableRow>({
   id,
-  headerLabel,
-  fields,
-  keyField,
-  data,
-  selectable = false,
   currentSelection = [],
-  setCurrentSelection,
-  showHeader = true,
-  showSearch = true,
-  showFilter = false,
-  showPager = true,
-  initialFilterSelected = false,
-  filterLabel = "Filter",
-  searchLabel = "Search",
-  onWidthChange,
-  onPagerChange,
-  tableClassName = "",
-  inputGroupClassName = "form-group",
-  filterLabelClassName = "form-check-label",
+  data,
+  fields,
   filterCheckClassName = "form-check-input",
-  searchLabelClassName = "form-label",
-  searchInputClassName = "form-control form-control-sm",
-  mainBackgroundColor = "white",
+  filterLabel = "Filter",
+  filterLabelClassName = "form-check-label",
   headerBackgroundColor = "white",
-  selectedBackgroundColor = "rgba(0, 0, 0, 0.8)",
-  selectInactiveColor = "rgb(0, 0, 0, 0.2)",
+  headerLabel,
+  initialFilterSelected = false,
+  inputGroupClassName = "form-group",
+  keyField,
+  mainBackgroundColor = "white",
+  onPagerChange,
+  onWidthChange,
+  searchInputClassName = "form-control form-control-sm",
+  searchLabel = "Search",
+  searchLabelClassName = "form-label",
   selectActiveColor = "rgb(255, 153, 0)",
+  selectInactiveColor = "rgb(0, 0, 0, 0.2)",
+  selectable = false,
+  selectedBackgroundColor = "rgba(0, 0, 0, 0.8)",
+  setCurrentSelection,
+  showFilter = false,
+  showHeader = true,
+  showPager = true,
+  showSearch = true,
+  tableClassName = "",
   ...rest
-}: SimpleTableProps): React.ReactElement => {
+}: SimpleTableProps<T>): React.ReactElement => {
   // Load local settings once on mount
   const localSettingsText =
     typeof window !== "undefined"
@@ -110,35 +113,39 @@ export const SimpleTable = ({
         null;
   const parsedSettings = localSettingsText ? JSON.parse(localSettingsText) : null;
   const localSettings = isSimpleTableLocalSettings(parsedSettings) ? parsedSettings : null;
-  const columnFilterValueFns: Record<string, ISimpleTableColumnFilterValueFn> = fields
+  const columnFilterValueFns: Partial<
+    Record<ISimpleTableFieldName<T>, ISimpleTableColumnFilterValueFn>
+  > = fields
     .filter((f) => f.columnFilterValueFn)
     .reduce(
       (acc, f) => {
-        acc[f.name] = f.columnFilterValueFn as (dataItem: unknown, showBlank?: boolean) => string[];
+        acc[f.name] = f.columnFilterValueFn as ISimpleTableColumnFilterValueFn;
         return acc;
       },
-      {} as Record<string, ISimpleTableColumnFilterValueFn>,
+      {} as Partial<Record<ISimpleTableFieldName<T>, ISimpleTableColumnFilterValueFn>>,
     );
 
   // Sync external data prop changes
-  const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
+  const [tableData, setTableData] = useState<T[]>(data);
   useEffect(() => {
     startTransition(() => setTableData(data));
   }, [data]);
 
   const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
-  const [sortBy, setSortBy] = useState<ISimpleTableSort | null>(null);
+  const [sortBy, setSortBy] = useState<ISimpleTableSort<T> | null>(null);
   const [searchText, setSearchText] = useState<string>("");
 
   // Initialize columnWidths from localStorage or fields
-  const [columnWidths, setColumnWidths] = useState<{ name: string; width: string }[]>(() => {
+  const [columnWidths, setColumnWidths] = useState<
+    { name: ISimpleTableFieldName<T>; width: string }[]
+  >(() => {
     if (localSettings?.headerWidths && Array.isArray(localSettings.headerWidths)) {
       // Check if it's the old format (string[]) or new format ({ name, width }[])
       if (
         localSettings.headerWidths.length > 0 &&
         !localSettings.headerWidths.every((c) => typeof c === "string" || c === null)
       ) {
-        return localSettings.headerWidths as { name: string; width: string }[];
+        return localSettings.headerWidths as { name: ISimpleTableFieldName<T>; width: string }[];
       }
     }
     return fields
@@ -169,27 +176,29 @@ export const SimpleTable = ({
   }, [showPager]);
 
   const [currentColumnFilter, setCurrentColumnFilter] = useState<number | null>(null);
-  const [currentColumnFilters, setCurrentColumnFilters] = useState<ISimpleTableColumnFilter[]>([]);
+  const [currentColumnFilters, setCurrentColumnFilters] = useState<ISimpleTableColumnFilter<T>[]>(
+    [],
+  );
 
-  const filterFn = (row: ISimpleTableRow) => {
+  const filterFn = (row: T) => {
     if (showFilter && filterData) {
       const filterFns = fields
         .filter((f) => f.filterOutFn)
-        .map((f) => f.filterOutFn as (a: ISimpleTableRow) => boolean);
+        .map((f) => f.filterOutFn as (a: T) => boolean);
       return !filterFns.some((fn) => fn(row));
     } else return true;
   };
 
-  const searchFn = (row: ISimpleTableRow) => {
+  const searchFn = (row: T) => {
     if (showSearch && searchText.trim().length > 0) {
       const searchFns = fields
         .filter((f) => f.searchFn)
-        .map((f) => f.searchFn as (a: ISimpleTableRow, searchText: string) => boolean);
+        .map((f) => f.searchFn as (a: T, searchText: string) => boolean);
       return searchFns.some((fn) => fn(row, searchText));
     } else return true;
   };
 
-  const sortFn = (rowa: ISimpleTableRow, rowb: ISimpleTableRow) => {
+  const sortFn = (rowa: T, rowb: T) => {
     try {
       const sortFn = fields.find((f) => f.name === sortBy?.name)?.sortFn;
       if (sortFn && sortBy)
@@ -223,7 +232,7 @@ export const SimpleTable = ({
   }, [viewData.length, firstRow]);
 
   // Update sort order
-  const updateSortBy = (field: ISimpleTableField) => {
+  const updateSortBy = (field: ISimpleTableField<T>) => {
     if (field.name === sortBy?.name && sortBy?.asc === false) {
       setSortBy(null);
     } else {
@@ -297,7 +306,7 @@ export const SimpleTable = ({
   // Save local settings
   const updateLocalSettings = (
     setting: string,
-    value: number | { name: string; width: string }[],
+    value: number | { name: ISimpleTableFieldName<T>; width: string }[],
   ) => {
     const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
     const localSettings = JSON.parse(localSettingsText ?? "{}") as SimpleTableLocalSettings;
@@ -375,7 +384,7 @@ export const SimpleTable = ({
           toggleSelection,
 
           columnWidths,
-          setColumnWidth: (name: string, width: string) => {
+          setColumnWidth: (name: ISimpleTableFieldName<T>, width: string) => {
             const newColumnWidths = [...columnWidths];
             // istanbul ignore else
             if (fields.map((f) => f.name).includes(name)) {
@@ -391,13 +400,13 @@ export const SimpleTable = ({
             onWidthChange?.(newColumnWidths);
           },
           pageRows,
-          setPageRows: (ret) => {
+          setPageRows: (ret: number) => {
             setPageRows(ret);
             updateLocalSettings("pageRows", ret);
             onPagerChange?.({ firstRow, pageRows: ret });
           },
           firstRow,
-          setFirstRow: (ret) => {
+          setFirstRow: (ret: number) => {
             setFirstRow(ret);
             onPagerChange?.({ firstRow: ret, pageRows });
           },
@@ -415,7 +424,7 @@ export const SimpleTable = ({
           searchInputClassName,
 
           headerBackgroundColor,
-        } as ISimpleTableContext
+        } as unknown as ISimpleTableContext
       }
     >
       <div className={styles.main}>
