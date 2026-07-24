@@ -32,8 +32,18 @@
   overflow-y: visible;
 }
 
+.clickableDisabled {
+  flex-grow: 1;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  overflow-y: visible;
+}
+
 .iconHolder {
-  justify-self: end;
+  position: absolute;
+  z-index: 9;
+  background-color: var(--st-header-background-color);
+  right: 4px;
   min-width: max-content;
   display: flex;
   align-items: center;
