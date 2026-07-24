@@ -1,9 +1,9 @@
 import React from "react";
-import { ISimpleTableCellRenderProps } from ".";
+import { ISimpleTableCellRenderFn, ISimpleTableCellRenderProps } from ".";
 import { columnFilterValue } from "../functions/columnFilterValue";
 import styles from "./SimpleTableCell.module.css";
 
-export const SimpleTableNullDate = ({
+export const SimpleTableNullDate: ISimpleTableCellRenderFn = ({
   rowData,
   cellField,
   field,
