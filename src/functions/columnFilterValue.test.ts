@@ -1,3 +1,4 @@
+import { ISimpleTableColumnFilterValueFn } from "components";
 import { columnFilterValue } from "./columnFilterValue";
 
 describe("columnFilterValue", () => {
@@ -38,10 +39,10 @@ describe("columnFilterValue", () => {
   });
 
   test("should use custom filter value function if provided", () => {
-    const customFn = (dataItem: unknown) =>
+    const customFn: ISimpleTableColumnFilterValueFn = (dataItem) =>
       Array.isArray(dataItem)
-        ? `custom-${dataItem.map((item: unknown) => `${item}`).join("-")}`
-        : "";
-    expect(columnFilterValue([1, 2, 3], true, customFn)).toBe("custom-1-2-3");
+        ? [`custom-${dataItem.map((item: unknown) => `${item}`).join("-")}`]
+        : [""];
+    expect(columnFilterValue([1, 2, 3], true, customFn)).toEqual(["custom-1-2-3"]);
   });
 });

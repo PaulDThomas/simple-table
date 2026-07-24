@@ -12,7 +12,12 @@ import { SimpleTableHeader } from "./SimpleTableHeader";
 import { SimpleTablePager } from "./SimpleTablePager";
 import { SimpleTableSearch } from "./SimpleTableSearch";
 import { SimpleTableSelectHeader } from "./SimpleTableSelectHeader";
-import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
+import {
+  ISimpleTableColumnFilterValueFn,
+  ISimpleTableField,
+  ISimpleTableRow,
+  ISimpleTableSort,
+} from "./interface";
 
 interface SimpleTableProps extends React.ComponentPropsWithoutRef<"table"> {
   id: string;
@@ -105,16 +110,15 @@ export const SimpleTable = ({
         null;
   const parsedSettings = localSettingsText ? JSON.parse(localSettingsText) : null;
   const localSettings = isSimpleTableLocalSettings(parsedSettings) ? parsedSettings : null;
-  const columnFilterValueFns: Record<string, (dataItem: unknown, showBlank?: boolean) => string> =
-    fields
-      .filter((f) => f.columnFilterValueFn)
-      .reduce(
-        (acc, f) => {
-          acc[f.name] = f.columnFilterValueFn as (dataItem: unknown, showBlank?: boolean) => string;
-          return acc;
-        },
-        {} as Record<string, (dataItem: unknown, showBlank?: boolean) => string>,
-      );
+  const columnFilterValueFns: Record<string, ISimpleTableColumnFilterValueFn> = fields
+    .filter((f) => f.columnFilterValueFn)
+    .reduce(
+      (acc, f) => {
+        acc[f.name] = f.columnFilterValueFn as (dataItem: unknown, showBlank?: boolean) => string[];
+        return acc;
+      },
+      {} as Record<string, ISimpleTableColumnFilterValueFn>,
+    );
 
   // Sync external data prop changes
   const [tableData, setTableData] = useState<ISimpleTableRow[]>(data);
@@ -250,7 +254,7 @@ export const SimpleTable = ({
                 })
                 .reduce((prev, cur) => prev && cur, true);
             })
-            .map((t) => columnFilterValue(t[f.name], true, f.columnFilterValueFn)),
+            .flatMap((t) => columnFilterValue(t[f.name], true)),
         ),
       ),
     }));

@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Key, useState } from "react";
-import { mockData } from "../../__dummy__/mock_data";
-import { mockFields } from "../../__dummy__/mock_fields";
+import { mockData, mockFields } from "../../__dummy__/mock_fields";
 import { ISimpleTableRow, SimpleTable } from "../components";
 
 const meta: Meta<typeof SimpleTable> = {

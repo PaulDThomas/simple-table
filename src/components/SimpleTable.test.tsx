@@ -34,7 +34,7 @@ const mockFields: ISimpleTableField[] = [
     filterOutFn: (rowData) => (rowData.accessLevel as eAccessLevel) === eAccessLevel.admin,
     canColumnFilter: true,
     columnFilterValueFn: (dataItem) => {
-      return String(dataItem);
+      return [String(dataItem)];
     },
   },
 ];

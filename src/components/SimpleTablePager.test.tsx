@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { mockData } from "../../__dummy__/mock_data";
+import { mockData } from "../../__dummy__/mock_fields";
 import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTablePager } from "./SimpleTablePager";
 

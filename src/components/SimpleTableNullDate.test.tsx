@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import type { ISimpleTableColumnFilterValueFn } from "components";
 import { SimpleTableNullDate } from "./SimpleTableNullDate";
 
 describe("Test print date function", () => {
@@ -61,8 +62,9 @@ describe("Test print date function", () => {
   });
 
   test("Uses custom columnFilterValueFn if provided", async () => {
-    const customFn = (dataItem: unknown) =>
-      dataItem === null ? "002" : `${dataItem}`.padStart(3, "0");
+    const customFn: ISimpleTableColumnFilterValueFn = (dataItem: unknown) => [
+      dataItem === null ? "002" : `${dataItem}`.padStart(3, "0"),
+    ];
     render(
       <div data-testid="cell">
         <SimpleTableNullDate
