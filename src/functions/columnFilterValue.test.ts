@@ -2,38 +2,46 @@ import { columnFilterValue } from "./columnFilterValue";
 
 describe("columnFilterValue", () => {
   test("should return string representation of a number", () => {
-    expect(columnFilterValue(123)).toEqual(["123"]);
+    expect(columnFilterValue(123)).toBe("123");
   });
 
   test("should return '<blank>' for an empty string", () => {
-    expect(columnFilterValue("")).toEqual(["<blank>"]);
+    expect(columnFilterValue("")).toBe("<blank>");
   });
 
   test("should return '<blank>' for null", () => {
-    expect(columnFilterValue(null)).toEqual(["<blank>"]);
+    expect(columnFilterValue(null)).toBe("<blank>");
   });
 
   test("should return '<blank>' for undefined", () => {
-    expect(columnFilterValue(undefined)).toEqual(["<blank>"]);
+    expect(columnFilterValue(undefined)).toBe("<blank>");
   });
 
   test("should return the string itself for non-empty strings", () => {
-    expect(columnFilterValue("hello")).toEqual(["hello"]);
+    expect(columnFilterValue("hello")).toBe("hello");
   });
 
   test("should return nowt", () => {
-    expect(columnFilterValue(null, false)).toEqual([""]);
-    expect(columnFilterValue(undefined, false)).toEqual([""]);
-    expect(columnFilterValue("    ", false)).toEqual([""]);
+    expect(columnFilterValue(null, false)).toBe("");
+    expect(columnFilterValue(undefined, false)).toBe("");
+    expect(columnFilterValue("    ", false)).toBe("");
   });
 
   test("should return string representation of other data types", () => {
-    expect(columnFilterValue(true)).toEqual(["true"]);
-    expect(columnFilterValue(false)).toEqual(["false"]);
-    expect(columnFilterValue({ value: "One", anotherValue: "Two" })).toEqual(["One", "Two"]);
-    expect(columnFilterValue(["❓", "ℹ️", "✅"])).toEqual(["❓", "ℹ️", "✅"]);
-    expect(columnFilterValue(new Date("2023-01-01"))).toEqual(["2023-01-01 00:00"]);
-    expect(columnFilterValue(() => {})).toEqual(["🛠️🛠️"]);
-    expect(columnFilterValue(Symbol("symbol"))).toEqual(["⁉️⁉️"]);
+    expect(columnFilterValue(true)).toBe("true");
+    expect(columnFilterValue(false)).toBe("false");
+    expect(columnFilterValue({})).toBe("📦📦");
+    expect(columnFilterValue([])).toBe("📃📃");
+    expect(columnFilterValue(new Date("2023-01-01"))).toBe("2023-01-01 00:00");
+    expect(columnFilterValue(() => {})).toBe("🛠️🛠️");
+    expect(columnFilterValue(Symbol("symbol"))).toBe("⁉️⁉️");
+  });
+
+  test("should use custom filter value function if provided", () => {
+    const customFn = (dataItem: unknown) =>
+      Array.isArray(dataItem)
+        ? `custom-${dataItem.map((item: unknown) => `${item}`).join("-")}`
+        : "";
+    expect(columnFilterValue([1, 2, 3], true, customFn)).toBe("custom-1-2-3");
   });
 });

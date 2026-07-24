@@ -14,6 +14,6 @@ export const SimpleTableNullDate = ({
       typeof rowData[cellField] === "number" ? styles.textRight : styles.textLeft,
     ].join(" ")}
   >
-    <span>{columnFilterValue(rowData[cellField], false)}</span>
+    <span>{columnFilterValue(rowData[cellField], false, field.columnFilterValueFn)}</span>
   </div>
 );
