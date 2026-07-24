@@ -2,39 +2,34 @@ import React from "react";
 
 export type ISimpleTableRow = Record<string, unknown>;
 
-export type ISimpleTableFieldName<T extends ISimpleTableRow = ISimpleTableRow> = Extract<
-  keyof T,
-  string
->;
+export type ISimpleTableFieldName<T extends object = ISimpleTableRow> = Extract<keyof T, string>;
 
 export type ISimpleTableSortFn<
-  T extends ISimpleTableRow = ISimpleTableRow,
+  T extends object = ISimpleTableRow,
   K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
 > = (a: T, b: T, sortBy: ISimpleTableSort<T, K>) => number;
 
-export type ISimpleTableSearchFn<T extends ISimpleTableRow = ISimpleTableRow> = (
+export type ISimpleTableSearchFn<T extends object = ISimpleTableRow> = (
   a: T,
   searchText: string,
 ) => boolean;
 
-export type ISimpleTableFilterOutFn<T extends ISimpleTableRow = ISimpleTableRow> = (
-  a: T,
-) => boolean;
+export type ISimpleTableFilterOutFn<T extends object = ISimpleTableRow> = (a: T) => boolean;
 
 export type ISimpleTableHeaderRenderFn<
-  T extends ISimpleTableRow = ISimpleTableRow,
+  T extends object = ISimpleTableRow,
   K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
 > = (a: ISimpleTableHeaderRenderProps<T, K>) => React.ReactElement;
 
 export type ISimpleTableCellRenderFn<
-  T extends ISimpleTableRow = ISimpleTableRow,
+  T extends object = ISimpleTableRow,
   K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
 > = (a: ISimpleTableCellRenderProps<T, K>) => React.ReactElement;
 
 export type ISimpleTableColumnFilterValueFn<TValue = unknown> = (dataItem: TValue) => string[];
 
 export interface ISimpleTableSort<
-  T extends ISimpleTableRow = ISimpleTableRow,
+  T extends object = ISimpleTableRow,
   K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
 > {
   name: K;
@@ -43,7 +38,7 @@ export interface ISimpleTableSort<
 }
 
 export interface ISimpleTableHeaderRenderProps<
-  T extends ISimpleTableRow = ISimpleTableRow,
+  T extends object = ISimpleTableRow,
   K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
 > {
   columnNumber: number;
@@ -51,7 +46,7 @@ export interface ISimpleTableHeaderRenderProps<
 }
 
 export interface ISimpleTableCellRenderProps<
-  T extends ISimpleTableRow = ISimpleTableRow,
+  T extends object = ISimpleTableRow,
   K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
 > extends ISimpleTableHeaderRenderProps<T, K> {
   cellField: K;
@@ -60,7 +55,7 @@ export interface ISimpleTableCellRenderProps<
 }
 
 export interface ISimpleTableField<
-  T extends ISimpleTableRow = ISimpleTableRow,
+  T extends object = ISimpleTableRow,
   K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
 > {
   name: K;

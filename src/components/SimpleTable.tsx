@@ -16,13 +16,10 @@ import {
   ISimpleTableColumnFilterValueFn,
   ISimpleTableField,
   ISimpleTableFieldName,
-  ISimpleTableRow,
   ISimpleTableSort,
 } from "./interface";
 
-interface SimpleTableProps<
-  T extends ISimpleTableRow,
-> extends React.ComponentPropsWithoutRef<"table"> {
+interface SimpleTableProps<T extends object> extends React.ComponentPropsWithoutRef<"table"> {
   id: string;
   headerLabel?: string;
   fields: ISimpleTableField<T>[];
@@ -74,7 +71,7 @@ const isSimpleTableLocalSettings = (obj: unknown): obj is SimpleTableLocalSettin
   return true;
 };
 
-export const SimpleTable = <T extends ISimpleTableRow>({
+export const SimpleTable = <T extends object>({
   id,
   currentSelection = [],
   data,

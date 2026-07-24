@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Key, useState } from "react";
-import { mockData, mockFields } from "../../__dummy__/mock_fields";
-import { ISimpleTableRow, SimpleTable } from "../components";
+import { DummyDataRow, mockData, mockFields } from "../../__dummy__/mock_fields";
+import { ISimpleTableFieldName, SimpleTable } from "../components";
 
 const meta: Meta<typeof SimpleTable> = {
   title: "Components/SimpleTable",
@@ -110,11 +110,15 @@ export const NoPager: Story = {
 
 // Interactive story with row selection
 const InteractiveTableWithSelection = () => {
-  const [data, setData] = useState<ISimpleTableRow[]>(
+  type InteractiveRow = DummyDataRow & { selected: string };
+
+  const [data, setData] = useState<InteractiveRow[]>(
     mockData.slice(0, 100).map((r) => ({ ...r, selected: "No" })),
   );
   const [selected, setSelected] = useState<Key[]>([]);
-  const [receivedWidths, setReceivedWidths] = useState<{ name: string; width: string }[]>([]);
+  const [receivedWidths, setReceivedWidths] = useState<
+    { name: ISimpleTableFieldName<InteractiveRow>; width: string }[]
+  >([]);
 
   return (
     <div style={{ padding: "1rem", height: "100vh", display: "flex", flexDirection: "column" }}>

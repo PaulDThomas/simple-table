@@ -1,12 +1,21 @@
-import { ISimpleTableSortFn } from "components/interface";
-import { ISimpleTableRow, ISimpleTableSort } from "../components";
+import { ISimpleTableFieldName, ISimpleTableRow, ISimpleTableSort } from "../components";
 import { columnFilterValue } from "./columnFilterValue";
 
-export const simpleTableSortFn: ISimpleTableSortFn = (
+export function simpleTableSortFn<T extends object, K extends ISimpleTableFieldName<T>>(
+  a: T,
+  b: T,
+  sortBy: ISimpleTableSort<T, K>,
+): number;
+export function simpleTableSortFn(
   a: ISimpleTableRow,
   b: ISimpleTableRow,
   sortBy: ISimpleTableSort,
-) => {
+): number;
+export function simpleTableSortFn(
+  a: ISimpleTableRow,
+  b: ISimpleTableRow,
+  sortBy: ISimpleTableSort,
+): number {
   const ret = sortBy.columnFilterValueFn
     ? (
         columnFilterValue(a[sortBy.name], false, sortBy.columnFilterValueFn)[0] ??
@@ -32,4 +41,4 @@ export const simpleTableSortFn: ISimpleTableSortFn = (
               "",
           );
   return ret;
-};
+}

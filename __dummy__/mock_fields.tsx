@@ -1,7 +1,23 @@
 import { ISimpleTableField, simpleTableSortFn } from "../src/main";
 import { raw_data } from "./mock_data";
 
-export const mockFields: ISimpleTableField[] = [
+export interface DummyDataRow {
+  id: string;
+  n: number;
+  first_name: string;
+  last_name: string;
+  age: number;
+  dob: Date;
+  car: {
+    make: string;
+    model: string;
+    fuel: string;
+  } | null;
+  tags: string[];
+  desires: { type: string; value: string }[];
+}
+
+export const mockFields: ISimpleTableField<DummyDataRow>[] = [
   { name: "id", hidden: true },
   { name: "n", label: "N", renderFn: ({ rowNumber }) => <>{rowNumber}</> },
   {
@@ -51,8 +67,7 @@ export const mockFields: ISimpleTableField[] = [
     ),
     sortFn: simpleTableSortFn,
     renderFn: ({ rowData }) => {
-      const rowDataTyped = rowData as RowData;
-      return rowDataTyped.car ? (
+      return rowData.car ? (
         <div
           className="overflow-hidden"
           style={{
@@ -65,13 +80,13 @@ export const mockFields: ISimpleTableField[] = [
             flexDirection: "row",
           }}
         >
-          {rowDataTyped.car?.make === "Ford" ? (
+          {rowData.car?.make === "Ford" ? (
             "Another FORD classic"
           ) : (
             <>
-              <span>{rowDataTyped.car.make}</span>
-              <span>{rowDataTyped.car.model}</span>
-              <span>{rowDataTyped.car.fuel}</span>
+              <span>{rowData.car.make}</span>
+              <span>{rowData.car.model}</span>
+              <span>{rowData.car.fuel}</span>
             </>
           )}
         </div>
@@ -79,24 +94,22 @@ export const mockFields: ISimpleTableField[] = [
         <div>No car</div>
       );
     },
-    filterOutFn: (rowData) => (rowData.car_make as string | null) === null,
+    filterOutFn: (rowData) => rowData.car === null,
     width: "140px",
     canColumnFilter: true,
   },
   {
     name: "tags",
     label: "Tags",
-    searchFn: (rd, searchText) => {
-      const rowData = rd as RowData;
-      return ((rowData.tags as string[]) ?? []).some((tag) =>
+    searchFn: (rowData, searchText) => {
+      return (rowData.tags ?? []).some((tag) =>
         tag.toLowerCase().includes(searchText.toLowerCase().trim()),
       );
     },
     width: "160px",
     canColumnFilter: true,
-    renderFn: ({ rowData: rd }) => {
-      const rowData = rd as RowData;
-      const tags = rowData.tags as string[] | undefined;
+    renderFn: ({ rowData }) => {
+      const tags = rowData.tags;
       if (!tags || tags.length === 0) {
         return <div>No tags</div>;
       }
@@ -125,9 +138,8 @@ export const mockFields: ISimpleTableField[] = [
   {
     name: "desires",
     label: "Desires",
-    renderFn: ({ rowData: rd }) => {
-      const rowData = rd as RowData;
-      const desires = rowData.desires as { type: string; value: string }[] | undefined;
+    renderFn: ({ rowData }) => {
+      const desires = rowData.desires;
       if (!desires || desires.length === 0) {
         return <div>No desires</div>;
       } else {
@@ -155,7 +167,7 @@ export const mockFields: ISimpleTableField[] = [
     },
     canColumnFilter: true,
     columnFilterValueFn: (dataItem) => {
-      const item = dataItem as RowData["desires"];
+      const item = dataItem as DummyDataRow["desires"];
       return item.map((desire) => desire.value) ?? [""];
     },
   },
@@ -176,23 +188,9 @@ const getDateOfBirth = (age: string, seed: string): Date => {
   return dateOfBirth;
 };
 
-export interface RowData extends Record<string, unknown> {
-  id: string;
-  first_name: string;
-  last_name: string;
-  age: number;
-  dob: Date;
-  car: {
-    make: string;
-    model: string;
-    fuel: string;
-  } | null;
-  tags: string[];
-  desires: { type: string; value: string }[];
-}
-
-export const mockData = raw_data.map((item) => ({
+export const mockData: DummyDataRow[] = raw_data.map((item, index) => ({
   id: item.id,
+  n: index + 1,
   first_name: item.first_name,
   last_name: item.last_name,
   age: Number(item.age),

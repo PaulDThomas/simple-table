@@ -20,19 +20,25 @@ npm install @asup/simple-table
 
 ## Usage
 
-```
-import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort, SimpleTable } from '@asup/simple-table';
+```ts
+import {
+  ISimpleTableField,
+  ISimpleTableSort,
+  ISimpleTableSortFn,
+  SimpleTable,
+  simpleTableSortFn,
+} from "@asup/simple-table";
 ```
 
 ... inside REACT component
 
-```
+```tsx
 <SimpleTable
   id?: string;
   headerLabel?: string;
-  fields: ISimpleTableField[];
-  keyField: string;
-  data: ISimpleTableRow[];
+  fields: ISimpleTableField<T>[];
+  keyField: keyof T;
+  data: T[];
   selectable?: boolean;
   currentSelection?: Key[];
   setCurrentSelection?: (ret: Key[]) => void;
@@ -42,7 +48,7 @@ import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort, SimpleTable } fro
   initialFilterSelected?: boolean;
   filterLabel?: string;
   searchLabel?: string;
-  onWidthChange?: (ret: (string | undefined)[]) => void;
+  onWidthChange?: (ret: { name: keyof T; width: string }[]) => void;
   onPagerChange?: (ret: {firstRow: number; pageRows: number}) => void
   tableClassName?: string;
   inputGroupClassName?: string;
@@ -87,9 +93,12 @@ import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort, SimpleTable } fro
 
 Input data should be an array of objects
 
-```
-interface ISimpleTableRow {
-  [key: string]: unknown;
+```ts
+interface PersonRow {
+  id: number;
+  first_name: string;
+  last_name: string;
+  car_make: string | null;
 }
 ```
 
@@ -100,57 +109,63 @@ e.g.
   id: 2,
   first_name: 'Paul',
   last_name: 'Thomas',
-  car_make: 'Ferrari',
-  car_model: 'Penis extension',
+  car_make: 'Lotus',
 },
 ```
 
-however, there are no restrictions on data type for each element. Complex objects will require a render function to be supplied, and sort/search/filter functions if they are required.
+Complex objects are supported. If you need custom formatting for sorting/filtering/rendering, provide the field callbacks.
+
+You do not need to extend a base interface. Any object shape works.
 
 ### Column definition
 
 Specify the fields to use in the table in the following format
 
-```
-interface ISimpleTableField {
-    name: string;
-    label?: string;
-    hidden?: boolean;
-    width?: string;
-    sortFn?: (a: ISimpleTableRow, b: ISimpleTableRow, sortBy: ISimpleTableSort) => number;
-    searchFn?: (a: ISimpleTableRow, searchText: string) => boolean;
-    filterOutFn?: (a: ISimpleTableRow) => boolean;
-    headerRenderFn?: (a: ISimpleTableHeaderRenderProps) => JSX.Element
-    renderFn?: (a: ISimpleTableCellRenderProps) => JSX.Element;
+```ts
+interface ISimpleTableField<T> {
+  name: keyof T;
+  label?: string;
+  hidden?: boolean;
+  width?: string;
+  sortFn?: (a: T, b: T, sortBy: ISimpleTableSort<T>) => number;
+  searchFn?: (a: T, searchText: string) => boolean;
+  filterOutFn?: (a: T) => boolean;
+  headerRenderFn?: (a: ISimpleTableHeaderRenderProps<T>) => JSX.Element;
+  renderFn?: (a: ISimpleTableCellRenderProps<T>) => JSX.Element;
 }
 ```
 
 e.g.
 
-```
-const fields: ISimpleTableField[] = [
+```ts
+interface PersonRow {
+  id: number;
+  first_name: string;
+  car_make: string | null;
+}
+
+const fields: ISimpleTableField<PersonRow>[] = [
   { name: 'id', hidden: true },
   {
     name: 'first_name',
     label: 'First name',
     searchFn: (rowData, searchText) =>
-      (rowData.first_name as string).toLowerCase().includes(searchText.toLowerCase().trim()),
-    sortFn: (a, b) => (a.first_name as string).localeCompare(b.first_name as string),
+      rowData.first_name.toLowerCase().includes(searchText.toLowerCase().trim()),
+    sortFn: simpleTableSortFn,
   },
   ...,
   {
     name: 'car_make',
     label: 'Make',
     searchFn: (rowData, searchText) =>
-      ((rowData.car_make as string | null) ?? '')
+      (rowData.car_make ?? '')
         .toLowerCase()
         .includes(searchText.toLowerCase().trim()),
-    sortFn: (a, b) =>
-      ((a.car_make as string | null) ?? '').localeCompare((b.car_make as string | null) ?? ''),
+    sortFn: simpleTableSortFn,
     renderFn: ({ rowData }) => {
-      return rowData.car_make ? <div>{rowData.car_make as string}</div> : <div>No car</div>;
+      return rowData.car_make ? <div>{rowData.car_make}</div> : <div>No car</div>;
     },
-    filterOutFn: (rowData) => (rowData.car_make as string | null) === null,
+    filterOutFn: (rowData) => rowData.car_make === null,
   },
   ...,
 ];
@@ -166,7 +181,7 @@ Specify how an each row should be filtered when the filter box is checked, on a 
 Should return a truthy or falsy value. **NB** A true value will remove the row.
 
 ```
-const filterOutFn = (rowData: ISimpleTableRow) => { return (rowData.car_make as string | null) === null; };
+const filterOutFn = (rowData: PersonRow) => rowData.car_make === null;
 ```
 
 ### Search function
@@ -175,8 +190,8 @@ Specify how an each row should be compared against the text in the search box, o
 Should return a truthy or falsy value.
 
 ```
-const searchFn = (rowData: ISimpleTableRow, searchText: string) => {
-  return ((rowData.car_make as string | null) ?? '').toLowerCase().includes(searchText.toLowerCase().trim());
+const searchFn = (rowData: PersonRow, searchText: string) => {
+  return (rowData.car_make ?? '').toLowerCase().includes(searchText.toLowerCase().trim());
 };
 ```
 
@@ -185,10 +200,16 @@ const searchFn = (rowData: ISimpleTableRow, searchText: string) => {
 Specify a column sort function, where `sortBy` returns the name and sort direction returned.  
 **NB** do not use the sort direction in the sorting algorithm, this will be applied by the table, however it is available for reference.
 
-```
-const sortFn = (a: ISimpleTableRow, b: ISimpleTableRow, sortBy: ISimpleTableSort) => {
-  return (a[sortBy.name] as string).localeCompare(b[sortBy.name] as string);
+```ts
+const sortFn: ISimpleTableSortFn<PersonRow> = (a, b, sortBy) => {
+  return String(a[sortBy.name]).localeCompare(String(b[sortBy.name]));
 };
+
+// Default sort helper can be used directly.
+const fieldsWithDefaultSort: ISimpleTableField<PersonRow>[] = [
+  { name: "first_name", label: "First name", sortFn: simpleTableSortFn },
+  { name: "car_make", label: "Make", sortFn: simpleTableSortFn },
+];
 ```
 
 ## Header Cell and Body Cell rendering
@@ -197,15 +218,15 @@ If no custom render function for the field is specified for the cell or the head
 
 A custom render function can be supplied to alter this, which is supplied with the column number, field name and row data as an object. It must return a valid JSX element.
 
-```
-interface ISimpleTableHeaderRenderProps {
+```ts
+interface ISimpleTableHeaderRenderProps<T> {
   columnNumber: number;
-  field: ISimpleTableField;
+  field: ISimpleTableField<T>;
 }
 
-interface ISimpleTableCellRenderProps extends ISimpleTableHeaderRenderProps {
-  cellField: string;
-  rowData: ISimpleTableRow;
+interface ISimpleTableCellRenderProps<T> extends ISimpleTableHeaderRenderProps<T> {
+  cellField: keyof T;
+  rowData: T;
   rowNumber: number;
 }
 ```

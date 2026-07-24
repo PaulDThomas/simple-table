@@ -6,12 +6,12 @@ import {
   ISimpleTableSort,
 } from "./interface";
 
-export interface ISimpleTableColumnFilter<T extends ISimpleTableRow = ISimpleTableRow> {
+export interface ISimpleTableColumnFilter<T extends object = ISimpleTableRow> {
   columnName: ISimpleTableFieldName<T>;
   values: string[];
 }
 
-export interface ISimpleTableContext<T extends ISimpleTableRow = ISimpleTableRow> {
+export interface ISimpleTableContext<T extends object = ISimpleTableRow> {
   id: string;
   fields: ISimpleTableField<T>[];
   keyField: ISimpleTableFieldName<T>;
@@ -84,4 +84,6 @@ export const defaultContext: ISimpleTableContext = {
   setCurrentColumnFilters: defaultFn,
 } as ISimpleTableContext;
 
-export const SimpleTableContext = createContext<ISimpleTableContext>(defaultContext);
+// Use a broad context value type at the React boundary so consumers with different row models can provide values.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const SimpleTableContext = createContext<ISimpleTableContext<any>>(defaultContext);
