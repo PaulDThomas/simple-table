@@ -1,4 +1,4 @@
-import { ISimpleTableField, SimpleTableNullDate, simpleTableSortFn } from "../src/main";
+import { ISimpleTableField, simpleTableSortFn } from "../src/main";
 import { raw_data } from "./mock_data";
 
 export const mockFields: ISimpleTableField[] = [
@@ -28,7 +28,6 @@ export const mockFields: ISimpleTableField[] = [
     name: "dob",
     label: "DOB",
     sortFn: simpleTableSortFn,
-    renderFn: SimpleTableNullDate,
   },
   {
     name: "car",
@@ -211,5 +210,5 @@ export const mockData = raw_data.map((item) => ({
     { type: "Car", value: item.car },
     { type: "Genre", value: item.genre },
     { type: "Animal", value: item.animal },
-  ].slice(0, Math.floor(Math.random() * 3)), // Randomly select 0 to 2 desires
+  ].slice(Math.floor(Math.random() * 3), 3), // Randomly select 0 to 2 desires
 }));
