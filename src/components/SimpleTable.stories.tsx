@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Key, useState } from "react";
+import { useState } from "react";
 import { DummyDataRow, mockData, mockFields } from "../../__dummy__/mock_fields";
-import { ISimpleTableFieldName, SimpleTable } from "../components";
+import { ISimpleTableField, SimpleTable } from "../components";
 
-const meta: Meta<typeof SimpleTable> = {
+const meta: Meta = {
   title: "Components/SimpleTable",
   component: SimpleTable,
   parameters: {
@@ -29,7 +29,7 @@ const meta: Meta<typeof SimpleTable> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof SimpleTable>;
+type Story = StoryObj;
 
 // Basic SimpleTable with minimal configuration
 export const Basic: Story = {
@@ -110,22 +110,16 @@ export const NoPager: Story = {
 
 // Interactive story with row selection
 const InteractiveTableWithSelection = () => {
-  type InteractiveRow = DummyDataRow & { selected: string };
-
-  const [data, setData] = useState<InteractiveRow[]>(
-    mockData.slice(0, 100).map((r) => ({ ...r, selected: "No" })),
-  );
-  const [selected, setSelected] = useState<Key[]>([]);
-  const [receivedWidths, setReceivedWidths] = useState<
-    { name: ISimpleTableFieldName<InteractiveRow>; width: string }[]
-  >([]);
+  const [data, setData] = useState<DummyDataRow[]>(mockData.slice(0, 100));
+  const [selected, setSelected] = useState<Array<DummyDataRow["id"]>>([]);
+  const [receivedWidths, setReceivedWidths] = useState<{ name: string; width: string }[]>([]);
 
   return (
     <div style={{ padding: "1rem", height: "100vh", display: "flex", flexDirection: "column" }}>
       <div style={{ marginBottom: "1rem" }}>
         <button
           onClick={() => {
-            setData(data.filter((r) => !selected.includes(r.id as Key)));
+            setData(data.filter((r) => !selected.includes(r.id)));
             setSelected([]);
           }}
           style={{ marginRight: "0.5rem" }}
@@ -134,7 +128,7 @@ const InteractiveTableWithSelection = () => {
         </button>
         <button
           onClick={() => {
-            setData(mockData.slice(0, 100).map((r) => ({ ...r, selected: "No" })));
+            setData(mockData.slice(0, 100));
             setSelected([]);
           }}
         >
@@ -149,7 +143,7 @@ const InteractiveTableWithSelection = () => {
       <div style={{ flex: 1, backgroundColor: "cyan", padding: "1rem" }}>
         <SimpleTable
           id="interactive-table"
-          fields={[{ name: "selected", label: "Sel" }, ...mockFields]}
+          fields={mockFields}
           keyField="id"
           data={data}
           headerLabel="Interactive Table"
@@ -162,12 +156,10 @@ const InteractiveTableWithSelection = () => {
           selectable
           currentSelection={selected}
           setCurrentSelection={(ret) => {
-            setSelected(ret);
-            const newData = data.map((r) => ({
-              ...r,
-              selected: ret.includes(r.id as Key) ? "Yes" : "No",
-            }));
-            setData(newData);
+            const nextSelected = ret.filter(
+              (id): id is DummyDataRow["id"] => typeof id === "string",
+            );
+            setSelected(nextSelected);
           }}
           onWidthChange={(ret) => setReceivedWidths(ret)}
           selectedBackgroundColor="rgb(0,0,0,0.1)"
@@ -217,7 +209,7 @@ export const LargeDataset: Story = {
 };
 
 // Story with minimal fields
-const minimalFields = [
+const minimalFields: ISimpleTableField<DummyDataRow>[] = [
   { name: "id", hidden: true },
   { name: "first_name", label: "First Name" },
   { name: "last_name", label: "Last Name" },
