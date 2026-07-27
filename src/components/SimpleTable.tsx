@@ -214,7 +214,11 @@ export const SimpleTable = <T extends object>({
     .filter((row) => {
       return currentColumnFilters
         .map((cf) => {
-          const columnValue = columnFilterValue(row[cf.columnName], true);
+          const columnValue = columnFilterValue(
+            row[cf.columnName],
+            true,
+            columnFilterValueFns[cf.columnName],
+          );
           return cf.values.some((v) => columnValue.includes(v));
         })
         .reduce((prev, cur) => prev && cur, true);
