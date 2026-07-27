@@ -32,8 +32,8 @@ import {
 
 ... inside REACT component
 
-```tsx
-<SimpleTable
+```ts
+interface SimpleTableProps<T extends object> extends React.ComponentPropsWithoutRef<"table"> {
   id: string;
   headerLabel?: string;
   fields: ISimpleTableField<T>[];
@@ -42,6 +42,7 @@ import {
   selectable?: boolean;
   currentSelection?: Key[];
   setCurrentSelection?: (ret: Key[]) => void;
+  showHeader?: boolean;
   showSearch?: boolean;
   showFilter?: boolean;
   showPager?: boolean;
@@ -49,45 +50,55 @@ import {
   filterLabel?: string;
   searchLabel?: string;
   onWidthChange?: (ret: { name: keyof T; width: string }[]) => void;
-  onPagerChange?: (ret: {firstRow: number; pageRows: number}) => void
+  onPagerChange?: (ret: { firstRow: number; pageRows: number }) => void;
+
   tableClassName?: string;
   inputGroupClassName?: string;
   filterLabelClassName?: string;
   filterCheckClassName?: string;
   searchLabelClassName?: string;
   searchInputClassName?: string;
+
+  mainBackgroundColor?: string;
   headerBackgroundColor?: string;
-/>
+  selectedBackgroundColor?: string;
+  selectInactiveColor?: string;
+  selectActiveColor?: string;
+}
 ```
 
 ## Properties
 
-| Prop                     | Description                                                                                            |            Default             |
-| :----------------------- | :----------------------------------------------------------------------------------------------------- | :----------------------------: |
-| id                       | Unique row id                                                                                          |         `simple-table`         |
-| headerLabel              | Title used in the at the top of the table                                                              |         'Simple table'         |
-| fields                   | List of columns in the table                                                                           |                                |
-| keyField                 | Field containing the unique key for each row                                                           |                                |
-| data                     | Data to display, must contain a unique key field                                                       |                                |
-| selectable               | Indicates if rows can be selected, using a checkbox                                                    |            `false`             |
-| currentSelection         | Currently selected row keys                                                                            |                                |
-| setCurrentSelection      | Function to update the selected row keys, must be used in conjunction with the selectable indicator    |                                |
-| showSearch               | Indicates whether to show the search input. All fields with a defined search function will be searched |             `true`             |
-| showFilter               | Indicates whether to show the filter checkbox                                                          |            `false`             |
-| showPager                | Indicates whether to show the pager in the footer.                                                     |             `true`             |
-| initialFilterSelected    | Indicates whether the filter checkbox is checked on the initial render                                 |            `false`             |
-| filterLabel              | Label for the filter checkbox                                                                          |            'Filter'            |
-| searchLabel              | Label for the search input                                                                             |            'Search'            |
-| onWidthChange            | Callback after changing column widths by dragging                                                      |                                |
-| onPagerChange            | Callback after changing pager                                                                          |
-| tableClassName           | Class names to apply to the table element.                                                             |               ''               |
-| ~~inputGroupClassName~~  | Not currently implemented                                                                              |          `form-group`          |
-| ~~filterLabelClassName~~ | Not currently implemented                                                                              |       `form-check-label`       |
-| filterCheckClassName     | Class names to apply to the checkboxes in the table. The default works well with bootstrap 5.2         |       `form-check-input`       |
-| searchLabelClassName     | Class names to apply to the search label. The default works well with bootstrap 5.2                    |          `form-label`          |
-| searchInputClassName     | Class names to apply to the search input. The default works well with bootstrap 5.2                    | `form-control form-control-sm` |
-| mainBackgroundColor      | Background colour applied                                                                              |            `white`             |
-| headerBackgroundColor    | Background colour applied to the header row, used when other rows scroll under it                      |            `white`             |
+| Prop                    | Description                                                                                            |            Default             |
+| :---------------------- | :----------------------------------------------------------------------------------------------------- | :----------------------------: |
+| id                      | Unique id applied to the table element                                                                 |              None              |
+| headerLabel             | Title displayed at the top of the table when `showHeader` is true                                      |              None              |
+| fields                  | List of columns in the table                                                                           |              None              |
+| keyField                | Field containing the unique key for each row                                                           |              None              |
+| data                    | Data to display, must contain a unique key field                                                       |              None              |
+| selectable              | Indicates if rows can be selected, using a checkbox                                                    |            `false`             |
+| currentSelection        | Currently selected row keys                                                                            |              `[]`              |
+| setCurrentSelection     | Function to update selected row keys (used with `selectable`)                                          |              None              |
+| showHeader              | Indicates whether to show the header title area                                                        |             `true`             |
+| showSearch              | Indicates whether to show the search input. All fields with a defined search function will be searched |             `true`             |
+| showFilter              | Indicates whether to show the filter checkbox                                                          |            `false`             |
+| showPager               | Indicates whether to show the pager in the footer                                                      |             `true`             |
+| initialFilterSelected   | Indicates whether the filter checkbox is checked on the initial render                                 |            `false`             |
+| filterLabel             | Label for the filter checkbox                                                                          |            `Filter`            |
+| searchLabel             | Label for the search input                                                                             |            `Search`            |
+| onWidthChange           | Callback after changing column widths by dragging                                                      |              None              |
+| onPagerChange           | Callback after changing pager values                                                                   |              None              |
+| tableClassName          | Class names to apply to the table element                                                              |              `""`              |
+| inputGroupClassName     | Class names for the search/filter input group container                                                |          `form-group`          |
+| filterLabelClassName    | Class names to apply to the filter label                                                               |       `form-check-label`       |
+| filterCheckClassName    | Class names to apply to filter checkboxes                                                              |       `form-check-input`       |
+| searchLabelClassName    | Class names to apply to the search label                                                               |          `form-label`          |
+| searchInputClassName    | Class names to apply to the search input                                                               | `form-control form-control-sm` |
+| mainBackgroundColor     | Background color applied to the table wrapper                                                          |            `white`             |
+| headerBackgroundColor   | Background color applied to the header row                                                             |            `white`             |
+| selectedBackgroundColor | Background color applied to selected rows                                                              |      `rgba(0, 0, 0, 0.8)`      |
+| selectInactiveColor     | Color for unchecked selection controls                                                                 |      `rgb(0, 0, 0, 0.2)`       |
+| selectActiveColor       | Color for checked selection controls                                                                   |       `rgb(255, 153, 0)`       |
 
 ### Input data
 
@@ -130,6 +141,7 @@ interface ISimpleTableField<T> {
   sortFn?: (a: T, b: T, sortBy: ISimpleTableSort<T>) => number;
   searchFn?: (a: T, searchText: string) => boolean;
   filterOutFn?: (a: T) => boolean;
+  columnFilterValueFn?: (value: unknown) => string[];
   headerRenderFn?: (a: ISimpleTableHeaderRenderProps<T>) => JSX.Element;
   renderFn?: (a: ISimpleTableCellRenderProps<T>) => JSX.Element;
 }
@@ -173,7 +185,11 @@ const fields: ISimpleTableField<PersonRow>[] = [
 
 ### Column header search and filter
 
-When generating options for column header filters, the table automatically handles arrays and objects by inspecting individual values. Array elements are each treated as a separate option; plain objects use their string representation. No custom conversion function is needed.
+When generating options for column header filters, the table automatically handles arrays and objects by inspecting individual values. Array elements are each treated as a separate option; plain objects use their string representation.
+
+Use `columnFilterValueFn` when you need custom conversion for sort/filter semantics. It should return one or more string values used by the table for column filtering and sort comparison text.
+
+Use `renderFn` for display only. It should return a React element (`JSX.Element`) for the cell UI and should not be used to define filter/sort values.
 
 ### Filter out function
 
