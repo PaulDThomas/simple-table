@@ -255,12 +255,16 @@ export const SimpleTable = <T extends object>({
               return currentColumnFilters
                 .filter((cf) => cf.columnName !== f.name)
                 .map((cf) => {
-                  const columnValue = columnFilterValue(row[cf.columnName], true);
+                  const columnValue = columnFilterValue(
+                    row[cf.columnName],
+                    true,
+                    columnFilterValueFns[cf.columnName],
+                  );
                   return cf.values.some((v) => columnValue.includes(v));
                 })
                 .reduce((prev, cur) => prev && cur, true);
             })
-            .flatMap((t) => columnFilterValue(t[f.name], true)),
+            .flatMap((t) => columnFilterValue(t[f.name], true, columnFilterValueFns[f.name])),
         ),
       ),
     }));

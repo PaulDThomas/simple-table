@@ -34,7 +34,7 @@ import {
 
 ```tsx
 <SimpleTable
-  id?: string;
+  id: string;
   headerLabel?: string;
   fields: ISimpleTableField<T>[];
   keyField: keyof T;

@@ -208,5 +208,5 @@ export const mockData: DummyDataRow[] = raw_data.map((item, index) => ({
     { type: "Car", value: item.car },
     { type: "Genre", value: item.genre },
     { type: "Animal", value: item.animal },
-  ].slice(Math.floor(Math.random() * 3), 3), // Randomly select 0 to 2 desires
+  ].slice(Math.floor(Math.random() * 4), 3),
 }));
