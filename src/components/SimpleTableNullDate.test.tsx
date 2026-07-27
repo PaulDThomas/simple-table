@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import type { ISimpleTableColumnFilterValueFn } from "components";
 import { SimpleTableNullDate } from "./SimpleTableNullDate";
 
 describe("Test print date function", () => {
@@ -58,5 +59,23 @@ describe("Test print date function", () => {
       </div>,
     );
     expect(screen.queryByTestId("cell")).toHaveTextContent("2022-01-01");
+  });
+
+  test("Uses custom columnFilterValueFn if provided", async () => {
+    const customFn: ISimpleTableColumnFilterValueFn = (dataItem: unknown) => [
+      dataItem === null ? "002" : `${dataItem}`.padStart(3, "0"),
+    ];
+    render(
+      <div data-testid="cell">
+        <SimpleTableNullDate
+          rowData={{ date: null }}
+          cellField="date"
+          field={{ name: "date", columnFilterValueFn: customFn }}
+          columnNumber={1}
+          rowNumber={0}
+        />
+      </div>,
+    );
+    expect(screen.queryByTestId("cell")).toHaveTextContent("002");
   });
 });

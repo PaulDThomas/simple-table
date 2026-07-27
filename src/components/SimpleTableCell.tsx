@@ -1,4 +1,4 @@
-import { Key, useContext } from "react";
+import { createElement, Key, useContext, type ReactElement } from "react";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import styles from "./SimpleTableCell.module.css";
 import { SimpleTableContext } from "./SimpleTableContext";
@@ -16,7 +16,7 @@ export const SimpleTableCell = ({
   cellField,
   columnNumber,
   rowNumber,
-}: SimpleTableCellProps): React.ReactElement => {
+}: SimpleTableCellProps): ReactElement => {
   const simpleTableContext = useContext(SimpleTableContext);
 
   const field: ISimpleTableField | undefined = simpleTableContext.fields.find(
@@ -36,19 +36,17 @@ export const SimpleTableCell = ({
       className={styles.cell}
     >
       {!field || !rowData ? (
-        `${!rowData ? "Row data" : ""}${!rowData && !field ? ", " : ""}${
+        <>{`${!rowData ? "Row data" : ""}${!rowData && !field ? ", " : ""}${
           !field ? "Field" : ""
-        } not found`
-      ) : field.renderFn ? (
-        field.renderFn({ rowData, columnNumber, field, cellField: field.name, rowNumber })
+        } not found`}</>
       ) : (
-        <SimpleTableNullDate
-          rowData={rowData}
-          columnNumber={columnNumber}
-          field={field}
-          cellField={field.name}
-          rowNumber={rowNumber}
-        />
+        createElement(field.renderFn ?? SimpleTableNullDate, {
+          rowData,
+          columnNumber,
+          field,
+          cellField: field.name,
+          rowNumber,
+        })
       )}
     </td>
   );

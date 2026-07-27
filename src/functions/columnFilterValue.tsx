@@ -1,6 +1,14 @@
+import type { ISimpleTableColumnFilterValueFn } from "components";
 import { convertDateToLocaleString } from "./convertDateToLocaleString";
 
-export const columnFilterValue = (dataItem: unknown, showBlank = true): string[] => {
+export const columnFilterValue = (
+  dataItem: unknown,
+  showBlank = true,
+  customFilterValueFn?: ISimpleTableColumnFilterValueFn,
+): string[] => {
+  if (customFilterValueFn) {
+    return customFilterValueFn(dataItem);
+  }
   if (
     !showBlank &&
     (dataItem === null ||

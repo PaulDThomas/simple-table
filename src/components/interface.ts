@@ -1,34 +1,72 @@
 import React from "react";
 
-export interface ISimpleTableRow {
-  [key: string]: unknown;
-}
+export type ISimpleTableRow = Record<string, unknown>;
 
-export interface ISimpleTableSort {
-  name: string;
+export type ISimpleTableFieldName<T extends object = ISimpleTableRow> = Extract<keyof T, string>;
+
+export type ISimpleTableSortFn<
+  T extends object = ISimpleTableRow,
+  K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
+> = (a: T, b: T, sortBy: ISimpleTableSort<T, K>) => number;
+
+export type ISimpleTableSearchFn<T extends object = ISimpleTableRow> = (
+  a: T,
+  searchText: string,
+) => boolean;
+
+export type ISimpleTableFilterOutFn<T extends object = ISimpleTableRow> = (a: T) => boolean;
+
+export type ISimpleTableHeaderRenderFn<
+  T extends object = ISimpleTableRow,
+  K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
+> = React.FunctionComponent<ISimpleTableHeaderRenderProps<T, K>>;
+
+export type ISimpleTableCellRenderFn<
+  T extends object = ISimpleTableRow,
+  K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
+> = React.FunctionComponent<ISimpleTableCellRenderProps<T, K>>;
+
+export type ISimpleTableColumnFilterValueFn<TValue = unknown> = (dataItem: TValue) => string[];
+
+export interface ISimpleTableSort<
+  T extends object = ISimpleTableRow,
+  K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
+> {
+  name: K;
   asc: boolean;
+  columnFilterValueFn?: ISimpleTableColumnFilterValueFn<T[K]>;
 }
 
-export interface ISimpleTableHeaderRenderProps {
+export interface ISimpleTableHeaderRenderProps<
+  T extends object = ISimpleTableRow,
+  K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
+> {
   columnNumber: number;
-  field: ISimpleTableField;
+  field: ISimpleTableField<T, K>;
 }
 
-export interface ISimpleTableCellRenderProps extends ISimpleTableHeaderRenderProps {
-  cellField: string;
-  rowData: ISimpleTableRow;
+export interface ISimpleTableCellRenderProps<
+  T extends object = ISimpleTableRow,
+  K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
+> extends ISimpleTableHeaderRenderProps<T, K> {
+  cellField: K;
+  rowData: T;
   rowNumber: number;
 }
 
-export interface ISimpleTableField {
-  name: string;
+export interface ISimpleTableField<
+  T extends object = ISimpleTableRow,
+  K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
+> {
+  name: K;
   label?: string;
   hidden?: boolean;
   width?: string;
-  sortFn?: (a: ISimpleTableRow, b: ISimpleTableRow, sortBy: ISimpleTableSort) => number;
-  searchFn?: (a: ISimpleTableRow, searchText: string) => boolean;
-  filterOutFn?: (a: ISimpleTableRow) => boolean;
-  headerRenderFn?: (a: ISimpleTableHeaderRenderProps) => React.ReactElement;
-  renderFn?: (a: ISimpleTableCellRenderProps) => React.ReactElement;
+  sortFn?: ISimpleTableSortFn<T, K>;
+  searchFn?: ISimpleTableSearchFn<T>;
+  filterOutFn?: ISimpleTableFilterOutFn<T>;
+  headerRenderFn?: ISimpleTableHeaderRenderFn<T, K>;
+  renderFn?: ISimpleTableCellRenderFn<T, K>;
   canColumnFilter?: boolean;
+  columnFilterValueFn?: ISimpleTableColumnFilterValueFn<T[K]>;
 }

@@ -1,11 +1,12 @@
 import React from "react";
-import { ISimpleTableCellRenderProps } from ".";
+import { ISimpleTableCellRenderFn, ISimpleTableCellRenderProps } from ".";
 import { columnFilterValue } from "../functions/columnFilterValue";
 import styles from "./SimpleTableCell.module.css";
 
-export const SimpleTableNullDate = ({
-  rowData,
+export const SimpleTableNullDate: ISimpleTableCellRenderFn = ({
   cellField,
+  field,
+  rowData,
 }: ISimpleTableCellRenderProps): React.ReactElement => (
   <div
     className={[
@@ -14,6 +15,8 @@ export const SimpleTableNullDate = ({
       typeof rowData[cellField] === "number" ? styles.textRight : styles.textLeft,
     ].join(" ")}
   >
-    <span>{columnFilterValue(rowData[cellField], false)}</span>
+    <span>{columnFilterValue(rowData[cellField], false, field.columnFilterValueFn)}</span>
   </div>
 );
+
+SimpleTableNullDate.displayName = "SimpleTableNullDate";

@@ -47,7 +47,7 @@ export const SimpleTableHeaderContents = ({
       )}
       <div className={styles.text}>
         <span
-          className={field.sortFn ? styles.clickable : undefined}
+          className={field.sortFn ? styles.clickable : styles.clickableDisabled}
           onClick={() => {
             if (field.sortFn) simpleTableContext.updateSortBy(field);
           }}

@@ -1,3 +1,4 @@
+import { ISimpleTableColumnFilterValueFn } from "components";
 import { columnFilterValue } from "./columnFilterValue";
 
 describe("columnFilterValue", () => {
@@ -35,5 +36,13 @@ describe("columnFilterValue", () => {
     expect(columnFilterValue(new Date("2023-01-01"))).toEqual(["2023-01-01 00:00"]);
     expect(columnFilterValue(() => {})).toEqual(["🛠️🛠️"]);
     expect(columnFilterValue(Symbol("symbol"))).toEqual(["⁉️⁉️"]);
+  });
+
+  test("should use custom filter value function if provided", () => {
+    const customFn: ISimpleTableColumnFilterValueFn = (dataItem) =>
+      Array.isArray(dataItem)
+        ? [`custom-${dataItem.map((item: unknown) => `${item}`).join("-")}`]
+        : [""];
+    expect(columnFilterValue([1, 2, 3], true, customFn)).toEqual(["custom-1-2-3"]);
   });
 });

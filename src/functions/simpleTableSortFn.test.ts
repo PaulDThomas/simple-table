@@ -1,3 +1,4 @@
+import { ISimpleTableColumnFilterValueFn } from "components";
 import { simpleTableSortFn } from "./simpleTableSortFn";
 
 describe("Test sort function", () => {
@@ -35,11 +36,22 @@ describe("Test sort function", () => {
     expect(simpleTableSortFn(b, a, { name: "date", asc: true })).toEqual(86400000);
     expect(simpleTableSortFn(c, a, { name: "date", asc: true })).toEqual(-1);
 
-    expect(simpleTableSortFn({ array: [] }, { array: [1] }, { name: "array", asc: true })).toEqual(
-      -1,
-    );
-    expect(simpleTableSortFn({ array: [1] }, { array: [] }, { name: "array", asc: true })).toEqual(
-      1,
-    );
+    const columnFilterValueFn: ISimpleTableColumnFilterValueFn = (dataItem) => {
+      return [dataItem === null ? "002" : `${dataItem}`.padStart(3, "0")];
+    };
+    expect(
+      simpleTableSortFn(a, b, {
+        name: "number",
+        asc: true,
+        columnFilterValueFn,
+      }),
+    ).toEqual(-1);
+    expect(
+      simpleTableSortFn(a, c, {
+        name: "number",
+        asc: true,
+        columnFilterValueFn,
+      }),
+    ).toEqual(1);
   });
 });
