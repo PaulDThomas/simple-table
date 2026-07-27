@@ -19,12 +19,12 @@ export type ISimpleTableFilterOutFn<T extends object = ISimpleTableRow> = (a: T)
 export type ISimpleTableHeaderRenderFn<
   T extends object = ISimpleTableRow,
   K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
-> = (a: ISimpleTableHeaderRenderProps<T, K>) => React.ReactElement;
+> = React.FunctionComponent<ISimpleTableHeaderRenderProps<T, K>>;
 
 export type ISimpleTableCellRenderFn<
   T extends object = ISimpleTableRow,
   K extends ISimpleTableFieldName<T> = ISimpleTableFieldName<T>,
-> = (a: ISimpleTableCellRenderProps<T, K>) => React.ReactElement;
+> = React.FunctionComponent<ISimpleTableCellRenderProps<T, K>>;
 
 export type ISimpleTableColumnFilterValueFn<TValue = unknown> = (dataItem: TValue) => string[];
 

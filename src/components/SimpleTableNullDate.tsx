@@ -4,9 +4,9 @@ import { columnFilterValue } from "../functions/columnFilterValue";
 import styles from "./SimpleTableCell.module.css";
 
 export const SimpleTableNullDate: ISimpleTableCellRenderFn = ({
-  rowData,
   cellField,
   field,
+  rowData,
 }: ISimpleTableCellRenderProps): React.ReactElement => (
   <div
     className={[
@@ -18,3 +18,5 @@ export const SimpleTableNullDate: ISimpleTableCellRenderFn = ({
     <span>{columnFilterValue(rowData[cellField], false, field.columnFilterValueFn)}</span>
   </div>
 );
+
+SimpleTableNullDate.displayName = "SimpleTableNullDate";
