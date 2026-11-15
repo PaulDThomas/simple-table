@@ -5,7 +5,7 @@ import { localStorageMock } from "../../__dummy__/localStorageMock";
 import { ISimpleTableField, ISimpleTableRow } from "./interface";
 import { SimpleTable } from "./SimpleTable";
 
-jest.mock("./SimpleTablePopover");
+vi.mock("./SimpleTablePopover");
 
 enum eAccessLevel {
   lead,
@@ -242,7 +242,7 @@ describe("Interactive renders", () => {
   });
 });
 
-const mockSetSelection = jest.fn();
+const mockSetSelection = vi.fn();
 describe("Toggle rows", () => {
   test("Check untoggled", async () => {
     await act(async () =>
@@ -537,7 +537,7 @@ describe("Local settings", () => {
 
   test("Load settings with numeric pageRows", async () => {
     // Test with numeric pageRows (not a string)
-    const mockSetSelection = jest.fn();
+    const mockSetSelection = vi.fn();
     window.localStorage.setItem(
       "asup.simple-table.test-table.settings",
       JSON.stringify({
@@ -735,7 +735,7 @@ describe("Local settings", () => {
 describe("Test callbacks", () => {
   test("onPagerChange callback number of rows", async () => {
     const user = userEvent.setup();
-    const mockOnPagerChange = jest.fn();
+    const mockOnPagerChange = vi.fn();
     await act(async () =>
       render(
         <SimpleTable
@@ -764,7 +764,7 @@ describe("Test callbacks", () => {
   });
 
   test("onWidthChange callback", async () => {
-    const mockOnWidthChange = jest.fn();
+    const mockOnWidthChange = vi.fn();
     const user = userEvent.setup();
     const ReloadingTable = () => {
       const [show, setShow] = useState<boolean>(true);
@@ -872,7 +872,7 @@ describe("Test callbacks", () => {
         },
       },
     ];
-    Object.defineProperty(console, "warn", { value: jest.fn() });
+    Object.defineProperty(console, "warn", { value: vi.fn() });
     await act(async () =>
       render(
         <SimpleTable

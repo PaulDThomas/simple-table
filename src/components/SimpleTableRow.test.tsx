@@ -14,7 +14,7 @@ const mockData: ISimpleTableRow = {
   displayName: "Some user",
 };
 
-const mockToggle = jest.fn();
+const mockToggle = vi.fn();
 describe("Access rights row rendering", () => {
   test("Basic render", async () => {
     render(

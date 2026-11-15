@@ -6,9 +6,9 @@ import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableHeaderContents } from "./SimpleTableHeaderContents";
 import * as stp from "./SimpleTablePopover";
 
-jest.mock("./SimpleTablePopover");
+vi.mock("./SimpleTablePopover");
 
-const mockSort = jest.fn();
+const mockSort = vi.fn();
 const mockSortUp: ISimpleTableSort = { name: "displayName", asc: true };
 const mockSortDown: ISimpleTableSort = { name: "displayName", asc: false };
 const mockFields: ISimpleTableField[] = [
@@ -91,8 +91,8 @@ describe("Simple table header contents renders", () => {
 
   test("Close filter from popover", async () => {
     const user = userEvent.setup();
-    const mockSetColumnFilter = jest.fn();
-    jest.spyOn(stp, "SimpleTablePopover").mockImplementation(({ onClose }) => {
+    const mockSetColumnFilter = vi.fn();
+    vi.spyOn(stp, "SimpleTablePopover").mockImplementation(({ onClose }) => {
       return (
         <div className="simple-table-popover filterHolder">
           <button
@@ -143,7 +143,7 @@ describe("Simple table header contents renders", () => {
 
   test("Click open filter button", async () => {
     const user = userEvent.setup();
-    const mockSetColumnFilter = jest.fn();
+    const mockSetColumnFilter = vi.fn();
 
     await act(async () =>
       render(
@@ -184,7 +184,7 @@ describe("Simple table header contents renders", () => {
 
   test("Click close filter button", async () => {
     const user = userEvent.setup();
-    const mockSetColumnFilter = jest.fn();
+    const mockSetColumnFilter = vi.fn();
 
     await act(async () =>
       render(
@@ -262,8 +262,8 @@ describe("Simple table header contents renders", () => {
 describe("Filter on column values", () => {
   test("Display all filter", async () => {
     const user = userEvent.setup();
-    const mockSet = jest.fn();
-    const mockSetCurrentFilter = jest.fn();
+    const mockSet = vi.fn();
+    const mockSetCurrentFilter = vi.fn();
     await act(async () => {
       render(
         <SimpleTableContext.Provider
@@ -303,8 +303,8 @@ describe("Filter on column values", () => {
 
   test("Display partial filter", async () => {
     const user = userEvent.setup();
-    const mockSet = jest.fn();
-    const mockSetCurrentFilter = jest.fn();
+    const mockSet = vi.fn();
+    const mockSetCurrentFilter = vi.fn();
     await act(async () => {
       render(
         <SimpleTableContext.Provider

@@ -1,4 +1,4 @@
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
 
 // Configure React 19 testing environment for act() support
@@ -32,6 +32,6 @@ beforeEach(() => {});
 
 afterEach(() => {
   cleanup();
-  jest.clearAllMocks();
-  jest.restoreAllMocks();
+  vi.clearAllMocks();
+  vi.restoreAllMocks();
 });

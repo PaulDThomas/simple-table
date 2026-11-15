@@ -54,4 +54,18 @@ describe("Test sort function", () => {
       }),
     ).toEqual(1);
   });
+
+  test("Uses empty strings when a filter produces no values", () => {
+    const emptyValueFn: ISimpleTableColumnFilterValueFn = () => [];
+    expect(simpleTableSortFn({ value: {} }, { value: {} }, { name: "value", asc: true })).toEqual(
+      0,
+    );
+    expect(
+      simpleTableSortFn(
+        { value: "first" },
+        { value: "second" },
+        { name: "value", asc: true, columnFilterValueFn: emptyValueFn },
+      ),
+    ).toEqual(0);
+  });
 });

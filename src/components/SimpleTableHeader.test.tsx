@@ -4,9 +4,9 @@ import { defaultContext, SimpleTableContext } from "./SimpleTableContext";
 import { SimpleTableHeader } from "./SimpleTableHeader";
 import { ISimpleTableField, ISimpleTableRow, ISimpleTableSort } from "./interface";
 
-jest.mock("./SimpleTableHeaderContents");
+vi.mock("./SimpleTableHeaderContents");
 
-const mockSort = jest.fn();
+const mockSort = vi.fn();
 
 const mockFields: ISimpleTableField[] = [
   { name: "tlfId", hidden: true },
@@ -30,7 +30,7 @@ const mockData: ISimpleTableRow[] = [
 const mockSortUp: ISimpleTableSort = { name: "displayName", asc: true };
 const mockSortDown: ISimpleTableSort = { name: "description", asc: false };
 
-const mockSorting = jest.fn();
+const mockSorting = vi.fn();
 
 describe("Simple table header renders", () => {
   test("No context render", async () => {
@@ -132,7 +132,7 @@ describe("Resize table cell", () => {
   });
 
   test("Mouse move without mouseDown does nothing", async () => {
-    const mockSetColumnWidth = jest.fn();
+    const mockSetColumnWidth = vi.fn();
     await act(async () => {
       render(
         <SimpleTableContext.Provider
@@ -178,7 +178,7 @@ describe("Resize table cell", () => {
   });
 
   test("Resize with width callback", async () => {
-    const mockSetColumnWidth = jest.fn();
+    const mockSetColumnWidth = vi.fn();
     await act(async () => {
       render(
         <SimpleTableContext.Provider
