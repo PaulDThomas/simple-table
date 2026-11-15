@@ -1,4 +1,4 @@
-import { Key, startTransition, useEffect, useState } from "react";
+import { Key, startTransition, useCallback, useEffect, useState } from "react";
 import { columnFilterValue } from "../functions/columnFilterValue";
 import styles from "./SimpleTable.module.css";
 import { SimpleTableBody } from "./SimpleTableBody";
@@ -9,6 +9,7 @@ import {
 } from "./SimpleTableContext";
 import { SimpleTableFilter } from "./SimpleTableFilter";
 import { SimpleTableHeader } from "./SimpleTableHeader";
+import { isSimpleTableLocalSettings, SimpleTableLocalSettings } from "./SimpleTableLocalSettings";
 import { SimpleTablePager } from "./SimpleTablePager";
 import { SimpleTableSearch } from "./SimpleTableSearch";
 import { SimpleTableSelectHeader } from "./SimpleTableSelectHeader";
@@ -19,7 +20,10 @@ import {
   ISimpleTableSort,
 } from "./interface";
 
-interface SimpleTableProps<T extends object> extends React.ComponentPropsWithoutRef<"table"> {
+export interface SimpleTableProps<
+  T extends object,
+> extends React.ComponentPropsWithoutRef<"table"> {
+  "data-ast-key"?: string;
   id: string;
   headerLabel?: string;
   fields: ISimpleTableField<T>[];
@@ -52,27 +56,9 @@ interface SimpleTableProps<T extends object> extends React.ComponentPropsWithout
   selectActiveColor?: string;
 }
 
-interface SimpleTableLocalSettings {
-  pageRows?: number | string;
-  headerWidths?: (string | undefined)[] | { name: string; width: string }[];
-}
-
-// Type guard for SimpleTableLocalSettings
-const isSimpleTableLocalSettings = (obj: unknown): obj is SimpleTableLocalSettings => {
-  if (typeof obj !== "object" || obj === null) return false;
-  const settings = obj as Record<string, unknown>;
-  if (settings.pageRows !== undefined) {
-    if (typeof settings.pageRows !== "number" && typeof settings.pageRows !== "string")
-      return false;
-  }
-  if (settings.headerWidths !== undefined) {
-    if (!Array.isArray(settings.headerWidths)) return false;
-  }
-  return true;
-};
-
 export const SimpleTable = <T extends object>({
   id,
+  "data-ast-key": dataAstKey,
   currentSelection = [],
   data,
   fields,
@@ -102,10 +88,12 @@ export const SimpleTable = <T extends object>({
   tableClassName = "",
   ...rest
 }: SimpleTableProps<T>): React.ReactElement => {
+  const persistAllSettings = Boolean(dataAstKey);
+  const settingsKey = `asup.simple-table.${dataAstKey || id}.settings`;
   // Load local settings once on mount
   const localSettingsText =
     typeof window !== "undefined"
-      ? window.localStorage.getItem(`asup.simple-table.${id}.settings`)
+      ? window.localStorage.getItem(settingsKey)
       : // istanbul ignore next
         null;
   const parsedSettings = localSettingsText ? JSON.parse(localSettingsText) : null;
@@ -128,9 +116,26 @@ export const SimpleTable = <T extends object>({
     startTransition(() => setTableData(data));
   }, [data]);
 
-  const [filterData, setFilterData] = useState<boolean>(initialFilterSelected);
-  const [sortBy, setSortBy] = useState<ISimpleTableSort<T> | null>(null);
-  const [searchText, setSearchText] = useState<string>("");
+  const [filterData, setFilterData] = useState<boolean>(
+    persistAllSettings
+      ? (localSettings?.filterData ?? initialFilterSelected)
+      : initialFilterSelected,
+  );
+  const [sortBy, setSortBy] = useState<ISimpleTableSort<T> | null>(() => {
+    const savedSort = persistAllSettings ? localSettings?.sortBy : null;
+    if (!savedSort) return null;
+    const field = fields.find((candidate) => candidate.name === savedSort.name);
+    return field?.sortFn
+      ? {
+          name: field.name,
+          asc: savedSort.asc,
+          columnFilterValueFn: columnFilterValueFns[field.name],
+        }
+      : null;
+  });
+  const [searchText, setSearchText] = useState<string>(
+    persistAllSettings ? (localSettings?.searchText ?? "") : "",
+  );
 
   // Initialize columnWidths from localStorage or fields
   const [columnWidths, setColumnWidths] = useState<
@@ -151,7 +156,7 @@ export const SimpleTable = <T extends object>({
   });
 
   // Initialize pageRows from localStorage or props
-  const [firstRow, setFirstRow] = useState(showPager === false ? 0 : 0);
+  const [firstRow, setFirstRow] = useState(0);
   const [pageRows, setPageRows] = useState(() => {
     if (showPager === false) return Infinity;
     if (localSettings?.pageRows && showPager) {
@@ -174,7 +179,15 @@ export const SimpleTable = <T extends object>({
 
   const [currentColumnFilter, setCurrentColumnFilter] = useState<number | null>(null);
   const [currentColumnFilters, setCurrentColumnFilters] = useState<ISimpleTableColumnFilter<T>[]>(
-    [],
+    () => {
+      if (!persistAllSettings) return [];
+      return (localSettings?.currentColumnFilters ?? []).flatMap((filter) => {
+        const field = fields.find(
+          (candidate) => candidate.name === filter.columnName && candidate.canColumnFilter,
+        );
+        return field ? [{ columnName: field.name, values: filter.values }] : [];
+      });
+    },
   );
 
   const filterFn = (row: T) => {
@@ -309,20 +322,39 @@ export const SimpleTable = <T extends object>({
   };
 
   // Save local settings
-  const updateLocalSettings = (
-    setting: string,
-    value: number | { name: ISimpleTableFieldName<T>; width: string }[],
-  ) => {
-    const localSettingsText = window.localStorage.getItem(`asup.simple-table.${id}.settings`);
-    const localSettings = JSON.parse(localSettingsText ?? "{}") as SimpleTableLocalSettings;
-    // istanbul ignore else
-    if (setting === "pageRows" && value && !Array.isArray(value)) {
-      localSettings.pageRows = value === Infinity ? "Infinity" : value;
-    } else if (setting === "headerWidths" && value && Array.isArray(value)) {
-      localSettings.headerWidths = value;
-    }
-    window.localStorage.setItem(`asup.simple-table.${id}.settings`, JSON.stringify(localSettings));
-  };
+  const updateLocalSettings = useCallback(
+    (update: Partial<SimpleTableLocalSettings>) => {
+      const currentSettingsText = window.localStorage.getItem(settingsKey);
+      const currentSettings: unknown = currentSettingsText ? JSON.parse(currentSettingsText) : null;
+      const savedSettings = isSimpleTableLocalSettings(currentSettings) ? currentSettings : {};
+      window.localStorage.setItem(settingsKey, JSON.stringify({ ...savedSettings, ...update }));
+    },
+    [settingsKey],
+  );
+
+  useEffect(() => {
+    updateLocalSettings({
+      ...(showPager ? { pageRows: pageRows === Infinity ? "Infinity" : pageRows } : {}),
+      headerWidths: columnWidths,
+    });
+  }, [columnWidths, pageRows, showPager, updateLocalSettings]);
+
+  useEffect(() => {
+    if (!persistAllSettings) return;
+    updateLocalSettings({
+      sortBy: sortBy ? { name: sortBy.name, asc: sortBy.asc } : null,
+      filterData,
+      searchText,
+      currentColumnFilters,
+    });
+  }, [
+    currentColumnFilters,
+    filterData,
+    persistAllSettings,
+    searchText,
+    sortBy,
+    updateLocalSettings,
+  ]);
 
   useEffect(() => {
     // istanbul ignore else
@@ -401,13 +433,11 @@ export const SimpleTable = <T extends object>({
               }
             }
             setColumnWidths(newColumnWidths);
-            updateLocalSettings("headerWidths", newColumnWidths);
             onWidthChange?.(newColumnWidths);
           },
           pageRows,
           setPageRows: (ret: number) => {
             setPageRows(ret);
-            updateLocalSettings("pageRows", ret);
             onPagerChange?.({ firstRow, pageRows: ret });
           },
           firstRow,
@@ -461,6 +491,7 @@ export const SimpleTable = <T extends object>({
             <table
               {...rest}
               id={id}
+              data-ast-key={dataAstKey}
               className={[styles.table, tableClassName].join(" ")}
             >
               <thead>
