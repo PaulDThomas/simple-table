@@ -99,6 +99,9 @@ interface SimpleTableProps<T extends object> extends React.ComponentPropsWithout
 | selectedBackgroundColor | Background color applied to selected rows                                                              |      `rgba(0, 0, 0, 0.8)`      |
 | selectInactiveColor     | Color for unchecked selection controls                                                                 |      `rgb(0, 0, 0, 0.2)`       |
 | selectActiveColor       | Color for checked selection controls                                                                   |       `rgb(255, 153, 0)`       |
+| data-ast-key            | Stable key used to persist table settings across ID changes and reloads                                |              None              |
+
+Tables with `data-ast-key` persist page size, sort order, filter and search selections, and column widths in local storage. The attribute selects a stable settings key; without it, existing ID-based page-size and column-width preferences remain unchanged.
 
 ### Input data
 

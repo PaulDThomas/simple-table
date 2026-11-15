@@ -84,7 +84,7 @@ describe("SimpleTablePopover", () => {
       <PopoverWrapper
         isVisible={true}
         anchorElement={null}
-        onClose={jest.fn()}
+        onClose={vi.fn()}
       >
         <div data-testid="popover-content">Test content</div>
       </PopoverWrapper>,
@@ -96,7 +96,7 @@ describe("SimpleTablePopover", () => {
   });
 
   test("renders correctly with default left alignment", async () => {
-    const mockClose = jest.fn();
+    const mockClose = vi.fn();
     // Mock anchor element that's close to the left edge
     mockAnchorElement.dataset.left = "200";
     mockAnchorElement.dataset.right = "300";
@@ -142,7 +142,7 @@ describe("SimpleTablePopover", () => {
   });
 
   test("renders on the right when not enough space on the left", async () => {
-    const mockClose = jest.fn();
+    const mockClose = vi.fn();
     // Mock anchor element that's past the edge
     mockAnchorElement.dataset.left = "900";
     mockAnchorElement.dataset.right = "1000";
@@ -185,7 +185,7 @@ describe("SimpleTablePopover", () => {
       <PopoverWrapper
         isVisible={false}
         anchorElement={mockAnchorElement}
-        onClose={jest.fn()}
+        onClose={vi.fn()}
       >
         <div data-testid="popover-content">Test content</div>
       </PopoverWrapper>,
@@ -195,7 +195,7 @@ describe("SimpleTablePopover", () => {
   });
 
   test("closes when anchor element is not visible", () => {
-    const mockClose = jest.fn();
+    const mockClose = vi.fn();
     // Mock anchor element that's out of view
     mockAnchorElement.dataset.top = "-100";
     mockAnchorElement.dataset.bottom = "-50";
@@ -216,7 +216,7 @@ describe("SimpleTablePopover", () => {
   });
 
   test("closes when escape key is pressed", () => {
-    const mockClose = jest.fn();
+    const mockClose = vi.fn();
     render(
       <PopoverWrapper
         isVisible={true}
@@ -233,7 +233,7 @@ describe("SimpleTablePopover", () => {
   });
 
   test("Closes when there is not enough height", async () => {
-    const mockClose = jest.fn();
+    const mockClose = vi.fn();
     await act(async () =>
       render(
         <PopoverWrapper
