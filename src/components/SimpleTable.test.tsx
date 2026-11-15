@@ -535,6 +535,39 @@ describe("Local settings", () => {
     expect(header).toHaveStyle("width: 150px");
   });
 
+  test("Migrates legacy column widths to named settings", async () => {
+    const settingsKey = "asup.simple-table.legacy-width-settings.settings";
+    window.localStorage.setItem(
+      settingsKey,
+      JSON.stringify({ headerWidths: ["200px", "300px", "400px"] }),
+    );
+
+    await act(async () =>
+      render(
+        <SimpleTable
+          id="legacy-width-settings"
+          headerLabel="TEST TABLE"
+          fields={mockFields}
+          keyField={"userId"}
+          data={mockAccesses}
+        />,
+      ),
+    );
+
+    expect(screen.getByText("Hierarchy").closest("th")).toHaveStyle("width: 200px");
+    expect(screen.getByText("Display name").closest("th")).toHaveStyle("width: 300px");
+    expect(screen.getByText("Access level").closest("th")).toHaveStyle("width: 400px");
+    expect(JSON.parse(window.localStorage.getItem(settingsKey) ?? "{}")).toMatchObject({
+      headerWidths: [
+        { name: "hierarchyLabel", width: "200px" },
+        { name: "displayName", width: "300px" },
+        { name: "accessLevel", width: "400px" },
+      ],
+    });
+
+    window.localStorage.removeItem(settingsKey);
+  });
+
   test("Load settings with numeric pageRows", async () => {
     // Test with numeric pageRows (not a string)
     const mockSetSelection = vi.fn();
@@ -803,12 +836,14 @@ describe("Test callbacks", () => {
     fireEvent.mouseMove(firstHandle, { clientX: 400 });
     fireEvent.mouseUp(firstHandle);
     expect(mockOnWidthChange).toHaveBeenLastCalledWith([
+      { name: mockFields.filter((f) => !f.hidden)[1].name, width: "0px" },
       { name: mockFields.filter((f) => !f.hidden)[0].name, width: "400px" },
     ]);
     fireEvent.mouseDown(firstHandle);
     fireEvent.mouseMove(firstHandle, { clientX: 200 });
     fireEvent.mouseUp(firstHandle);
     expect(mockOnWidthChange).toHaveBeenLastCalledWith([
+      { name: mockFields.filter((f) => !f.hidden)[1].name, width: "0px" },
       { name: mockFields.filter((f) => !f.hidden)[0].name, width: "200px" },
     ]);
     // Hide table

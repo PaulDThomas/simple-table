@@ -1,4 +1,7 @@
-import { isSimpleTableLocalSettings } from "./SimpleTableLocalSettings";
+import {
+  isSimpleTableLocalSettings,
+  resolveSimpleTableLocalSettings,
+} from "./SimpleTableLocalSettings";
 
 describe("isSimpleTableLocalSettings", () => {
   test.each([
@@ -7,6 +10,7 @@ describe("isSimpleTableLocalSettings", () => {
     ["page row count as a string", { pageRows: "Infinity" }],
     ["column widths", { headerWidths: [{ name: "name", width: "200px" }] }],
     ["legacy column widths", { headerWidths: ["200px", undefined] }],
+    ["legacy column widths with null entries", { headerWidths: [null, "200px"] }],
     ["ascending sort", { sortBy: { name: "name", asc: true } }],
     ["no sort", { sortBy: null }],
     ["filter toggle", { filterData: false }],
@@ -22,6 +26,13 @@ describe("isSimpleTableLocalSettings", () => {
     ["an array", []],
     ["invalid page rows", { pageRows: { value: 25 } }],
     ["invalid header widths", { headerWidths: "200px" }],
+    ["a numeric column width", { headerWidths: [200] }],
+    ["an unnamed column width", { headerWidths: [{ width: "200px" }] }],
+    ["a column width without a width", { headerWidths: [{ name: "name" }] }],
+    [
+      "mixed legacy and named column widths",
+      { headerWidths: ["200px", { name: "name", width: "300px" }] },
+    ],
     ["a string sort", { sortBy: "name" }],
     ["an array sort", { sortBy: [] }],
     ["a sort without a name", { sortBy: { asc: true } }],
@@ -43,5 +54,33 @@ describe("isSimpleTableLocalSettings", () => {
     ],
   ])("rejects %s", (_label, settings) => {
     expect(isSimpleTableLocalSettings(settings)).toBe(false);
+  });
+});
+
+describe("resolveSimpleTableLocalSettings", () => {
+  test("returns null for invalid settings", () => {
+    expect(resolveSimpleTableLocalSettings({ headerWidths: [200] }, ["name"])).toBeNull();
+  });
+
+  test("preserves current named column widths", () => {
+    const settings = { headerWidths: [{ name: "name", width: "200px" }] };
+
+    expect(resolveSimpleTableLocalSettings(settings, ["name"])).toEqual(settings);
+  });
+
+  test("converts legacy widths to named widths and skips missing entries", () => {
+    expect(
+      resolveSimpleTableLocalSettings({ headerWidths: [null, "200px", undefined, "400px"] }, [
+        "first",
+        "second",
+        "third",
+      ]),
+    ).toEqual({ headerWidths: [{ name: "second", width: "200px" }] });
+  });
+
+  test("preserves settings that do not contain column widths", () => {
+    const settings = { pageRows: 25 };
+
+    expect(resolveSimpleTableLocalSettings(settings, ["name"])).toEqual(settings);
   });
 });

@@ -9,7 +9,10 @@ import {
 } from "./SimpleTableContext";
 import { SimpleTableFilter } from "./SimpleTableFilter";
 import { SimpleTableHeader } from "./SimpleTableHeader";
-import { isSimpleTableLocalSettings, SimpleTableLocalSettings } from "./SimpleTableLocalSettings";
+import {
+  resolveSimpleTableLocalSettings,
+  SimpleTableLocalSettings,
+} from "./SimpleTableLocalSettings";
 import { SimpleTablePager } from "./SimpleTablePager";
 import { SimpleTableSearch } from "./SimpleTableSearch";
 import { SimpleTableSelectHeader } from "./SimpleTableSelectHeader";
@@ -97,7 +100,10 @@ export const SimpleTable = <T extends object>({
       : // istanbul ignore next
         null;
   const parsedSettings = localSettingsText ? JSON.parse(localSettingsText) : null;
-  const localSettings = isSimpleTableLocalSettings(parsedSettings) ? parsedSettings : null;
+  const localSettings = resolveSimpleTableLocalSettings(
+    parsedSettings,
+    fields.filter((field) => !field.hidden).map((field) => field.name),
+  );
   const columnFilterValueFns: Partial<
     Record<ISimpleTableFieldName<T>, ISimpleTableColumnFilterValueFn>
   > = fields
@@ -326,10 +332,14 @@ export const SimpleTable = <T extends object>({
     (update: Partial<SimpleTableLocalSettings>) => {
       const currentSettingsText = window.localStorage.getItem(settingsKey);
       const currentSettings: unknown = currentSettingsText ? JSON.parse(currentSettingsText) : null;
-      const savedSettings = isSimpleTableLocalSettings(currentSettings) ? currentSettings : {};
+      const savedSettings =
+        resolveSimpleTableLocalSettings(
+          currentSettings,
+          fields.filter((field) => !field.hidden).map((field) => field.name),
+        ) ?? {};
       window.localStorage.setItem(settingsKey, JSON.stringify({ ...savedSettings, ...update }));
     },
-    [settingsKey],
+    [fields, settingsKey],
   );
 
   useEffect(() => {

@@ -1,14 +1,34 @@
+interface LegacySimpleTableLocalSettings extends Omit<SimpleTableLocalSettings, "headerWidths"> {
+  headerWidths?: (string | null | undefined)[];
+}
+
+type SimpleTableLocalSettingsInput = SimpleTableLocalSettings | LegacySimpleTableLocalSettings;
+
 export interface SimpleTableLocalSettings {
   pageRows?: number | string;
-  headerWidths?: (string | undefined)[] | { name: string; width: string }[];
+  headerWidths?: { name: string; width: string }[];
   sortBy?: { name: string; asc: boolean } | null;
   filterData?: boolean;
   searchText?: string;
   currentColumnFilters?: { columnName: string; values: string[] }[];
 }
 
-// Type guard for SimpleTableLocalSettings
-export const isSimpleTableLocalSettings = (obj: unknown): obj is SimpleTableLocalSettings => {
+const isNamedHeaderWidths = (
+  headerWidths: unknown[],
+): headerWidths is { name: string; width: string }[] =>
+  headerWidths.every((width) => {
+    if (typeof width !== "object" || width === null || Array.isArray(width)) return false;
+    const columnWidth = width as Record<string, unknown>;
+    return typeof columnWidth.name === "string" && typeof columnWidth.width === "string";
+  });
+
+const isLegacyHeaderWidths = (
+  headerWidths: unknown[],
+): headerWidths is (string | null | undefined)[] =>
+  headerWidths.every((width) => typeof width === "string" || width === null || width === undefined);
+
+/** Validates settings loaded from either the legacy or current local-storage format. */
+export const isSimpleTableLocalSettings = (obj: unknown): obj is SimpleTableLocalSettingsInput => {
   if (typeof obj !== "object" || obj === null || Array.isArray(obj)) return false;
   const settings = obj as Record<string, unknown>;
   if (settings.pageRows !== undefined) {
@@ -16,7 +36,11 @@ export const isSimpleTableLocalSettings = (obj: unknown): obj is SimpleTableLoca
       return false;
   }
   if (settings.headerWidths !== undefined) {
-    if (!Array.isArray(settings.headerWidths)) return false;
+    if (
+      !Array.isArray(settings.headerWidths) ||
+      (!isNamedHeaderWidths(settings.headerWidths) && !isLegacyHeaderWidths(settings.headerWidths))
+    )
+      return false;
   }
   if (settings.sortBy !== undefined && settings.sortBy !== null) {
     if (typeof settings.sortBy !== "object" || Array.isArray(settings.sortBy)) return false;
@@ -40,4 +64,23 @@ export const isSimpleTableLocalSettings = (obj: unknown): obj is SimpleTableLoca
   )
     return false;
   return true;
+};
+
+/** Converts accepted legacy width arrays to the current named-column format. */
+export const resolveSimpleTableLocalSettings = (
+  obj: unknown,
+  visibleFieldNames: string[],
+): SimpleTableLocalSettings | null => {
+  if (!isSimpleTableLocalSettings(obj)) return null;
+  if (obj.headerWidths === undefined) return { ...obj, headerWidths: undefined };
+  if (isNamedHeaderWidths(obj.headerWidths)) return { ...obj, headerWidths: obj.headerWidths };
+
+  return {
+    ...obj,
+    headerWidths: obj.headerWidths.flatMap((width, index) =>
+      typeof width === "string" && visibleFieldNames[index] !== undefined
+        ? [{ name: visibleFieldNames[index], width }]
+        : [],
+    ),
+  };
 };
